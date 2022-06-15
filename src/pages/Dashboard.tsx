@@ -1,28 +1,21 @@
-import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useContext } from "react";
 import { UserContext } from "../App";
+import NavBar from "../components/NavBar";
 
 const Dashboard = () => {
-  const { user, setUser } = useContext(UserContext);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    setUser({ username: "" });
-    toast("Successfully logged out!");
-    navigate("/");
-  };
+  const { user } = useContext(UserContext);
 
   return (
-    <div className="m-auto">
-      <div className="font-semibold text-2xl">Welcome, {user.username}</div>
-      <button
-        onClick={handleLogout}
-        className="mx-auto px-4 py-2 bg-neutral-300 hover:bg-neutral-500 hover:text-white transition-colors"
-      >
-        Logout
-      </button>
+    <div
+      className="w-full h-full bg-contain flex flex-col bg-center"
+      style={{ backgroundImage: "url(images/dashboard.png)" }}
+    >
+      <NavBar />
+      <div className="m-auto">
+        <div className="font-semibold text-5xl">
+          Welcome {user.type}, {user.username}
+        </div>
+      </div>
     </div>
   );
 };

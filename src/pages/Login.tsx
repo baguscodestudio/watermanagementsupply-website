@@ -7,7 +7,7 @@ import { UserContext } from "../App";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const setUser = useContext(UserContext).setUser;
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
@@ -20,7 +20,8 @@ const Login = () => {
       .then((response) => {
         if (response.status === 200) {
           localStorage.setItem("accessToken", response.data.token);
-          setUser({ username: username });
+          console.log(response.data.user);
+          setUser({ ...response.data.user });
           console.log(response);
           toast("Logged in successfully");
           navigate("/dashboard");
