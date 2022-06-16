@@ -69,7 +69,7 @@ const Chemical = () => {
             </div>
           </div> */}
           <div className="flex flex-col mx-auto mt-2">
-            <div className="my-4 text-xl">Update chemical inventory</div>
+            <div className="my-4 text-xl">Insert chemical inventory</div>
             <Link
               to="/chemical/insert"
               id="insert"
@@ -87,6 +87,7 @@ const Chemical = () => {
               <th className="border-x-2">Chemical quantity</th>
               <th className="border-x-2">Chemical measure</th>
               <th className="border-x-2">Chemical usage description</th>
+              <th className="border-x-2">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -100,6 +101,14 @@ const Chemical = () => {
                 <td>{chemical.quantity}</td>
                 <td>{chemical.measureUnit}</td>
                 <td>{chemical.usageDescription}</td>
+                <td>
+                  <Link
+                    to={`/chemical/update/${chemical.chemicalId}`}
+                    className="underline underline-offset-2"
+                  >
+                    Update
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>

@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import NavBar from "../components/NavBar";
 
-const EquipmentCreate = () => {
+const ChemicalInsert = () => {
   const [chemical, setChemical] = useState({
     chemicalName: "",
     quantity: 0,
@@ -42,7 +42,7 @@ const EquipmentCreate = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-32 bg-[#FFA500] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-32 bg-[#F0E68C] flex items-center px-12">
           Chemical Inventory
         </div>
         <form
@@ -128,4 +128,4 @@ const EquipmentCreate = () => {
   );
 };
 
-export default EquipmentCreate;
+export default ChemicalInsert;

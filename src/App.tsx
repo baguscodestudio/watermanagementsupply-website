@@ -13,6 +13,7 @@ import EquipmentCreate from "./pages/EquipmentCreate";
 import Chemical from "./pages/Chemical";
 import ChemicalInsert from "./pages/ChemicalInsert";
 import BroadcastCreate from "./pages/BroadcastCreate";
+import ChemicalUpdate from "./pages/ChemicalUpdate";
 
 export interface User {
   username: string;
@@ -55,6 +56,10 @@ function App() {
               <Route path="/equipment" element={<Equipment />} />
               <Route path="/equipment/insert" element={<EquipmentCreate />} />
               <Route path="/chemical" element={<Chemical />} />
+              <Route
+                path="/chemical/update/:chemicalId"
+                element={<ChemicalUpdate />}
+              />
               <Route path="/chemical/insert" element={<ChemicalInsert />} />
             </Route>
           </Routes>
