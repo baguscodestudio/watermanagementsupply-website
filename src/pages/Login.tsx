@@ -58,7 +58,6 @@ const Login = () => {
           />
         </div>
       </div>
-      <div className="inline-flex my-4">Remember Me</div>
       <button
         type="submit"
         className="mx-auto bg-gray-200 border-2 rounded-lg border-black px-8 my-auto"

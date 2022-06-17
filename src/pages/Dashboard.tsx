@@ -12,9 +12,7 @@ const Dashboard = () => {
     >
       <NavBar />
       <div className="m-auto">
-        <div className="font-semibold text-5xl">
-          Welcome {user.type}, {user.username}
-        </div>
+        <div className="font-semibold text-5xl">Welcome, {user.username}</div>
       </div>
     </div>
   );

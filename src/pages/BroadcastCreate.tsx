@@ -8,7 +8,7 @@ const BroadcastCreate = () => {
   const [broadcast, setBroadcast] = useState({
     alertTitle: "",
     alertDescription: "",
-    createdAt: new Date().toISOString(),
+    // createdAt: new Date().toISOString(),
   });
 
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ const BroadcastCreate = () => {
           onSubmit={(event) => handleSubmit(event)}
         >
           <div className="text-2xl mb-14 underline">Broadcast details</div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
+          {/* <div className="my-2 w-[27rem] inline-flex justify-between">
             <div className="text-lg">Date:</div>
             <input
               name="date"
@@ -58,7 +58,7 @@ const BroadcastCreate = () => {
               value={new Date().toISOString()}
               className="w-56 border-2 px-2 border-black bg-transparent"
             />
-          </div>
+          </div> */}
           <div className="my-2 w-[27rem] inline-flex justify-between">
             <div className="text-lg">Title:</div>
             <input
