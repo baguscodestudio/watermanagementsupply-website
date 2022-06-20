@@ -74,7 +74,7 @@ const Equipment = () => {
               />
               <button
                 type="submit"
-                className="bg-transparent rounded-lg px-4 py-1 border-2 border-black"
+                className="bg-transparent rounded-lg px-4 py-1 border-2 border-black hover:bg-zinc-700 hover:scale-110 transition-all"
               >
                 Search
               </button>
