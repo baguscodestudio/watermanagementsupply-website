@@ -15,6 +15,8 @@ import ChemicalInsert from "./pages/ChemicalInsert";
 import BroadcastCreate from "./pages/BroadcastCreate";
 import ChemicalUpdate from "./pages/ChemicalUpdate";
 import ManageRole from "./pages/ManageRole";
+import CustomerAccount from "./pages/CustomerAccount";
+import CustomerCreate from "./pages/CustomerCreate";
 
 export interface User {
   username: string;
@@ -53,7 +55,10 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route element={<ProtectedRoutes />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/user/role" element={<ManageRole />} />
+              <Route path="/staff/role" element={<ManageRole />} />
+              <Route path="/staff" element={<ManageRole />} />
+              <Route path="/customer" element={<CustomerAccount />} />
+              <Route path="/customer/create" element={<CustomerCreate />} />
               <Route path="/broadcast" element={<BroadcastCreate />} />
               <Route path="/equipment" element={<Equipment />} />
               <Route path="/equipment/insert" element={<EquipmentCreate />} />

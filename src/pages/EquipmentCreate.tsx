@@ -10,6 +10,7 @@ const EquipmentCreate = () => {
     installationDate: "",
     guaranteeDate: "",
     hardwareSpec: "",
+    cost: 0,
     type: "",
   });
 
@@ -19,7 +20,7 @@ const EquipmentCreate = () => {
     event.preventDefault();
     axios
       .post(
-        "http://localhost:5000/api/Equipment/Insert",
+        "http://localhost:5000/api/Equipment",
         {
           ...equipment,
         },
@@ -94,10 +95,17 @@ const EquipmentCreate = () => {
             />
           </div>
           <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Replacement period:</div>
+            <div className="text-lg">Cost:</div>
             <input
-              name="replacement-period"
-              disabled
+              name="cost"
+              type="number"
+              step="0.01"
+              onChange={(event) =>
+                setEquipment({
+                  ...equipment,
+                  cost: parseFloat(event.currentTarget.value),
+                })
+              }
               className="w-56 border-2 px-2 border-black bg-transparent disabled:bg-neutral-100"
             />
           </div>

@@ -3,54 +3,54 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import NavBar from "../components/NavBar";
-import ChecmicalType from "../type/Chemical";
+import CustomerType from "../type/Customer";
 
-const Chemical = () => {
-  const [chemicals, setChemicals] = useState<ChecmicalType[]>([]);
+const CustomerAccount = () => {
+  const [customers, setCustomers] = useState<CustomerType[]>([]);
 
-  const fetchChemicals = () => {
+  const fetchCustomers = () => {
     axios
-      .get("http://localhost:5000/api/Chemical", {
+      .get("http://localhost:5000/api/Customer", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       })
       .then((response) => {
-        setChemicals(response.data);
+        setCustomers(response.data);
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error occured while getting chemicals");
+        toast.error("Error occured while getting customers");
       });
   };
 
   const handleDelete = (id: string) => {
     axios
-      .delete(`http://localhost:5000/api/Chemical/${id}`, {
+      .delete(`http://localhost:5000/api/Customer/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       })
       .then((response) => {
-        toast("Successfully deleted chemical");
-        fetchChemicals();
+        toast("Successfully deleted customer");
+        fetchCustomers();
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error while deleting chemical");
+        toast.error("Error while deleting customer");
       });
   };
 
   useEffect(() => {
-    fetchChemicals();
+    fetchCustomers();
   }, []);
 
   return (
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-32 bg-[#8FBC8F] flex items-center px-12">
-          Chemical Inventory
+        <div className="text-4xl font-bold w-full h-32 bg-[#FFFACD] flex items-center px-12">
+          Manage Customers
         </div>
         <div className="w-full inline-flex">
           {/* <div className="w-96 ml-24 mt-2">
@@ -69,45 +69,49 @@ const Chemical = () => {
             </div>
           </div> */}
           <div className="flex flex-col mx-auto mt-2">
-            <div className="my-4 text-xl">Insert chemical inventory</div>
+            <div className="my-4 text-xl">Create Customer Account</div>
             <Link
-              to="/chemical/insert"
-              id="insert"
+              to="/customer/create"
+              id="create"
               className="bg-transparent rounded-lg px-4 py-1 border-2 border-black text-center"
             >
-              Insert
+              Create
             </Link>
           </div>
         </div>
         <table className="w-full mt-16">
           <thead className="bg-[#00008B] text-white text-lg font-thin h-10">
             <tr>
-              <th className="border-x-2">Chemical ID</th>
-              <th className="border-x-2">Chemical name</th>
-              <th className="border-x-2">Chemical quantity</th>
-              <th className="border-x-2">Chemical measure</th>
-              <th className="border-x-2">Chemical usage description</th>
+              <th className="border-x-2">Customer ID</th>
+              <th className="border-x-2">Customer username</th>
+              <th className="border-x-2">Customer name</th>
+              <th className="border-x-2">Gender</th>
+              <th className="border-x-2">Phone number</th>
+              <th className="border-x-2">Email address</th>
+              <th className="border-x-2">Last Maintenance</th>
               <th className="border-x-2">Action</th>
             </tr>
           </thead>
           <tbody>
-            {chemicals.map((chemical, index) => (
+            {customers.map((customer, index) => (
               <tr
                 key={index}
                 className="odd:bg-[#E5E5E5] even:bg-white h-8 text-center"
               >
-                <td>{chemical.chemicalId}</td>
-                <td>{chemical.chemicalName}</td>
-                <td>{chemical.quantity}</td>
-                <td>{chemical.measureUnit}</td>
-                <td>{chemical.usageDescription}</td>
+                <td>{customer.userId}</td>
+                <td>{customer.username}</td>
+                <td>{customer.fullName}</td>
+                <td>{customer.gender === "M" ? "Male" : "Female"}</td>
+                <td>{customer.phone}</td>
+                <td>{customer.email}</td>
+                <td>{new Date(customer.lastMaintenance).toDateString()}</td>
                 <td>
-                  <Link
-                    to={`/chemical/update/${chemical.chemicalId}`}
+                  <button
+                    onClick={() => handleDelete(customer.userId)}
                     className="underline underline-offset-2"
                   >
-                    Update
-                  </Link>
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -118,4 +122,4 @@ const Chemical = () => {
   );
 };
 
-export default Chemical;
+export default CustomerAccount;

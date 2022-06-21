@@ -2,8 +2,10 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Menu } from "@styled-icons/entypo/Menu";
 import NavBar from "../components/NavBar";
 import EquipmentType from "../type/Equipment";
+import EquipmentCard from "../components/EquipmentCard";
 
 const Equipment = () => {
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
@@ -12,7 +14,7 @@ const Equipment = () => {
 
   const fetchEquipments = () => {
     axios
-      .get("http://localhost:5000/api/Equipment/FetchAll", {
+      .get("http://localhost:5000/api/Equipment/", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -31,23 +33,6 @@ const Equipment = () => {
     setFinalSearch(search);
   };
 
-  const handleDelete = (id: string) => {
-    axios
-      .delete(`http://localhost:5000/api/Equipment/Delete/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      })
-      .then((response) => {
-        toast("Successfully deleted Equipment");
-        fetchEquipments();
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error("Error while deleting equipment");
-      });
-  };
-
   useEffect(() => {
     fetchEquipments();
   }, []);
@@ -59,80 +44,58 @@ const Equipment = () => {
         <div className="text-4xl font-bold w-full h-32 bg-[#BC8F8F] flex items-center px-12">
           Equipment
         </div>
-        <div className="w-full inline-flex">
-          <div className="w-96 ml-24 mt-2">
-            <div className="text-xl my-4">Equipment Search</div>
-            <form
-              onSubmit={(event) => handleSearch(event)}
-              className="border-2 border-black w-full items-center inline-flex p-4 justify-between"
-            >
-              <input
-                placeholder="Search for equipment name"
-                onChange={(event) => setSearch(event.currentTarget.value)}
-                id="search"
-                className="border-2 border-black h-8 px-2 py-1"
-              />
-              <button
-                type="submit"
-                className="bg-transparent rounded-lg px-4 py-1 border-2 border-black hover:bg-zinc-700 hover:scale-110 transition-all"
+        <div className="flex">
+          <div className="w-1/5 p-4">
+            <div className="inline-flex w-full text-2xl items-center">
+              <Menu size="24" className="mr-2" />
+              Menu
+            </div>
+            <div className="w-full mt-2 p-2 flex flex-col border-[2px] border-black rounded-lg lg:min-h-[30rem]">
+              <form
+                onSubmit={(event) => handleSearch(event)}
+                className="w-full flex px-4 my-2 flex-col"
               >
-                Search
-              </button>
-            </form>
+                <input
+                  placeholder="Search for equipment name"
+                  onChange={(event) => setSearch(event.currentTarget.value)}
+                  id="search"
+                  className="border-[2px] border-black h-8 px-2 py-1"
+                />
+                <button
+                  type="submit"
+                  className="bg-transparent rounded-lg px-4 py-1 border-2 w-fit mt-2 border-black hover:scale-105 transition-transform"
+                >
+                  Search
+                </button>
+              </form>
+              <Link
+                to="/equipment/insert"
+                id="insert"
+                className="bg-transparent rounded-lg px-4 mx-4 my-2 w-fit py-1 border-2 border-black hover:scale-105 transition-transform"
+              >
+                Insert Equipment
+              </Link>
+            </div>
           </div>
-          <div className="flex flex-col mx-auto mt-2">
-            <div className="my-4 text-xl">Insert Equipment</div>
-            <Link
-              to="/equipment/insert"
-              id="insert"
-              className="bg-transparent rounded-lg px-4 py-1 border-2 border-black text-center"
-            >
-              Insert
-            </Link>
+          <div className="flex w-4/5 mt-12 pl-4 h-[60vh] overflow-auto">
+            <div className="grid gap-6 grid-cols-2 w-[95%]">
+              {equipments
+                .filter((equipment) =>
+                  equipment.equipmentName
+                    .toLowerCase()
+                    .includes(finalSearch.toLowerCase())
+                )
+                .map((equipment, index) => (
+                  <EquipmentCard
+                    key={index}
+                    equipment={equipment}
+                    fetchEquipments={fetchEquipments}
+                  />
+                ))}
+            </div>
+            <div className="w-[16px] ml-auto mr-4 bg-neutral-300 h-full"></div>
           </div>
         </div>
-        <table className="w-full mt-16">
-          <thead className="bg-[#00008B] text-white text-lg font-thin h-10">
-            <tr>
-              <th className="border-x-2">Equipment ID</th>
-              <th className="border-x-2">Equipment name</th>
-              <th className="border-x-2">Installation date</th>
-              <th className="border-x-2">Guarantee</th>
-              <th className="border-x-2">Replacement period</th>
-              <th className="border-x-2">Hardware Specification</th>
-              <th className="border-x-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {equipments
-              .filter((equipment) =>
-                equipment.equipmentName
-                  .toLowerCase()
-                  .includes(finalSearch.toLowerCase())
-              )
-              .map((equipment, index) => (
-                <tr
-                  key={index}
-                  className="odd:bg-[#E5E5E5] even:bg-white h-8 text-center"
-                >
-                  <td>{equipment.equipmentId}</td>
-                  <td>{equipment.equipmentName}</td>
-                  <td>{new Date(equipment.installationDate).toDateString()}</td>
-                  <td>{new Date(equipment.guaranteeDate).toDateString()}</td>
-                  <td></td>
-                  <td>{equipment.hardwareSpec}</td>
-                  <td>
-                    <button
-                      className="underline underline-offset-2"
-                      onClick={() => handleDelete(equipment.equipmentId)}
-                    >
-                      Remove
-                    </button>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
       </div>
     </>
   );

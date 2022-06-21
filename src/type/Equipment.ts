@@ -5,4 +5,5 @@ export default interface EquipmentType {
   hardwareSpec: string;
   type: string;
   installationDate: string;
+  cost: number;
 }

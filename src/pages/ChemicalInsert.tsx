@@ -18,7 +18,7 @@ const ChemicalInsert = () => {
     event.preventDefault();
     axios
       .post(
-        "http://localhost:5000/api/Chemical/Insert",
+        "http://localhost:5000/api/Chemical",
         {
           ...chemical,
         },
