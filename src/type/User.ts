@@ -1,4 +1,4 @@
-export default interface CustomerType {
+export default interface UserType {
   userId: string;
   username: string;
   password: string;
@@ -8,5 +8,4 @@ export default interface CustomerType {
   email: string;
   phone: string;
   type: string;
-  lastMaintenance: string;
 }

@@ -4,30 +4,30 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import NavBar from "../components/NavBar";
 
-const CustomerCreate = () => {
+const StaffCreate = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [customer, setCustomer] = useState({
+  const [staff, setStaff] = useState({
     username: "",
     password: "",
     fullName: "",
     gender: "M",
     email: "",
     phone: "",
-    type: "Customer",
+    type: "Staff",
   });
 
   const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (customer.password !== confirmPassword) {
+    if (staff.password !== confirmPassword) {
       toast.error("Password does not match!");
     } else {
       axios
         .post(
           "http://localhost:5000/api/Customer",
           {
-            ...customer,
+            ...staff,
           },
           {
             headers: {
@@ -36,12 +36,12 @@ const CustomerCreate = () => {
           }
         )
         .then((response) => {
-          toast("Successfully created customer!");
-          navigate("/customer");
+          toast("Successfully created staff!");
+          navigate("/staff");
         })
         .catch((err) => {
           console.log(err);
-          toast.error("Error while inserting customer");
+          toast.error("Error while inserting staff");
         });
     }
   };
@@ -51,11 +51,11 @@ const CustomerCreate = () => {
       <NavBar />
       <div className="w-full">
         <div className="text-4xl font-bold w-full h-32 bg-[#D8BFD8] flex items-center px-12">
-          Customer
+          Staff
         </div>
         <form
           className="flex flex-col ml-20 mt-24"
-          id="customer-info"
+          id="staff-info"
           onSubmit={(event) => handleSubmit(event)}
         >
           <div className="text-2xl mb-14 underline">Personal Information</div>
@@ -64,8 +64,8 @@ const CustomerCreate = () => {
             <input
               name="username"
               onChange={(event) =>
-                setCustomer({
-                  ...customer,
+                setStaff({
+                  ...staff,
                   username: event.currentTarget.value,
                 })
               }
@@ -77,8 +77,8 @@ const CustomerCreate = () => {
             <input
               name="full-name"
               onChange={(event) =>
-                setCustomer({
-                  ...customer,
+                setStaff({
+                  ...staff,
                   fullName: event.currentTarget.value,
                 })
               }
@@ -93,8 +93,8 @@ const CustomerCreate = () => {
                   type="radio"
                   name="gender"
                   onChange={(event) =>
-                    setCustomer({
-                      ...customer,
+                    setStaff({
+                      ...staff,
                       gender: "M",
                     })
                   }
@@ -107,8 +107,8 @@ const CustomerCreate = () => {
                   type="radio"
                   name="gender"
                   onChange={(event) =>
-                    setCustomer({
-                      ...customer,
+                    setStaff({
+                      ...staff,
                       gender: "F",
                     })
                   }
@@ -124,8 +124,8 @@ const CustomerCreate = () => {
               type="password"
               pattern="^(?=\P{Ll}*\p{Ll})(?=\P{Lu}*\p{Lu})(?=\P{N}*\p{N})(?=[\p{L}\p{N}]*[^\p{L}\p{N}])[\s\S]{8,}$"
               onChange={(event) =>
-                setCustomer({
-                  ...customer,
+                setStaff({
+                  ...staff,
                   password: event.currentTarget.value,
                 })
               }
@@ -149,8 +149,8 @@ const CustomerCreate = () => {
             <input
               name="phone-number"
               onChange={(event) =>
-                setCustomer({
-                  ...customer,
+                setStaff({
+                  ...staff,
                   phone: event.currentTarget.value,
                 })
               }
@@ -163,8 +163,8 @@ const CustomerCreate = () => {
               name="email"
               type="email"
               onChange={(event) =>
-                setCustomer({
-                  ...customer,
+                setStaff({
+                  ...staff,
                   email: event.currentTarget.value,
                 })
               }
@@ -179,7 +179,7 @@ const CustomerCreate = () => {
               Submit
             </button>
             <Link
-              to="/customer"
+              to="/staff"
               className="rounded-lg border-black bg-transparent border-2 px-4 py-1"
             >
               Cancel
@@ -191,4 +191,4 @@ const CustomerCreate = () => {
   );
 };
 
-export default CustomerCreate;
+export default StaffCreate;

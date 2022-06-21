@@ -41,7 +41,7 @@ const ChemicalUpdate = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     axios
-      .patch(
+      .put(
         "http://localhost:5000/api/Chemical/Update",
         {
           chemicalId: id,
