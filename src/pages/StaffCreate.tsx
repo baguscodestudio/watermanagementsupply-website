@@ -13,6 +13,7 @@ const StaffCreate = () => {
     gender: "M",
     email: "",
     phone: "",
+    staffRole: "",
     type: "Staff",
   });
 
@@ -25,7 +26,7 @@ const StaffCreate = () => {
     } else {
       axios
         .post(
-          "http://localhost:5000/api/Customer",
+          "http://localhost:5000/api/Staff",
           {
             ...staff,
           },
@@ -166,6 +167,19 @@ const StaffCreate = () => {
                 setStaff({
                   ...staff,
                   email: event.currentTarget.value,
+                })
+              }
+              className="w-56 border-2 px-2 border-black bg-transparent disabled:bg-neutral-100"
+            />
+          </div>
+          <div className="my-2 w-[27rem] inline-flex justify-between">
+            <div className="text-lg">Role:</div>
+            <input
+              name="role"
+              onChange={(event) =>
+                setStaff({
+                  ...staff,
+                  staffRole: event.currentTarget.value,
                 })
               }
               className="w-56 border-2 px-2 border-black bg-transparent disabled:bg-neutral-100"

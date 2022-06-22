@@ -93,6 +93,7 @@ const StaffAccount = () => {
               <th className="border-x-2">Phone number</th>
               <th className="border-x-2">Email address</th>
               <th className="border-x-2">Staff Role</th>
+              <th className="border-x-2">Update</th>
               <th className="border-x-2">Action</th>
             </tr>
           </thead>
@@ -109,6 +110,14 @@ const StaffAccount = () => {
                 <td>{staff.phone}</td>
                 <td>{staff.email}</td>
                 <td>{staff.staffRole}</td>
+                <td>
+                  <Link
+                    to={`/staff/update/${staff.userId}`}
+                    className="underline underline-offset-2"
+                  >
+                    Update
+                  </Link>
+                </td>
                 <td>
                   <button
                     onClick={() => handleDelete(staff.userId)}

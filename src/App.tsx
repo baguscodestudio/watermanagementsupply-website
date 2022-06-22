@@ -19,6 +19,7 @@ import CustomerAccount from "./pages/CustomerAccount";
 import CustomerCreate from "./pages/CustomerCreate";
 import StaffAccount from "./pages/StaffAccount";
 import StaffCreate from "./pages/StaffCreate";
+import StaffUpdate from "./pages/StaffUpdate";
 
 export interface User {
   username: string;
@@ -60,6 +61,7 @@ function App() {
               <Route path="/staff/role" element={<ManageRole />} />
               <Route path="/staff" element={<StaffAccount />} />
               <Route path="/staff/create" element={<StaffCreate />} />
+              <Route path="/staff/update/:staffId" element={<StaffUpdate />} />
               <Route path="/customer" element={<CustomerAccount />} />
               <Route path="/customer/create" element={<CustomerCreate />} />
               <Route path="/broadcast" element={<BroadcastCreate />} />
