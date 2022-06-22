@@ -23,7 +23,7 @@ const ChemicalUpdate = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/Chemical/Fetch/Id/${id}`, {
+      .get(`http://localhost:5000/api/Chemical/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },

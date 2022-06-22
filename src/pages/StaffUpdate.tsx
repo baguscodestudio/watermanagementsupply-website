@@ -213,7 +213,7 @@ const StaffUpdate = () => {
                 Submit
               </button>
               <Link
-                to="/chemical"
+                to="/staff"
                 className="rounded-lg border-black bg-transparent border-2 px-4 py-1"
               >
                 Cancel
