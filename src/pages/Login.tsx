@@ -13,7 +13,7 @@ const Login = () => {
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     axios
-      .post("http://localhost:5000/api/Login", {
+      .post("http://localhost:5000/api/Staff/Login", {
         username: username,
         password: password,
       })

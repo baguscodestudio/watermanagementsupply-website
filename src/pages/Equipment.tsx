@@ -41,7 +41,7 @@ const Equipment = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-32 bg-[#BC8F8F] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-44 bg-[#BC8F8F] flex items-center px-12">
           Equipment
         </div>
         <div className="flex">

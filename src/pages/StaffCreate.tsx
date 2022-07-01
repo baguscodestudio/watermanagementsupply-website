@@ -51,7 +51,7 @@ const StaffCreate = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-32 bg-[#D8BFD8] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-44 bg-[#D8BFD8] flex items-center px-12">
           Staff
         </div>
         <form
@@ -64,6 +64,7 @@ const StaffCreate = () => {
             <div className="text-lg">Username:</div>
             <input
               name="username"
+              required
               onChange={(event) =>
                 setStaff({
                   ...staff,
@@ -77,6 +78,7 @@ const StaffCreate = () => {
             <div className="text-lg">Name:</div>
             <input
               name="full-name"
+              required
               onChange={(event) =>
                 setStaff({
                   ...staff,
@@ -123,6 +125,7 @@ const StaffCreate = () => {
             <div className="text-lg">Password:</div>
             <input
               type="password"
+              required
               pattern="^(?=\P{Ll}*\p{Ll})(?=\P{Lu}*\p{Lu})(?=\P{N}*\p{N})(?=[\p{L}\p{N}]*[^\p{L}\p{N}])[\s\S]{8,}$"
               onChange={(event) =>
                 setStaff({
@@ -138,6 +141,7 @@ const StaffCreate = () => {
             <div className="text-lg">Confirm password:</div>
             <input
               type="password"
+              required
               onChange={(event) =>
                 setConfirmPassword(event.currentTarget.value)
               }
@@ -149,6 +153,7 @@ const StaffCreate = () => {
             <div className="text-lg">Phone number:</div>
             <input
               name="phone-number"
+              required
               onChange={(event) =>
                 setStaff({
                   ...staff,
@@ -162,6 +167,7 @@ const StaffCreate = () => {
             <div className="text-lg">Email:</div>
             <input
               name="email"
+              required
               type="email"
               onChange={(event) =>
                 setStaff({

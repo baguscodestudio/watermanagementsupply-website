@@ -14,15 +14,7 @@ const StaffUpdate = () => {
     email: "",
     phone: "",
     type: "Staff",
-  });
-  const [previousStaff, setPreviousStaff] = useState({
-    username: "",
-    password: "",
-    fullName: "",
-    gender: "M",
-    email: "",
-    phone: "",
-    type: "Staff",
+    staffRole: "",
   });
   const params = useParams();
   const id = params.staffId;
@@ -36,8 +28,6 @@ const StaffUpdate = () => {
         },
       })
       .then((response) => {
-        // console.log(response);
-        setPreviousStaff(response.data);
         setStaff(response.data);
       })
       .catch((err) => {
@@ -79,7 +69,7 @@ const StaffUpdate = () => {
     <>
       <NavBar />
       <div className="w-full grid grid-cols-2">
-        <div className="text-4xl font-bold w-full h-32 bg-[#FFA500] flex items-center px-12 col-span-2">
+        <div className="text-4xl font-bold w-full h-44 bg-[#FFA500] flex items-center px-12 col-span-2">
           Staff
         </div>
         <div className="">
@@ -196,6 +186,20 @@ const StaffUpdate = () => {
                 name="email"
                 value={staff.email}
                 type="email"
+                onChange={(event) =>
+                  setStaff({
+                    ...staff,
+                    email: event.currentTarget.value,
+                  })
+                }
+                className="w-56 border-2 px-2 border-black bg-transparent disabled:bg-neutral-100"
+              />
+            </div>
+            <div className="my-2 w-[27rem] inline-flex justify-between">
+              <div className="text-lg">Staff Role:</div>
+              <input
+                name="staffRole"
+                value={staff.staffRole}
                 onChange={(event) =>
                   setStaff({
                     ...staff,

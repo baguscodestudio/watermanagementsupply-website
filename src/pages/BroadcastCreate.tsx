@@ -17,7 +17,7 @@ const BroadcastCreate = () => {
     event.preventDefault();
     axios
       .post(
-        "http://localhost:5000/api/BroadcastAlert/Insert",
+        "http://localhost:5000/api/BroadcastAlert",
         {
           ...broadcast,
         },
@@ -29,7 +29,7 @@ const BroadcastCreate = () => {
       )
       .then((response) => {
         toast("Successfully announced broadcast!");
-        navigate("/");
+        navigate("/broadcast");
       })
       .catch((err) => {
         console.log(err);
@@ -41,7 +41,7 @@ const BroadcastCreate = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-32 bg-[#FA8072] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-44 bg-[#FA8072] flex items-center px-12">
           Broadcast Alert
         </div>
         <form
@@ -95,7 +95,7 @@ const BroadcastCreate = () => {
               Submit
             </button>
             <Link
-              to="/"
+              to="/broadcast"
               className="rounded-lg border-black bg-transparent border-2 px-4 py-1"
             >
               Cancel

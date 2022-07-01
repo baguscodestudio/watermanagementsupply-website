@@ -50,7 +50,7 @@ const CustomerCreate = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-32 bg-[#D8BFD8] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-44 bg-[#D8BFD8] flex items-center px-12">
           Customer
         </div>
         <form

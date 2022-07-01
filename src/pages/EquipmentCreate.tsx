@@ -44,7 +44,7 @@ const EquipmentCreate = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-32 bg-[#E9967A] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-44 bg-[#E9967A] flex items-center px-12">
           Equipment
         </div>
         <form

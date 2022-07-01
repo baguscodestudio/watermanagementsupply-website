@@ -67,7 +67,7 @@ const ChemicalUpdate = () => {
     <>
       <NavBar />
       <div className="w-full grid grid-cols-2">
-        <div className="text-4xl font-bold w-full h-32 bg-[#FFA500] flex items-center px-12 col-span-2">
+        <div className="text-4xl font-bold w-full h-44 bg-[#FFA500] flex items-center px-12 col-span-2">
           Chemical Inventory
         </div>
         <div className="">

@@ -5,12 +5,8 @@ import { toast } from "react-toastify";
 import NavBar from "../components/NavBar";
 import UserType from "../type/User";
 
-interface StaffType extends UserType {
-  staffRole: string;
-}
-
 const StaffAccount = () => {
-  const [staffs, setStaffs] = useState<StaffType[]>([]);
+  const [staffs, setStaffs] = useState<UserType[]>([]);
 
   const fetchStaffs = () => {
     axios
@@ -53,7 +49,7 @@ const StaffAccount = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-32 bg-[#FFFACD] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-44 bg-[#FFFACD] flex items-center px-12">
           Manage Staffs
         </div>
         <div className="w-full inline-flex">
