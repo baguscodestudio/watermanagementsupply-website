@@ -28,6 +28,7 @@ import WaterUsage from "./pages/WaterUsage";
 import ViewIndividualWaterUsage from "./pages/ViewIndividualWaterUsage";
 import Profile from "./pages/Profile";
 import UserType from "./type/User";
+import CustomerUpdate from "./pages/CustomerUpdate";
 Chart.register(...registerables);
 
 const userObj = {
@@ -88,6 +89,10 @@ function App() {
               <Route path="/staff/update/:staffId" element={<StaffUpdate />} />
               <Route path="/customer" element={<CustomerAccount />} />
               <Route path="/customer/create" element={<CustomerCreate />} />
+              <Route
+                path="/customer/update/:customerId"
+                element={<CustomerUpdate />}
+              />
               <Route path="/broadcast" element={<Broadcast />} />
               <Route path="/broadcast/create" element={<BroadcastCreate />} />
               <Route path="/equipment" element={<Equipment />} />

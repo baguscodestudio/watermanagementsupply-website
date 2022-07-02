@@ -56,7 +56,8 @@ const WaterUsage = () => {
     }
     return arr;
   };
-  const getPumpName = async (customerId: string) => {
+
+  const getCustomerName = async (customerId: string) => {
     let response = await axios.get(
       `http://localhost:5000/api/Customer/${customerId}`,
       {
@@ -65,7 +66,7 @@ const WaterUsage = () => {
         },
       }
     );
-    return response.data[0].equipmentName;
+    return response.data.fullName;
   };
 
   const labels: string[] = getDaysArray(previousDateString, currentDateString);
@@ -79,17 +80,17 @@ const WaterUsage = () => {
       let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
         Math.random() * 255
       )},${Math.floor(Math.random() * 255)})`;
-      // getPumpName(waterPumpUsage.customerId).then((name) => {
-      setDataValue({
-        ...dataValue,
-        [waterPumpUsage.customerId]: {
-          label: waterPumpUsage.customerId,
-          data: [average],
-          borderColor: color,
-          backgroundColor: color,
-        },
+      getCustomerName(waterPumpUsage.customerId).then((name) => {
+        setDataValue({
+          ...dataValue,
+          [waterPumpUsage.customerId]: {
+            label: name,
+            data: [average],
+            borderColor: color,
+            backgroundColor: color,
+          },
+        });
       });
-      // });
     }
   });
   const data = {
@@ -105,7 +106,7 @@ const WaterUsage = () => {
       },
       title: {
         display: true,
-        text: "All Pump Usage",
+        text: "All Customer Water Usage",
       },
     },
   };

@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { User, UserContext } from "./App";
+import { UserContext } from "./App";
+import UserType from "./type/User";
 
 const ProtectedRoutes = () => {
   const [access, setAccess] = useState(false);
@@ -19,7 +20,7 @@ const ProtectedRoutes = () => {
         if (response.status === 200) {
           setAccess(true);
           setLoading(false);
-          setUser(JSON.parse(localStorage.getItem("userData")!) as User);
+          setUser(JSON.parse(localStorage.getItem("userData")!) as UserType);
         } else {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("userData");

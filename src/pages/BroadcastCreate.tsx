@@ -62,6 +62,7 @@ const BroadcastCreate = () => {
           <div className="my-2 w-[27rem] inline-flex justify-between">
             <div className="text-lg">Title:</div>
             <input
+              required
               onChange={(event) =>
                 setBroadcast({
                   ...broadcast,
@@ -75,6 +76,7 @@ const BroadcastCreate = () => {
           <div className="my-2 w-[27rem] inline-flex justify-between">
             <div className="text-lg">Message:</div>
             <textarea
+              required
               name="message"
               rows={6}
               cols={75}

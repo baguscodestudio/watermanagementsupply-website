@@ -7,6 +7,7 @@ import NavBar from "../components/NavBar";
 const ChemicalInsert = () => {
   const [chemical, setChemical] = useState({
     chemicalName: "",
+    minQuantity: 0,
     quantity: 0,
     measureUnit: "",
     usageDescription: "",
@@ -63,6 +64,20 @@ const ChemicalInsert = () => {
                   chemicalName: event.currentTarget.value,
                 })
               }
+              className="w-56 border-2 px-2 border-black bg-transparent"
+            />
+          </div>
+          <div className="my-2 w-[27rem] inline-flex justify-between">
+            <div className="text-lg">Chemical min quantity:</div>
+            <input
+              type="number"
+              onChange={(event) =>
+                setChemical({
+                  ...chemical,
+                  minQuantity: parseInt(event.currentTarget.value),
+                })
+              }
+              name="minQuantity"
               className="w-56 border-2 px-2 border-black bg-transparent"
             />
           </div>

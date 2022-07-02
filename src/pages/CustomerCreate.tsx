@@ -63,6 +63,7 @@ const CustomerCreate = () => {
             <div className="text-lg">Username:</div>
             <input
               name="username"
+              required
               onChange={(event) =>
                 setCustomer({
                   ...customer,
@@ -76,6 +77,7 @@ const CustomerCreate = () => {
             <div className="text-lg">Name:</div>
             <input
               name="full-name"
+              required
               onChange={(event) =>
                 setCustomer({
                   ...customer,
@@ -122,6 +124,7 @@ const CustomerCreate = () => {
             <div className="text-lg">Password:</div>
             <input
               type="password"
+              required
               pattern="^(?=\P{Ll}*\p{Ll})(?=\P{Lu}*\p{Lu})(?=\P{N}*\p{N})(?=[\p{L}\p{N}]*[^\p{L}\p{N}])[\s\S]{8,}$"
               onChange={(event) =>
                 setCustomer({
@@ -137,6 +140,7 @@ const CustomerCreate = () => {
             <div className="text-lg">Confirm password:</div>
             <input
               type="password"
+              required
               onChange={(event) =>
                 setConfirmPassword(event.currentTarget.value)
               }
@@ -148,6 +152,7 @@ const CustomerCreate = () => {
             <div className="text-lg">Phone number:</div>
             <input
               name="phone-number"
+              required
               onChange={(event) =>
                 setCustomer({
                   ...customer,
@@ -161,6 +166,7 @@ const CustomerCreate = () => {
             <div className="text-lg">Email:</div>
             <input
               name="email"
+              required
               type="email"
               onChange={(event) =>
                 setCustomer({

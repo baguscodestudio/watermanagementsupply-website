@@ -3,11 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import NavBar from "../components/NavBar";
-import UserType from "../type/User";
-
-interface CustomerType extends UserType {
-  lastMaintenance: string;
-}
+import CustomerType from "../type/Customer";
 
 const CustomerAccount = () => {
   const [customers, setCustomers] = useState<CustomerType[]>([]);
@@ -93,6 +89,7 @@ const CustomerAccount = () => {
               <th className="border-x-2">Phone number</th>
               <th className="border-x-2">Email address</th>
               <th className="border-x-2">Last Maintenance</th>
+              <th className="border-x-2">Update</th>
               <th className="border-x-2">Action</th>
             </tr>
           </thead>
@@ -109,6 +106,14 @@ const CustomerAccount = () => {
                 <td>{customer.phone}</td>
                 <td>{customer.email}</td>
                 <td>{new Date(customer.lastMaintenance).toDateString()}</td>
+                <td>
+                  <Link
+                    to={`/customer/update/${customer.userId}`}
+                    className="underline underline-offset-2"
+                  >
+                    Update
+                  </Link>
+                </td>
                 <td>
                   <button
                     onClick={() => handleDelete(customer.userId)}

@@ -7,12 +7,14 @@ import NavBar from "../components/NavBar";
 const ChemicalUpdate = () => {
   const [chemical, setChemical] = useState({
     chemicalName: "",
+    minQuantity: 0,
     quantity: 0,
     measureUnit: "",
     usageDescription: "",
   });
   const [previousChemical, setPreviousChemical] = useState({
     chemicalName: "",
+    minQuantity: 0,
     quantity: 0,
     measureUnit: "",
     usageDescription: "",
@@ -42,7 +44,7 @@ const ChemicalUpdate = () => {
     event.preventDefault();
     axios
       .put(
-        "http://localhost:5000/api/Chemical/Update",
+        "http://localhost:5000/api/Chemical",
         {
           chemicalId: id,
           ...chemical,
@@ -59,7 +61,7 @@ const ChemicalUpdate = () => {
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error while inserting chemical");
+        toast.error("Error while updating chemical");
       });
   };
 
@@ -89,6 +91,20 @@ const ChemicalUpdate = () => {
                     chemicalName: event.currentTarget.value,
                   })
                 }
+                className="w-56 border-2 px-2 border-black bg-transparent"
+              />
+            </div>
+            <div className="my-2 w-[27rem] inline-flex justify-between">
+              <div className="text-lg">Chemical min quantity:</div>
+              <input
+                type="number"
+                onChange={(event) =>
+                  setChemical({
+                    ...chemical,
+                    minQuantity: parseInt(event.currentTarget.value),
+                  })
+                }
+                name="minQuantity"
                 className="w-56 border-2 px-2 border-black bg-transparent"
               />
             </div>

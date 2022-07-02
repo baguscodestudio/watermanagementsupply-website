@@ -147,7 +147,7 @@ const ViewIndividualWaterUsage = () => {
               />
             </div>
             <Link
-              to="/pumpusage"
+              to="/waterusage"
               className="rounded-lg border-black bg-white border-2 px-4 py-1 ml-4 mt-4"
             >
               Back

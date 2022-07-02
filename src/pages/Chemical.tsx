@@ -85,8 +85,10 @@ const Chemical = () => {
               <th className="border-x-2">Chemical ID</th>
               <th className="border-x-2">Chemical name</th>
               <th className="border-x-2">Chemical quantity</th>
+              <th className="border-x-2">Chemical min quantity</th>
               <th className="border-x-2">Chemical measure</th>
               <th className="border-x-2">Chemical usage description</th>
+              <th className="border-x-2">Update</th>
               <th className="border-x-2">Action</th>
             </tr>
           </thead>
@@ -98,6 +100,7 @@ const Chemical = () => {
               >
                 <td>{chemical.chemicalId}</td>
                 <td>{chemical.chemicalName}</td>
+                <td>{chemical.minQuantity}</td>
                 <td>{chemical.quantity}</td>
                 <td>{chemical.measureUnit}</td>
                 <td>{chemical.usageDescription}</td>
@@ -108,6 +111,14 @@ const Chemical = () => {
                   >
                     Update
                   </Link>
+                </td>
+                <td>
+                  <button
+                    onClick={() => handleDelete(chemical.chemicalId)}
+                    className="underline underline-offset-2"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
