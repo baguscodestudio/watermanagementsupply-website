@@ -64,6 +64,7 @@ const StaffCreate = () => {
             <div className="text-lg">Username:</div>
             <input
               name="username"
+              pattern="^.*[a-zA-Z]+.*$"
               required
               onChange={(event) =>
                 setStaff({
@@ -79,6 +80,7 @@ const StaffCreate = () => {
             <input
               name="full-name"
               required
+              pattern="^.*[a-zA-Z]+.*$"
               onChange={(event) =>
                 setStaff({
                   ...staff,

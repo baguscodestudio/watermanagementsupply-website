@@ -64,6 +64,7 @@ const CustomerCreate = () => {
             <input
               name="username"
               required
+              pattern="^.*[a-zA-Z]+.*$"
               onChange={(event) =>
                 setCustomer({
                   ...customer,
@@ -78,6 +79,7 @@ const CustomerCreate = () => {
             <input
               name="full-name"
               required
+              pattern="^.*[a-zA-Z]+.*$"
               onChange={(event) =>
                 setCustomer({
                   ...customer,

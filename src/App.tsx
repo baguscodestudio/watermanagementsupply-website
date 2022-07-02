@@ -1,13 +1,14 @@
-import axios from "axios";
 import { useState, createContext } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
-import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
+
 import ProtectedRoutes from "./ProtectedRoutes";
 import "react-toastify/dist/ReactToastify.css";
 
+// Pages
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
 import Equipment from "./pages/Equipment";
 import EquipmentCreate from "./pages/EquipmentCreate";
 import Chemical from "./pages/Chemical";
@@ -22,13 +23,16 @@ import StaffCreate from "./pages/StaffCreate";
 import StaffUpdate from "./pages/StaffUpdate";
 import Broadcast from "./pages/Broadcast";
 import WaterPumpUsage from "./pages/WaterPumpUsage";
-import { Chart, registerables } from "chart.js";
 import ViewIndividualPumpUsage from "./pages/ViewIndividualPumpUsage";
 import WaterUsage from "./pages/WaterUsage";
 import ViewIndividualWaterUsage from "./pages/ViewIndividualWaterUsage";
 import Profile from "./pages/Profile";
-import UserType from "./type/User";
 import CustomerUpdate from "./pages/CustomerUpdate";
+
+import { Chart, registerables } from "chart.js";
+
+import UserType from "./type/User";
+
 Chart.register(...registerables);
 
 const userObj = {

@@ -181,6 +181,10 @@ const ChemicalUpdate = () => {
                   {previousChemical.chemicalName}
                 </div>
                 <div>
+                  <strong>Chemical min quantity: </strong>
+                  {previousChemical.minQuantity}
+                </div>
+                <div>
                   <strong>Chemical quantity: </strong>
                   {previousChemical.quantity}
                 </div>

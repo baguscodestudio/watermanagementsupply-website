@@ -21,7 +21,7 @@ const NavBar = () => {
       roles: ["CustomerSupport", "UserAdmin"],
       items: [
         {
-          roles: ["CustomerSupport"],
+          roles: ["CustomerSupport", "UserAdmin"],
           label: "Customer Account",
           path: "/customer",
         },
@@ -38,7 +38,7 @@ const NavBar = () => {
       ],
     },
     {
-      title: "User",
+      title: "Assets",
       roles: ["Technician"],
       items: [
         {

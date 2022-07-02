@@ -167,6 +167,13 @@ const CustomerUpdate = () => {
                 <>
                   <input
                     name={updatePage}
+                    pattern={
+                      updatePage === "password"
+                        ? "^(?=P{Ll}*p{Ll})(?=P{Lu}*p{Lu})(?=P{N}*p{N})(?=[p{L}p{N}]*[^p{L}p{N}])[sS]{8,}$"
+                        : updatePage === "fullName"
+                        ? "^.*[a-zA-Z]+.*$"
+                        : ""
+                    }
                     type={
                       updatePage === "lastMaintenance"
                         ? "date"
