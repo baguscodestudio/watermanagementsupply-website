@@ -1,12 +1,13 @@
-import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import NavBar from "../components/NavBar";
-import WaterPumpUsageType from "../type/WaterPumpUsage";
-import { Chart } from "react-chartjs-2";
-import { Chart as ChartJS } from "chart.js";
-import EquipmentType from "../type/Equipment";
+import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import NavBar from '../components/NavBar';
+import WaterPumpUsageType from '../type/WaterPumpUsage';
+import { Chart } from 'react-chartjs-2';
+import { Chart as ChartJS } from 'chart.js';
+import EquipmentType from '../type/Equipment';
+import moment from 'moment';
 
 const ViewIndividualPumpUsage = () => {
   const [waterPumpUsages, setWaterPumpUsages] = useState<WaterPumpUsageType[]>(
@@ -15,102 +16,66 @@ const ViewIndividualPumpUsage = () => {
   const [equipment, setEquipment] = useState<EquipmentType>();
   const currentDate = new Date();
   const previousDate = new Date();
-  const navigate = useNavigate();
   const params = useParams();
   previousDate.setDate(currentDate.getDate() - 7);
   const [currentDateString, setCurrentDateString] = useState(
-    `${currentDate.getFullYear()}-${
-      currentDate.getMonth() < 9
-        ? `0${currentDate.getMonth() + 1}`
-        : currentDate.getMonth() + 1
-    }-${
-      currentDate.getDate() < 10
-        ? `${currentDate.getDate()}`
-        : currentDate.getDate()
-    }`
+    moment().format('YYYY-MM-DD')
   );
   const [previousDateString, setPreviousDateString] = useState(
-    `${previousDate.getFullYear()}-${
-      previousDate.getMonth() < 9
-        ? `0${previousDate.getMonth() + 1}`
-        : previousDate.getMonth() + 1
-    }-${
-      previousDate.getDate() < 10
-        ? `${previousDate.getDate()}`
-        : previousDate.getDate()
-    }`
+    moment().add(-7, 'days').format('YYYY-MM-DD')
   );
   const chartRef = useRef<ChartJS>(null);
 
-  const getDaysArray = function (start: string, end: string) {
-    for (
-      var arr = [], dt = new Date(start);
-      dt <= new Date(end);
-      dt.setDate(dt.getDate() + 1)
-    ) {
-      arr.push(new Date(dt).toLocaleDateString());
-    }
-    return arr;
-  };
-
-  const labels: string[] = getDaysArray(previousDateString, currentDateString);
+  const labels: string[] = [];
   const dataValue: {
-    [key: string]: {
-      label: string;
-      data: number[];
-      borderColor: string;
-      backgroundColor: string;
-    };
+    [key: string]: any;
   } = {};
   waterPumpUsages.map((waterPumpUsage, index) => {
-    let total = 0;
-    waterPumpUsage.data.map((sensordata, i) => (total += sensordata.value));
-    let average = total / waterPumpUsage.data.length;
-    if (dataValue[waterPumpUsage.pumpId]) {
-      dataValue[waterPumpUsage.pumpId].data.push(average);
-    } else {
-      let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
-        Math.random() * 255
-      )},${Math.floor(Math.random() * 255)})`;
-      dataValue[waterPumpUsage.pumpId] = {
-        label: waterPumpUsage.pumpId,
-        data: [average],
-        borderColor: color,
-        backgroundColor: color,
-      };
+    if (waterPumpUsage.pumpId == params.pumpId) {
+      waterPumpUsage.data.map((sensordata, i) => {
+        if (dataValue[waterPumpUsage.pumpId]) {
+          dataValue[waterPumpUsage.pumpId].data.push({
+            x: moment(sensordata.timestamp),
+            y: sensordata.value,
+          });
+        } else {
+          let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
+            Math.random() * 255
+          )},${Math.floor(Math.random() * 255)})`;
+          dataValue[waterPumpUsage.pumpId] = {
+            label: waterPumpUsage.pumpId,
+            data: [
+              {
+                x: moment(sensordata.timestamp),
+                y: sensordata.value,
+              },
+            ],
+            borderColor: color,
+            backgroundColor: color,
+          };
+        }
+      });
     }
   });
+
   const data = {
     labels: labels,
     datasets: Object.keys(dataValue).map((key) => dataValue[key]),
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: equipment?.equipmentName,
-      },
-    },
   };
 
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/Equipment/EquipmentId/${params.pumpId}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => setEquipment(response.data[0]))
-      .catch((err) => toast.error("Error while getting equipment"));
+      .catch((err) => toast.error('Error while getting equipment'));
     axios
       .get(`http://localhost:5000/api/WaterPumpUsage/${params.pumpId}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
         params: {
           fromDate: previousDateString,
@@ -120,9 +85,9 @@ const ViewIndividualPumpUsage = () => {
       .then((response) => setWaterPumpUsages(response.data))
       .catch((err) => {
         console.log(err);
-        toast.error("An error occured while getting Water Pump Usage");
+        toast.error('An error occured while getting Water Pump Usage');
       });
-  }, []);
+  }, [previousDateString, currentDateString]);
 
   return (
     <>
@@ -168,7 +133,30 @@ const ViewIndividualPumpUsage = () => {
               type="line"
               className="w-full h-auto"
               data={data}
-              options={options}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: 'top' as const,
+                  },
+                  title: {
+                    display: true,
+                    text: equipment?.equipmentName,
+                  },
+                },
+                scales: {
+                  x: {
+                    type: 'time',
+                    time: {
+                      unit: 'day',
+                      displayFormats: {
+                        day: 'DD/MM/YYYY',
+                      },
+                      tooltipFormat: 'DD MMM YYYY',
+                    },
+                  },
+                },
+              }}
             />
           </div>
         </div>

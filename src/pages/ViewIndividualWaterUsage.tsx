@@ -1,13 +1,14 @@
-import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import NavBar from "../components/NavBar";
-import WaterPumpUsageType from "../type/WaterPumpUsage";
-import { Chart } from "react-chartjs-2";
-import { Chart as ChartJS } from "chart.js";
-import EquipmentType from "../type/Equipment";
-import WaterUsageType from "../type/WaterUsage";
+import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import NavBar from '../components/NavBar';
+import WaterPumpUsageType from '../type/WaterPumpUsage';
+import { Chart } from 'react-chartjs-2';
+import { Chart as ChartJS } from 'chart.js';
+import EquipmentType from '../type/Equipment';
+import WaterUsageType from '../type/WaterUsage';
+import moment from 'moment';
 
 const ViewIndividualWaterUsage = () => {
   const [waterPumpUsages, setWaterPumpUsages] = useState<WaterUsageType[]>([]);
@@ -18,26 +19,10 @@ const ViewIndividualWaterUsage = () => {
   const params = useParams();
   previousDate.setDate(currentDate.getDate() - 7);
   const [currentDateString, setCurrentDateString] = useState(
-    `${currentDate.getFullYear()}-${
-      currentDate.getMonth() < 9
-        ? `0${currentDate.getMonth() + 1}`
-        : currentDate.getMonth() + 1
-    }-${
-      currentDate.getDate() < 10
-        ? `${currentDate.getDate()}`
-        : currentDate.getDate()
-    }`
+    moment().format('YYYY-MM-DD')
   );
   const [previousDateString, setPreviousDateString] = useState(
-    `${previousDate.getFullYear()}-${
-      previousDate.getMonth() < 9
-        ? `0${previousDate.getMonth() + 1}`
-        : previousDate.getMonth() + 1
-    }-${
-      previousDate.getDate() < 10
-        ? `${previousDate.getDate()}`
-        : previousDate.getDate()
-    }`
+    moment().add(-7, 'days').format('YYYY-MM-DD')
   );
   const chartRef = useRef<ChartJS>(null);
 
@@ -88,7 +73,7 @@ const ViewIndividualWaterUsage = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: "top" as const,
+        position: 'top' as const,
       },
       title: {
         display: true,
@@ -101,7 +86,7 @@ const ViewIndividualWaterUsage = () => {
     axios
       .get(`http://localhost:5000/api/WaterUsage/${params.customerId}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
         params: {
           fromDate: previousDateString,
@@ -111,7 +96,7 @@ const ViewIndividualWaterUsage = () => {
       .then((response) => setWaterPumpUsages(response.data))
       .catch((err) => {
         console.log(err);
-        toast.error("An error occured while getting Water Pump Usage");
+        toast.error('An error occured while getting Water Pump Usage');
       });
   }, []);
 

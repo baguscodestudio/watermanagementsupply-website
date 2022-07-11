@@ -1,96 +1,66 @@
-import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import NavBar from "../components/NavBar";
-import { Chart, getDatasetAtEvent } from "react-chartjs-2";
-import { Chart as ChartJS } from "chart.js";
-import type { InteractionItem } from "chart.js";
-import WaterUsageType from "../type/WaterUsage";
+import axios from 'axios';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import NavBar from '../components/NavBar';
+import { Chart, getDatasetAtEvent } from 'react-chartjs-2';
+import { Chart as ChartJS } from 'chart.js';
+import type { InteractionItem } from 'chart.js';
+import WaterUsageType from '../type/WaterUsage';
+import moment, { Moment } from 'moment';
+import { UserContext } from '../App';
 
 const WaterUsage = () => {
   const [waterPumpUsages, setWaterPumpUsages] = useState<WaterUsageType[]>([]);
-  const [dataValue, setDataValue] = useState<{
-    [key: string]: {
-      label: string;
-      data: number[];
-      borderColor: string;
-      backgroundColor: string;
-    };
-  }>({});
-  const currentDate = new Date();
-  const previousDate = new Date();
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
-  previousDate.setDate(currentDate.getDate() - 7);
   const [currentDateString, setCurrentDateString] = useState(
-    `${currentDate.getFullYear()}-${
-      currentDate.getMonth() < 9
-        ? `0${currentDate.getMonth() + 1}`
-        : currentDate.getMonth() + 1
-    }-${
-      currentDate.getDate() < 10
-        ? `${currentDate.getDate()}`
-        : currentDate.getDate()
-    }`
+    moment().format('YYYY-MM-DD')
   );
   const [previousDateString, setPreviousDateString] = useState(
-    `${previousDate.getFullYear()}-${
-      previousDate.getMonth() < 9
-        ? `0${previousDate.getMonth() + 1}`
-        : previousDate.getMonth() + 1
-    }-${
-      previousDate.getDate() < 10
-        ? `${previousDate.getDate()}`
-        : previousDate.getDate()
-    }`
+    moment().add(-7, 'days').format('YYYY-MM-DD')
   );
   const chartRef = useRef<ChartJS>(null);
 
-  const getDaysArray = function (start: string, end: string) {
-    for (
-      var arr = [], dt = new Date(start);
-      dt <= new Date(end);
-      dt.setDate(dt.getDate() + 1)
-    ) {
-      arr.push(new Date(dt).toLocaleDateString());
-    }
-    return arr;
-  };
+  const dataValue: { [key: string]: any } = {};
 
   const getCustomerName = async (customerId: string) => {
     let response = await axios.get(
       `http://localhost:5000/api/Customer/${customerId}`,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       }
     );
     return response.data.fullName;
   };
 
-  const labels: string[] = getDaysArray(previousDateString, currentDateString);
+  const labels: string[] = [];
   waterPumpUsages.map((waterPumpUsage, index) => {
     let total = 0;
     waterPumpUsage.data.map((sensordata, i) => (total += sensordata.value));
     let average = total / waterPumpUsage.data.length;
     if (dataValue[waterPumpUsage.customerId]) {
-      dataValue[waterPumpUsage.customerId].data.push(average);
+      dataValue[waterPumpUsage.customerId].data.push({
+        x: moment(waterPumpUsage.date),
+        y: average,
+      });
     } else {
       let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
         Math.random() * 255
       )},${Math.floor(Math.random() * 255)})`;
-      getCustomerName(waterPumpUsage.customerId).then((name) => {
-        setDataValue({
-          ...dataValue,
-          [waterPumpUsage.customerId]: {
-            label: name,
-            data: [average],
-            borderColor: color,
-            backgroundColor: color,
+      dataValue[waterPumpUsage.customerId] = {
+        label: waterPumpUsage.customerId,
+        data: [
+          {
+            x: moment(waterPumpUsage.date),
+            y: average,
           },
-        });
-      });
+        ],
+        borderColor: color,
+        backgroundColor: color,
+      };
     }
   });
   const data = {
@@ -98,30 +68,20 @@ const WaterUsage = () => {
     datasets: Object.keys(dataValue).map((key) => dataValue[key]),
   };
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: "All Customer Water Usage",
-      },
-    },
-  };
-
   const onClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     const { current: chart } = chartRef;
-    let items: InteractionItem[] = getDatasetAtEvent(chart!, event);
+    if (!chart) {
+      return;
+    }
+    let items: InteractionItem[] = getDatasetAtEvent(chart, event);
     navigate(`/waterusage/${data.datasets[items[0].datasetIndex].label}`);
   };
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/WaterUsage", {
+      .get('http://localhost:5000/api/WaterUsage', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
         params: {
           fromDate: previousDateString,
@@ -131,9 +91,9 @@ const WaterUsage = () => {
       .then((response) => setWaterPumpUsages(response.data))
       .catch((err) => {
         console.log(err);
-        toast.error("An error occured while getting Water Usage");
+        toast.error('An error occured while getting Water Usage');
       });
-  }, []);
+  }, [previousDateString, currentDateString]);
 
   return (
     <>
@@ -167,14 +127,35 @@ const WaterUsage = () => {
               />
             </div>
             <div className=" mt-4 inline-flex w-full justify-around">
-              <button className="rounded-lg border-black bg-white border-2 px-4 py-1">
-                Yearly
+              <button
+                onClick={() =>
+                  setPreviousDateString(
+                    moment().startOf('year').format('YYYY-MM-DD')
+                  )
+                }
+                className="rounded-lg border-black bg-white border-2 px-4 py-1"
+              >
+                This Year
               </button>
-              <button className="rounded-lg border-black bg-white border-2 px-4 py-1">
-                Monthly
+              <button
+                onClick={() =>
+                  setPreviousDateString(
+                    moment().startOf('month').format('YYYY-MM-DD')
+                  )
+                }
+                className="rounded-lg border-black bg-white border-2 px-4 py-1"
+              >
+                This Month
               </button>
-              <button className="rounded-lg border-black bg-white border-2 px-4 py-1">
-                Weekly
+              <button
+                onClick={() =>
+                  setPreviousDateString(
+                    moment().startOf('week').format('YYYY-MM-DD')
+                  )
+                }
+                className="rounded-lg border-black bg-white border-2 px-4 py-1"
+              >
+                This Week
               </button>
             </div>
           </div>
@@ -184,7 +165,30 @@ const WaterUsage = () => {
               type="line"
               className="w-full h-auto"
               data={data}
-              options={options}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: 'top' as const,
+                  },
+                  title: {
+                    display: true,
+                    text: 'All Customer Water Usage',
+                  },
+                },
+                scales: {
+                  x: {
+                    type: 'time',
+                    time: {
+                      unit: 'day',
+                      displayFormats: {
+                        day: 'DD/MM/YYYY',
+                      },
+                      tooltipFormat: 'DD MMM YYYY',
+                    },
+                  },
+                },
+              }}
               onClick={onClick}
             />
           </div>

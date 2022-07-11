@@ -1,52 +1,52 @@
-import { useState, createContext } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "./App.css";
+import { useState, createContext } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import './App.css';
 
-import ProtectedRoutes from "./ProtectedRoutes";
-import "react-toastify/dist/ReactToastify.css";
+import ProtectedRoutes from './ProtectedRoutes';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Pages
-import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import Equipment from "./pages/Equipment";
-import EquipmentCreate from "./pages/EquipmentCreate";
-import Chemical from "./pages/Chemical";
-import ChemicalInsert from "./pages/ChemicalInsert";
-import BroadcastCreate from "./pages/BroadcastCreate";
-import ChemicalUpdate from "./pages/ChemicalUpdate";
-import ManageRole from "./pages/ManageRole";
-import CustomerAccount from "./pages/CustomerAccount";
-import CustomerCreate from "./pages/CustomerCreate";
-import StaffAccount from "./pages/StaffAccount";
-import StaffCreate from "./pages/StaffCreate";
-import StaffUpdate from "./pages/StaffUpdate";
-import Broadcast from "./pages/Broadcast";
-import WaterPumpUsage from "./pages/WaterPumpUsage";
-import ViewIndividualPumpUsage from "./pages/ViewIndividualPumpUsage";
-import WaterUsage from "./pages/WaterUsage";
-import ViewIndividualWaterUsage from "./pages/ViewIndividualWaterUsage";
-import Profile from "./pages/Profile";
-import CustomerUpdate from "./pages/CustomerUpdate";
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import Equipment from './pages/Equipment';
+import EquipmentCreate from './pages/EquipmentCreate';
+import Chemical from './pages/Chemical';
+import ChemicalInsert from './pages/ChemicalInsert';
+import BroadcastCreate from './pages/BroadcastCreate';
+import ChemicalUpdate from './pages/ChemicalUpdate';
+import ManageRole from './pages/ManageRole';
+import CustomerAccount from './pages/CustomerAccount';
+import CustomerCreate from './pages/CustomerCreate';
+import StaffAccount from './pages/StaffAccount';
+import StaffCreate from './pages/StaffCreate';
+import StaffUpdate from './pages/StaffUpdate';
+import Broadcast from './pages/Broadcast';
+import WaterPumpUsage from './pages/WaterPumpUsage';
+import ViewIndividualPumpUsage from './pages/ViewIndividualPumpUsage';
+import WaterUsage from './pages/WaterUsage';
+import ViewIndividualWaterUsage from './pages/ViewIndividualWaterUsage';
+import Profile from './pages/Profile';
+import CustomerUpdate from './pages/CustomerUpdate';
 
-import { Chart, registerables } from "chart.js";
+import { Chart, registerables } from 'chart.js';
 
-import UserType from "./type/User";
-
+import UserType from './type/User';
+import 'chartjs-adapter-moment';
 Chart.register(...registerables);
 
 const userObj = {
   user: {
-    userId: "",
-    username: "",
-    password: "",
-    createdAt: "",
-    fullName: "",
-    gender: "M",
-    email: "",
-    phone: "",
-    type: "",
-    staffRole: "",
+    userId: '',
+    username: '',
+    password: '',
+    createdAt: '',
+    fullName: '',
+    gender: 'M',
+    email: '',
+    phone: '',
+    type: '',
+    staffRole: '',
   },
   setUser: (user: UserType) => {},
 };
