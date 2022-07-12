@@ -1,93 +1,109 @@
-import React, { useContext } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { UserContext } from "../App";
-import { Menu } from "@headlessui/react";
+import React, { useContext } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { UserContext } from '../App';
+import { Menu } from '@headlessui/react';
 
-import { BellFill } from "@styled-icons/bootstrap/BellFill";
-import { User } from "@styled-icons/boxicons-solid/User";
+import { BellFill } from '@styled-icons/bootstrap/BellFill';
+import { User } from '@styled-icons/boxicons-solid/User';
 
-import LinkList from "./LinkList";
+import LinkList from './LinkList';
 const NavBar = () => {
   const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const paths = [
-    { path: "/dashboard", label: "Dashboard" },
-    { path: "/broadcast", label: "Broadcast", roles: ["CustomerSupport"] },
+    { path: '/dashboard', label: 'Dashboard' },
+    { path: '/broadcast', label: 'Broadcast', roles: ['CustomerSupport'] },
   ];
   const LINK_LIST = [
     {
-      title: "User",
-      roles: ["CustomerSupport", "UserAdmin"],
+      title: 'User',
+      roles: ['CustomerSupport', 'UserAdmin'],
       items: [
         {
-          roles: ["CustomerSupport", "UserAdmin"],
-          label: "Customer Account",
-          path: "/customer",
+          roles: ['CustomerSupport', 'UserAdmin'],
+          label: 'Customer Account',
+          path: '/customer',
         },
         {
-          roles: ["UserAdmin"],
-          label: "Staff Account",
-          path: "/staff",
+          roles: ['UserAdmin'],
+          label: 'Staff Account',
+          path: '/staff',
         },
         {
-          roles: ["UserAdmin"],
-          label: "Staff Role",
-          path: "/staff/role",
+          roles: ['UserAdmin'],
+          label: 'Staff Role',
+          path: '/staff/role',
         },
       ],
     },
     {
-      title: "Assets",
-      roles: ["Technician"],
+      title: 'Assets',
+      roles: ['Technician'],
       items: [
         {
-          roles: ["Technician"],
-          label: "Equipment",
-          path: "/equipment",
+          roles: ['Technician'],
+          label: 'Equipment',
+          path: '/equipment',
         },
         {
-          roles: ["Technician"],
-          label: "Chemical Inventory",
-          path: "/chemical",
+          roles: ['Technician'],
+          label: 'Chemical Inventory',
+          path: '/chemical',
         },
       ],
     },
     {
-      title: "Usage",
-      roles: ["Technician", "CustomerSupport"],
+      title: 'Usage',
+      roles: ['Technician', 'CustomerSupport'],
       items: [
         {
-          roles: ["Technician"],
-          label: "Water Pump Usage",
-          path: "/pumpusage",
+          roles: ['Technician'],
+          label: 'Water Pump Usage',
+          path: '/pumpusage',
         },
         {
-          roles: ["Technician", "CustomerSupport"],
-          label: "Water Usage",
-          path: "/waterusage",
+          roles: ['Technician', 'CustomerSupport'],
+          label: 'Water Usage',
+          path: '/waterusage',
+        },
+      ],
+    },
+    {
+      title: 'Customer',
+      roles: ['CustomerSupport'],
+      items: [
+        {
+          roles: ['CustomerSupport'],
+          label: 'Bill',
+          path: '/bill',
+        },
+        {
+          roles: ['CustomerSupport'],
+          label: 'Reports',
+          path: '/reports',
         },
       ],
     },
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("userData");
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userData');
     setUser({
-      userId: "",
-      username: "",
-      password: "",
-      createdAt: "",
-      fullName: "",
-      gender: "M",
-      email: "",
-      phone: "",
-      type: "",
-      staffRole: "",
+      userId: '',
+      username: '',
+      password: '',
+      createdAt: '',
+      fullName: '',
+      gender: 'M',
+      email: '',
+      phone: '',
+      type: '',
+      staffRole: '',
     });
-    toast("Successfully logged out!");
-    navigate("/");
+    toast('Successfully logged out!');
+    navigate('/');
   };
 
   return (
@@ -134,7 +150,7 @@ const NavBar = () => {
                     <Link
                       to="/profile"
                       className={`${
-                        active && "bg-emerald-500 text-white"
+                        active && 'bg-emerald-500 text-white'
                       } flex px-2 w-32 py-1 divide-y divide-gray-100 rounded-sm`}
                     >
                       {user.username}
@@ -152,7 +168,7 @@ const NavBar = () => {
                   {({ active }) => (
                     <button
                       className={`${
-                        active && "bg-emerald-500 text-white"
+                        active && 'bg-emerald-500 text-white'
                       } flex px-2 w-32 py-1 divide-y divide-gray-100 rounded-sm`}
                       onClick={handleLogout}
                     >

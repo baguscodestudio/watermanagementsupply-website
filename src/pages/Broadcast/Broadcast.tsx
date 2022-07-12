@@ -1,18 +1,18 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import NavBar from "../components/NavBar";
-import BroadcastType from "../type/Broadcast";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import NavBar from '../../components/NavBar';
+import BroadcastType from '../../type/Broadcast';
 
-import { Info } from "@styled-icons/fa-solid/Info";
-import { TextParagraph } from "@styled-icons/bootstrap/TextParagraph";
-import { CalendarDateFill } from "@styled-icons/bootstrap/CalendarDateFill";
+import { Info } from '@styled-icons/fa-solid/Info';
+import { TextParagraph } from '@styled-icons/bootstrap/TextParagraph';
+import { CalendarDateFill } from '@styled-icons/bootstrap/CalendarDateFill';
 
 const Broadcast = () => {
   const [broadcasts, setBroadcasts] = useState<BroadcastType[]>([]);
-  const [filter, setFilter] = useState("");
-  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState('');
+  const [search, setSearch] = useState('');
 
   const navigate = useNavigate();
 
@@ -22,15 +22,15 @@ const Broadcast = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/BroadcastAlert", {
+      .get('http://localhost:5000/api/BroadcastAlert', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => setBroadcasts(response.data))
       .catch((err) => {
         console.log(err);
-        toast.error("An error occured while getting broadcasts");
+        toast.error('An error occured while getting broadcasts');
       });
   }, []);
 
@@ -94,7 +94,7 @@ const Broadcast = () => {
                       <tr className="h-10 border-y-2">
                         <td className="px-4">
                           {new Date(broadcast.createdAt).toLocaleTimeString() +
-                            " " +
+                            ' ' +
                             new Date(broadcast.createdAt).toLocaleDateString()}
                         </td>
                         <td className="px-4">{broadcast.alertTitle}</td>

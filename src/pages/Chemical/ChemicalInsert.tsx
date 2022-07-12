@@ -1,16 +1,16 @@
-import axios from "axios";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import NavBar from "../components/NavBar";
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import NavBar from '../../components/NavBar';
 
 const ChemicalInsert = () => {
   const [chemical, setChemical] = useState({
-    chemicalName: "",
+    chemicalName: '',
     minQuantity: 0,
     quantity: 0,
-    measureUnit: "",
-    usageDescription: "",
+    measureUnit: '',
+    usageDescription: '',
   });
 
   const navigate = useNavigate();
@@ -19,23 +19,23 @@ const ChemicalInsert = () => {
     event.preventDefault();
     axios
       .post(
-        "http://localhost:5000/api/Chemical",
+        'http://localhost:5000/api/Chemical',
         {
           ...chemical,
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
         }
       )
       .then((response) => {
-        toast("Successfully inserted chemical!");
-        navigate("/chemical");
+        toast('Successfully inserted chemical!');
+        navigate('/chemical');
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error while inserting chemical");
+        toast.error('Error while inserting chemical');
       });
   };
 

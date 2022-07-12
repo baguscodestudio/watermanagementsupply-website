@@ -1,23 +1,23 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import NavBar from "../components/NavBar";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import NavBar from '../../components/NavBar';
 
 const ChemicalUpdate = () => {
   const [chemical, setChemical] = useState({
-    chemicalName: "",
+    chemicalName: '',
     minQuantity: 0,
     quantity: 0,
-    measureUnit: "",
-    usageDescription: "",
+    measureUnit: '',
+    usageDescription: '',
   });
   const [previousChemical, setPreviousChemical] = useState({
-    chemicalName: "",
+    chemicalName: '',
     minQuantity: 0,
     quantity: 0,
-    measureUnit: "",
-    usageDescription: "",
+    measureUnit: '',
+    usageDescription: '',
   });
   const params = useParams();
   const id = params.chemicalId;
@@ -27,7 +27,7 @@ const ChemicalUpdate = () => {
     axios
       .get(`http://localhost:5000/api/Chemical/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => {
@@ -36,7 +36,7 @@ const ChemicalUpdate = () => {
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error occured while getting the chemical information");
+        toast.error('Error occured while getting the chemical information');
       });
   }, []);
 
@@ -44,24 +44,24 @@ const ChemicalUpdate = () => {
     event.preventDefault();
     axios
       .put(
-        "http://localhost:5000/api/Chemical",
+        'http://localhost:5000/api/Chemical',
         {
           chemicalId: id,
           ...chemical,
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
         }
       )
       .then((response) => {
-        toast("Successfully updated chemical!");
-        navigate("/chemical");
+        toast('Successfully updated chemical!');
+        navigate('/chemical');
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error while updating chemical");
+        toast.error('Error while updating chemical');
       });
   };
 

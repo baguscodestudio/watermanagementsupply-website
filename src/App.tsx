@@ -11,28 +11,32 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Equipment from './pages/Equipment';
 import EquipmentCreate from './pages/EquipmentCreate';
-import Chemical from './pages/Chemical';
-import ChemicalInsert from './pages/ChemicalInsert';
-import BroadcastCreate from './pages/BroadcastCreate';
-import ChemicalUpdate from './pages/ChemicalUpdate';
+import Chemical from './pages/Chemical/Chemical';
+import ChemicalInsert from './pages/Chemical/ChemicalInsert';
+import BroadcastCreate from './pages/Broadcast/BroadcastCreate';
+import ChemicalUpdate from './pages/Chemical/ChemicalUpdate';
 import ManageRole from './pages/ManageRole';
 import CustomerAccount from './pages/CustomerAccount';
 import CustomerCreate from './pages/CustomerCreate';
 import StaffAccount from './pages/StaffAccount';
 import StaffCreate from './pages/StaffCreate';
 import StaffUpdate from './pages/StaffUpdate';
-import Broadcast from './pages/Broadcast';
+import Broadcast from './pages/Broadcast/Broadcast';
 import WaterPumpUsage from './pages/WaterPumpUsage';
 import ViewIndividualPumpUsage from './pages/ViewIndividualPumpUsage';
 import WaterUsage from './pages/WaterUsage';
 import ViewIndividualWaterUsage from './pages/ViewIndividualWaterUsage';
 import Profile from './pages/Profile';
 import CustomerUpdate from './pages/CustomerUpdate';
+import Bill from './pages/Bill/Bill';
 
 import { Chart, registerables } from 'chart.js';
 
 import UserType from './type/User';
 import 'chartjs-adapter-moment';
+import BillView from './pages/Bill/BillView';
+import Reports from './pages/Report/Reports';
+import ReportView from './pages/Report/ReportView';
 Chart.register(...registerables);
 
 const userObj = {
@@ -97,6 +101,10 @@ function App() {
                 path="/customer/update/:customerId"
                 element={<CustomerUpdate />}
               />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="/reports/:reportId" element={<ReportView />} />
+              <Route path="/bill" element={<Bill />} />
+              <Route path="/bill/:billId" element={<BillView />} />
               <Route path="/broadcast" element={<Broadcast />} />
               <Route path="/broadcast/create" element={<BroadcastCreate />} />
               <Route path="/equipment" element={<Equipment />} />

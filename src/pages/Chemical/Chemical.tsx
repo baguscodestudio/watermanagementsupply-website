@@ -1,18 +1,18 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import NavBar from "../components/NavBar";
-import ChecmicalType from "../type/Chemical";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import NavBar from '../../components/NavBar';
+import ChecmicalType from '../../type/Chemical';
 
 const Chemical = () => {
   const [chemicals, setChemicals] = useState<ChecmicalType[]>([]);
 
   const fetchChemicals = () => {
     axios
-      .get("http://localhost:5000/api/Chemical", {
+      .get('http://localhost:5000/api/Chemical', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => {
@@ -20,7 +20,7 @@ const Chemical = () => {
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error occured while getting chemicals");
+        toast.error('Error occured while getting chemicals');
       });
   };
 
@@ -28,16 +28,16 @@ const Chemical = () => {
     axios
       .delete(`http://localhost:5000/api/Chemical/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => {
-        toast("Successfully deleted chemical");
+        toast('Successfully deleted chemical');
         fetchChemicals();
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error while deleting chemical");
+        toast.error('Error while deleting chemical');
       });
   };
 

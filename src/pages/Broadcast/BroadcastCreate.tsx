@@ -1,13 +1,13 @@
-import axios from "axios";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import NavBar from "../components/NavBar";
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import NavBar from '../../components/NavBar';
 
 const BroadcastCreate = () => {
   const [broadcast, setBroadcast] = useState({
-    alertTitle: "",
-    alertDescription: "",
+    alertTitle: '',
+    alertDescription: '',
     // createdAt: new Date().toISOString(),
   });
 
@@ -17,23 +17,23 @@ const BroadcastCreate = () => {
     event.preventDefault();
     axios
       .post(
-        "http://localhost:5000/api/BroadcastAlert",
+        'http://localhost:5000/api/BroadcastAlert',
         {
           ...broadcast,
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
         }
       )
       .then((response) => {
-        toast("Successfully announced broadcast!");
-        navigate("/broadcast");
+        toast('Successfully announced broadcast!');
+        navigate('/broadcast');
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error while announcing broadcast");
+        toast.error('Error while announcing broadcast');
       });
   };
 
