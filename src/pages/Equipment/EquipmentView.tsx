@@ -1,7 +1,7 @@
 import axios from 'axios';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import NavBar from '../../components/NavBar';
 import EquipmentType from '../../type/Equipment';
@@ -104,6 +104,14 @@ const EquipmentView = () => {
               </td>
             </tr>
           </table>
+        </div>
+        <div className="flex">
+          <Link
+            to="/equipment"
+            className="m-auto rounded-lg border-black bg-transparent border-2 px-4 py-1"
+          >
+            Cancel
+          </Link>
         </div>
       </div>
     </>

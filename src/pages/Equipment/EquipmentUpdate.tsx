@@ -106,7 +106,7 @@ const EquipmentUpdate = () => {
                   Update
                 </button>
                 <Link
-                  to="/chemical"
+                  to="/equipment"
                   className="rounded-lg border-black bg-transparent border-2 px-4 py-1"
                 >
                   Cancel

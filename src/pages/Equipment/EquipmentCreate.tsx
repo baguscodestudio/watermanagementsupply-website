@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavBar from '../components/NavBar';
+import NavBar from '../../components/NavBar';
 
 const EquipmentCreate = () => {
   const [equipment, setEquipment] = useState({

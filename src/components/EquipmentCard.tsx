@@ -58,9 +58,12 @@ const EquipmentCard = ({
           </div>
         </div>
         <div className="inline-flex w-full justify-around mt-4">
-          <button className="rounded-xl px-4 text-lg border-[2px] border-black bg-[#B0C4DE]">
+          <Link
+            to={`/equipment/${equipment.equipmentId}`}
+            className="rounded-xl px-4 text-lg border-[2px] border-black bg-[#B0C4DE]"
+          >
             View
-          </button>
+          </Link>
           <Link
             to={`/equipment/update/${equipment.equipmentId}`}
             className="rounded-xl px-4 text-lg border-[2px] border-black bg-[#FFDAB9]"
