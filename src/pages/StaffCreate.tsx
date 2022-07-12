@@ -1,20 +1,20 @@
-import axios from "axios";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import NavBar from "../components/NavBar";
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import NavBar from '../components/NavBar';
 
 const StaffCreate = () => {
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [staff, setStaff] = useState({
-    username: "",
-    password: "",
-    fullName: "",
-    gender: "M",
-    email: "",
-    phone: "",
-    staffRole: "",
-    type: "Staff",
+    username: '',
+    password: '',
+    fullName: '',
+    gender: 'M',
+    email: '',
+    phone: '',
+    staffRole: '',
+    type: 'Staff',
   });
 
   const navigate = useNavigate();
@@ -22,27 +22,27 @@ const StaffCreate = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (staff.password !== confirmPassword) {
-      toast.error("Password does not match!");
+      toast.error('Password does not match!');
     } else {
       axios
         .post(
-          "http://localhost:5000/api/Staff",
+          'http://localhost:5000/api/Staff',
           {
             ...staff,
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             },
           }
         )
         .then((response) => {
-          toast("Successfully created staff!");
-          navigate("/staff");
+          toast('Successfully created staff!');
+          navigate('/staff');
         })
         .catch((err) => {
           console.log(err);
-          toast.error("Error while inserting staff");
+          toast.error('Error while inserting staff');
         });
     }
   };
@@ -51,7 +51,7 @@ const StaffCreate = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-44 bg-[#D8BFD8] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-[20vh] bg-[#D8BFD8] flex items-center px-12">
           Staff
         </div>
         <form
@@ -100,7 +100,7 @@ const StaffCreate = () => {
                   onChange={(event) =>
                     setStaff({
                       ...staff,
-                      gender: "M",
+                      gender: 'M',
                     })
                   }
                   className="mr-2"
@@ -114,7 +114,7 @@ const StaffCreate = () => {
                   onChange={(event) =>
                     setStaff({
                       ...staff,
-                      gender: "F",
+                      gender: 'F',
                     })
                   }
                   className="mr-2"

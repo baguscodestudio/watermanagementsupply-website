@@ -1,22 +1,22 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Menu } from "@styled-icons/entypo/Menu";
-import NavBar from "../components/NavBar";
-import EquipmentType from "../type/Equipment";
-import EquipmentCard from "../components/EquipmentCard";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Menu } from '@styled-icons/entypo/Menu';
+import NavBar from '../components/NavBar';
+import EquipmentType from '../type/Equipment';
+import EquipmentCard from '../components/EquipmentCard';
 
 const Equipment = () => {
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
-  const [search, setSearch] = useState("");
-  const [finalSearch, setFinalSearch] = useState("");
+  const [search, setSearch] = useState('');
+  const [finalSearch, setFinalSearch] = useState('');
 
   const fetchEquipments = () => {
     axios
-      .get("http://localhost:5000/api/Equipment/", {
+      .get('http://localhost:5000/api/Equipment/', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => {
@@ -24,7 +24,7 @@ const Equipment = () => {
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error occured while getting equipments");
+        toast.error('Error occured while getting equipments');
       });
   };
 
@@ -41,7 +41,7 @@ const Equipment = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-44 bg-[#BC8F8F] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-[20vh] bg-[#BC8F8F] flex items-center px-12">
           Equipment
         </div>
         <div className="flex">

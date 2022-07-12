@@ -48,7 +48,7 @@ const BillView = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-44 bg-[#FFC0CB] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFC0CB] flex items-center px-12">
           Bill {bill?.billId}
         </div>
         <div className="w-full flex flex-col">

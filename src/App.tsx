@@ -37,6 +37,7 @@ import 'chartjs-adapter-moment';
 import BillView from './pages/Bill/BillView';
 import Reports from './pages/Report/Reports';
 import ReportView from './pages/Report/ReportView';
+import EquipmentUpdate from './pages/EquipmentUpdate';
 Chart.register(...registerables);
 
 const userObj = {
@@ -109,6 +110,10 @@ function App() {
               <Route path="/broadcast/create" element={<BroadcastCreate />} />
               <Route path="/equipment" element={<Equipment />} />
               <Route path="/equipment/insert" element={<EquipmentCreate />} />
+              <Route
+                path="/equipment/update/:equipmentId"
+                element={<EquipmentUpdate />}
+              />
               <Route path="/chemical" element={<Chemical />} />
               <Route path="/profile" element={<Profile />} />
               <Route

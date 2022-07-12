@@ -1,19 +1,19 @@
-import axios from "axios";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import NavBar from "../components/NavBar";
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import NavBar from '../components/NavBar';
 
 const CustomerCreate = () => {
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [customer, setCustomer] = useState({
-    username: "",
-    password: "",
-    fullName: "",
-    gender: "M",
-    email: "",
-    phone: "",
-    type: "Customer",
+    username: '',
+    password: '',
+    fullName: '',
+    gender: 'M',
+    email: '',
+    phone: '',
+    type: 'Customer',
   });
 
   const navigate = useNavigate();
@@ -21,27 +21,27 @@ const CustomerCreate = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (customer.password !== confirmPassword) {
-      toast.error("Password does not match!");
+      toast.error('Password does not match!');
     } else {
       axios
         .post(
-          "http://localhost:5000/api/Customer",
+          'http://localhost:5000/api/Customer',
           {
             ...customer,
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             },
           }
         )
         .then((response) => {
-          toast("Successfully created customer!");
-          navigate("/customer");
+          toast('Successfully created customer!');
+          navigate('/customer');
         })
         .catch((err) => {
           console.log(err);
-          toast.error("Error while inserting customer");
+          toast.error('Error while inserting customer');
         });
     }
   };
@@ -50,7 +50,7 @@ const CustomerCreate = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-44 bg-[#D8BFD8] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-[20vh] bg-[#D8BFD8] flex items-center px-12">
           Customer
         </div>
         <form
@@ -99,7 +99,7 @@ const CustomerCreate = () => {
                   onChange={(event) =>
                     setCustomer({
                       ...customer,
-                      gender: "M",
+                      gender: 'M',
                     })
                   }
                   className="mr-2"
@@ -113,7 +113,7 @@ const CustomerCreate = () => {
                   onChange={(event) =>
                     setCustomer({
                       ...customer,
-                      gender: "F",
+                      gender: 'F',
                     })
                   }
                   className="mr-2"

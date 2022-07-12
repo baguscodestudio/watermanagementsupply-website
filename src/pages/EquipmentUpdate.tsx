@@ -1,45 +1,44 @@
 import { Menu } from '@headlessui/react';
 import axios from 'axios';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ChevronDown, ChevronUp } from 'styled-icons/bootstrap';
-import NavBar from '../../components/NavBar';
+import NavBar from '../components/NavBar';
+import EquipmentType from '../type/Equipment';
 
-const ChemicalUpdate = () => {
-  const [chemical, setChemical] = useState({
-    chemicalName: '',
-    minQuantity: 0,
-    quantity: 0,
-    measureUnit: '',
-    usageDescription: '',
-  });
+const EquipmentUpdate = () => {
+  const [equipment, setEquipment] = useState<EquipmentType>();
   const params = useParams();
-  const id = params.chemicalId;
+  const id = params.equipmentId;
   const [updatePage, setUpdatePage] = useState('');
   const navigate = useNavigate();
   const items = [
-    { label: 'Chemical Name', key: 'chemicalName' },
-    { label: 'Min Quantity', key: 'minQuanity' },
-    { label: 'Quantity', key: 'quantity' },
-    { label: 'Measure Unit', key: 'measureUnit' },
-    { label: 'Usage Description', key: 'usageDescription' },
+    { label: 'Equipment Name', key: 'equipmentName' },
+    { label: 'Installation Date', key: 'installationDate' },
+    { label: 'Guarantee Date', key: 'guaranteeDate' },
+    { label: 'Replacement Period', key: 'replacementPeriod' },
+    { label: 'Type', key: 'type' },
+    { label: 'Lifespan', key: 'lifespan' },
+    { label: 'Hardware Spec', key: 'hardwareSpec' },
+    { label: 'Cost', key: 'cost' },
   ];
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/Chemical/${id}`, {
+      .get(`http://localhost:5000/api/Equipment/EquipmentId/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => {
         // console.log(response);
-        setChemical(response.data);
+        setEquipment(response.data[0]);
       })
       .catch((err) => {
         console.log(err);
-        toast.error('Error occured while getting the chemical information');
+        toast.error('Error occured while getting the equipment information');
       });
   }, []);
 
@@ -47,10 +46,9 @@ const ChemicalUpdate = () => {
     event.preventDefault();
     axios
       .put(
-        'http://localhost:5000/api/Chemical',
+        'http://localhost:5000/api/equipment',
         {
-          chemicalId: id,
-          ...chemical,
+          ...equipment,
         },
         {
           headers: {
@@ -59,12 +57,12 @@ const ChemicalUpdate = () => {
         }
       )
       .then((response) => {
-        toast('Successfully updated chemical!');
-        navigate('/chemical');
+        toast('Successfully updated Equipment!');
+        navigate('/equipment');
       })
       .catch((err) => {
         console.log(err);
-        toast.error('Error while updating chemical');
+        toast.error('Error while updating eupment');
       });
   };
 
@@ -72,18 +70,18 @@ const ChemicalUpdate = () => {
     <>
       <NavBar />
       <div className="w-full grid grid-cols-2">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFA500] flex items-center px-12 col-span-2">
-          Chemical Inventory
+        <div className="text-4xl font-bold w-full h-[20vh] bg-[#BC8F8F] flex items-center px-12 col-span-2">
+          Equipment
         </div>
         {updatePage !== '' ? (
           <div className="">
             <form
               className="flex flex-col ml-20 mt-24"
-              id="chemical-info"
+              id="equipment-info"
               onSubmit={(event) => handleSubmit(event)}
             >
               <div className="text-2xl mb-14 underline">
-                Chemical Inventory Information
+                Equipment {equipment?.equipmentName}
               </div>
               <div className="my-2 w-[27rem] inline-flex justify-between">
                 <div className="text-lg">
@@ -92,8 +90,8 @@ const ChemicalUpdate = () => {
                 <input
                   name={updatePage}
                   onChange={(event) =>
-                    setChemical({
-                      ...chemical,
+                    setEquipment({
+                      ...equipment!,
                       [updatePage]: event.currentTarget.value,
                     })
                   }
@@ -120,34 +118,70 @@ const ChemicalUpdate = () => {
           <div></div>
         )}
         <div className="flex flex-col mt-24">
-          <div className="mx-auto text-4xl font-bold underline">
-            Chemical Inventory
-          </div>
+          <div className="mx-auto text-4xl font-bold underline">Equipment</div>
           <table className="mt-16 w-4/5 mx-auto">
             <tr className="bg-neutral-100 border-[2px] border-black">
-              <th>Previous Inventory</th>
+              <th>Information</th>
             </tr>
             <tr className="border-[2px] border-black">
               <td className="flex flex-col px-6 py-4">
                 <div>
-                  <strong>Chemical name: </strong>
-                  {chemical.chemicalName}
+                  <strong>Equipment name: </strong>
+                  {equipment?.equipmentName}
                 </div>
                 <div>
-                  <strong>Chemical min quantity: </strong>
-                  {chemical.minQuantity}
+                  <strong>Equipment Cost: </strong>${equipment?.cost}
                 </div>
                 <div>
-                  <strong>Chemical quantity: </strong>
-                  {chemical.quantity}
+                  <strong>Type: </strong>
+                  {equipment?.type}
                 </div>
                 <div>
-                  <strong>Chemical measure: </strong>
-                  {chemical.measureUnit}
+                  <strong>Installation Date: </strong>
+                  {moment(equipment?.installationDate).format('DD-MM-YYYY')}
                 </div>
                 <div>
-                  <strong>Chemical usage description: </strong>
-                  {chemical.usageDescription}
+                  <strong>Guarantee Date: </strong>
+                  {moment(equipment?.guaranteeDate).format('DD-MM-YYYY')}
+                </div>
+                <div>
+                  <strong>Replacement: </strong>
+                  {moment(equipment?.replacementPeriod).format('DD-MM-YYYY')}
+                </div>
+                <div>
+                  <strong>Specification: </strong>
+                  {equipment?.hardwareSpec}
+                </div>
+                <div>
+                  <strong>Lifespan: </strong>
+                  {equipment?.lifespan}
+                </div>
+                <div className="flex flex-col w-full">
+                  <strong>Maintenances: </strong>
+                  <div className="w-full rounded-lg border-2 overflow-clip">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b-2">
+                          <th>Date</th>
+                          <th>Summary</th>
+                          <th>Details</th>
+                          <th>Cost</th>
+                        </tr>
+                      </thead>
+                      {equipment?.maintenance?.map((main, index) => (
+                        <tr>
+                          <td>
+                            {moment(main.maintenanceDate).format(
+                              'HH:mm:ss DD/MM/YY'
+                            )}
+                          </td>
+                          <td>{main.maintenanceSummary}</td>
+                          <td>{main.maintenanceDetails}</td>
+                          <td>${main.maintenanceCost}</td>
+                        </tr>
+                      ))}
+                    </table>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -195,4 +229,4 @@ const ChemicalUpdate = () => {
   );
 };
 
-export default ChemicalUpdate;
+export default EquipmentUpdate;

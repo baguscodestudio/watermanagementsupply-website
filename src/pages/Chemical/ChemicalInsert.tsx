@@ -43,7 +43,7 @@ const ChemicalInsert = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-44 bg-[#F0E68C] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-[20vh] bg-[#F0E68C] flex items-center px-12">
           Chemical Inventory
         </div>
         <form

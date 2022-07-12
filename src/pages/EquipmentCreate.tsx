@@ -1,17 +1,17 @@
-import axios from "axios";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import NavBar from "../components/NavBar";
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import NavBar from '../components/NavBar';
 
 const EquipmentCreate = () => {
   const [equipment, setEquipment] = useState({
-    equipmentName: "",
-    installationDate: "",
-    guaranteeDate: "",
-    hardwareSpec: "",
+    equipmentName: '',
+    installationDate: '',
+    guaranteeDate: '',
+    hardwareSpec: '',
     cost: 0,
-    type: "",
+    type: '',
   });
 
   const navigate = useNavigate();
@@ -20,23 +20,23 @@ const EquipmentCreate = () => {
     event.preventDefault();
     axios
       .post(
-        "http://localhost:5000/api/Equipment",
+        'http://localhost:5000/api/Equipment',
         {
           ...equipment,
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
         }
       )
       .then((response) => {
-        toast("Successfully created equipment!");
-        navigate("/equipment");
+        toast('Successfully created equipment!');
+        navigate('/equipment');
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error while inserting equipment");
+        toast.error('Error while inserting equipment');
       });
   };
 
@@ -44,7 +44,7 @@ const EquipmentCreate = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-44 bg-[#E9967A] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-[20vh] bg-[#E9967A] flex items-center px-12">
           Equipment
         </div>
         <form

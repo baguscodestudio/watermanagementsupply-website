@@ -1,34 +1,34 @@
-import { Listbox, Menu } from "@headlessui/react";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { ChevronDown, ChevronUp } from "styled-icons/bootstrap";
-import { CheckmarkOutline } from "styled-icons/evaicons-outline";
-import NavBar from "../components/NavBar";
+import { Listbox, Menu } from '@headlessui/react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { ChevronDown, ChevronUp } from 'styled-icons/bootstrap';
+import { CheckmarkOutline } from 'styled-icons/evaicons-outline';
+import NavBar from '../components/NavBar';
 
 const StaffUpdate = () => {
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [updatePage, setUpdatePage] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [updatePage, setUpdatePage] = useState('');
   const [staff, setStaff] = useState({
-    username: "",
-    password: "",
-    fullName: "",
-    gender: "M",
-    email: "",
-    phone: "",
-    type: "Staff",
-    staffRole: "",
+    username: '',
+    password: '',
+    fullName: '',
+    gender: 'M',
+    email: '',
+    phone: '',
+    type: 'Staff',
+    staffRole: '',
   });
   const params = useParams();
   const id = params.staffId;
   const items = [
-    { label: "Username", key: "username" },
-    { label: "Full Name", key: "fullName" },
-    { label: "Email", key: "email" },
-    { label: "Password", key: "password" },
-    { label: "Phone", key: "phone" },
-    { label: "Gender", key: "gender" },
+    { label: 'Username', key: 'username' },
+    { label: 'Full Name', key: 'fullName' },
+    { label: 'Email', key: 'email' },
+    { label: 'Password', key: 'password' },
+    { label: 'Phone', key: 'phone' },
+    { label: 'Gender', key: 'gender' },
   ];
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ const StaffUpdate = () => {
     axios
       .get(`http://localhost:5000/api/Staff/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => {
@@ -44,7 +44,7 @@ const StaffUpdate = () => {
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error occured while getting the staff information");
+        toast.error('Error occured while getting the staff information');
       });
   }, []);
 
@@ -53,30 +53,30 @@ const StaffUpdate = () => {
     key: string
   ) => {
     event.preventDefault();
-    if (updatePage === "password" && staff.password !== confirmPassword) {
-      toast.error("Password does not match!");
+    if (updatePage === 'password' && staff.password !== confirmPassword) {
+      toast.error('Password does not match!');
     } else {
       axios
         .put(
-          "http://localhost:5000/api/Staff",
+          'http://localhost:5000/api/Staff',
           {
             userId: id,
-            updatePassword: updatePage === "password",
+            updatePassword: updatePage === 'password',
             ...staff,
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             },
           }
         )
         .then((response) => {
-          toast("Successfully updated staff!");
-          navigate("/staff");
+          toast('Successfully updated staff!');
+          navigate('/staff');
         })
         .catch((err) => {
           console.log(err);
-          toast.error("Error while updating staff");
+          toast.error('Error while updating staff');
         });
     }
   };
@@ -85,7 +85,7 @@ const StaffUpdate = () => {
     <>
       <NavBar />
       <div className="w-full grid grid-cols-2">
-        <div className="text-4xl font-bold w-full h-44 bg-[#FFA500] flex items-center px-12 col-span-2">
+        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFA500] flex items-center px-12 col-span-2">
           Staff
         </div>
         <div className="bg-neutral-100 w-1/2 h-[50vh] shadow-lg flex flex-col py-6 px-10 mt-12 ml-10">
@@ -132,7 +132,7 @@ const StaffUpdate = () => {
                             <button
                               onClick={() => setUpdatePage(item.key)}
                               className={`${
-                                active && "bg-emerald-500 text-white"
+                                active && 'bg-emerald-500 text-white'
                               } flex px-2 py-1 w-32 divide-y divide-gray-100 rounded-sm text-left`}
                             >
                               {item.label}
@@ -147,7 +147,7 @@ const StaffUpdate = () => {
             )}
           </Menu>
         </div>
-        {updatePage !== "" && (
+        {updatePage !== '' && (
           <form
             className="bg-neutral-100 w-1/2 shadow-lg flex flex-col py-6 px-10 mt-12"
             onSubmit={(event) => handleSubmit(event, updatePage)}
@@ -156,18 +156,18 @@ const StaffUpdate = () => {
               <div className="text-lg">
                 {updatePage.charAt(0).toUpperCase() + updatePage.slice(1)}
               </div>
-              {updatePage !== "gender" ? (
+              {updatePage !== 'gender' ? (
                 <>
                   <input
                     name={updatePage}
                     pattern={
-                      updatePage === "password"
-                        ? "^(?=P{Ll}*p{Ll})(?=P{Lu}*p{Lu})(?=P{N}*p{N})(?=[p{L}p{N}]*[^p{L}p{N}])[sS]{8,}$"
-                        : updatePage === "fullName"
-                        ? "^.*[a-zA-Z]+.*$"
-                        : ""
+                      updatePage === 'password'
+                        ? '^(?=P{Ll}*p{Ll})(?=P{Lu}*p{Lu})(?=P{N}*p{N})(?=[p{L}p{N}]*[^p{L}p{N}])[sS]{8,}$'
+                        : updatePage === 'fullName'
+                        ? '^.*[a-zA-Z]+.*$'
+                        : ''
                     }
-                    type={updatePage === "password" ? "password" : "text"}
+                    type={updatePage === 'password' ? 'password' : 'text'}
                     onChange={(event) =>
                       setStaff({
                         ...staff,
@@ -198,8 +198,8 @@ const StaffUpdate = () => {
                         className={({ active }) =>
                           `relative cursor-default select-none py-2 pl-10 pr-4 ${
                             active
-                              ? "bg-amber-100 text-amber-900"
-                              : "text-gray-900"
+                              ? 'bg-amber-100 text-amber-900'
+                              : 'text-gray-900'
                           }`
                         }
                       >
@@ -207,7 +207,7 @@ const StaffUpdate = () => {
                           <>
                             <span
                               className={`block truncate ${
-                                selected ? "font-medium" : "font-normal"
+                                selected ? 'font-medium' : 'font-normal'
                               }`}
                             >
                               M
@@ -228,8 +228,8 @@ const StaffUpdate = () => {
                         className={({ active }) =>
                           `relative cursor-default select-none py-2 pl-10 pr-4 ${
                             active
-                              ? "bg-amber-100 text-amber-900"
-                              : "text-gray-900"
+                              ? 'bg-amber-100 text-amber-900'
+                              : 'text-gray-900'
                           }`
                         }
                       >
@@ -237,7 +237,7 @@ const StaffUpdate = () => {
                           <>
                             <span
                               className={`block truncate ${
-                                selected ? "font-medium" : "font-normal"
+                                selected ? 'font-medium' : 'font-normal'
                               }`}
                             >
                               F
@@ -259,7 +259,7 @@ const StaffUpdate = () => {
               )}
             </div>
             <div className="my-2 inline-flex justify-between">
-              {updatePage == "password" && (
+              {updatePage == 'password' && (
                 <>
                   <div className="text-lg">Confirm Password</div>
                   <input
@@ -282,7 +282,7 @@ const StaffUpdate = () => {
               </button>
               <button
                 onClick={() => {
-                  setUpdatePage("");
+                  setUpdatePage('');
                 }}
                 className="rounded-lg border-black bg-transparent border-2 px-4 py-1"
               >

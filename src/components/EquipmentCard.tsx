@@ -1,7 +1,8 @@
-import axios from "axios";
-import React from "react";
-import { toast } from "react-toastify";
-import EquipmentType from "../type/Equipment";
+import axios from 'axios';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import EquipmentType from '../type/Equipment';
 
 const EquipmentCard = ({
   equipment,
@@ -14,18 +15,19 @@ const EquipmentCard = ({
     axios
       .delete(`http://localhost:5000/api/Equipment/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => {
-        toast("Successfully deleted Equipment");
+        toast('Successfully deleted Equipment');
         fetchEquipments();
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error while deleting equipment");
+        toast.error('Error while deleting equipment');
       });
   };
+
   return (
     <div className="rounded-lg border-2 border-black flex px-4 py-3">
       <div className="bg-neutral-300 h-full w-1/3"></div>
@@ -34,7 +36,7 @@ const EquipmentCard = ({
         <div className="leading-tight">
           ID: {equipment.equipmentId}
           <br />
-          Installation Date:{" "}
+          Installation Date:{' '}
           {new Date(equipment.installationDate).toDateString()}
           <br />
           Guarantee Date: {new Date(equipment.guaranteeDate).toDateString()}
@@ -59,9 +61,12 @@ const EquipmentCard = ({
           <button className="rounded-xl px-4 text-lg border-[2px] border-black bg-[#B0C4DE]">
             View
           </button>
-          <button className="rounded-xl px-4 text-lg border-[2px] border-black bg-[#FFDAB9]">
+          <Link
+            to={`/equipment/update/${equipment.equipmentId}`}
+            className="rounded-xl px-4 text-lg border-[2px] border-black bg-[#FFDAB9]"
+          >
             Update
-          </button>
+          </Link>
           <button
             onClick={() => handleDelete(equipment.equipmentId)}
             className="rounded-xl px-4 text-lg border-[2px] border-black bg-[#FF3F29]"

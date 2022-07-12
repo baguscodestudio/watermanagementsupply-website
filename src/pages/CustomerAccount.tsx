@@ -1,18 +1,18 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import NavBar from "../components/NavBar";
-import CustomerType from "../type/Customer";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import NavBar from '../components/NavBar';
+import CustomerType from '../type/Customer';
 
 const CustomerAccount = () => {
   const [customers, setCustomers] = useState<CustomerType[]>([]);
 
   const fetchCustomers = () => {
     axios
-      .get("http://localhost:5000/api/Customer", {
+      .get('http://localhost:5000/api/Customer', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => {
@@ -20,7 +20,7 @@ const CustomerAccount = () => {
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error occured while getting customers");
+        toast.error('Error occured while getting customers');
       });
   };
 
@@ -28,16 +28,16 @@ const CustomerAccount = () => {
     axios
       .delete(`http://localhost:5000/api/Customer/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => {
-        toast("Successfully deleted customer");
+        toast('Successfully deleted customer');
         fetchCustomers();
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Error while deleting customer");
+        toast.error('Error while deleting customer');
       });
   };
 
@@ -49,7 +49,7 @@ const CustomerAccount = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-44 bg-[#FFFACD] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFFACD] flex items-center px-12">
           Manage Customers
         </div>
         <div className="w-full inline-flex">
@@ -102,7 +102,7 @@ const CustomerAccount = () => {
                 <td>{customer.userId}</td>
                 <td>{customer.username}</td>
                 <td>{customer.fullName}</td>
-                <td>{customer.gender === "M" ? "Male" : "Female"}</td>
+                <td>{customer.gender === 'M' ? 'Male' : 'Female'}</td>
                 <td>{customer.phone}</td>
                 <td>{customer.email}</td>
                 <td>{new Date(customer.lastMaintenance).toDateString()}</td>

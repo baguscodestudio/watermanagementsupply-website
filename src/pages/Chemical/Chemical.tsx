@@ -49,7 +49,7 @@ const Chemical = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-44 bg-[#8FBC8F] flex items-center px-12">
+        <div className="text-4xl font-bold w-full h-[20vh] bg-[#8FBC8F] flex items-center px-12">
           Chemical Inventory
         </div>
         <div className="w-full inline-flex">

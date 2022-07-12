@@ -1,24 +1,24 @@
-import { Listbox, Menu } from "@headlessui/react";
-import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { Listbox, Menu } from '@headlessui/react';
+import axios from 'axios';
+import React, { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import { CheckmarkOutline } from "@styled-icons/evaicons-outline/CheckmarkOutline";
-import { ChevronDown, ChevronUp } from "styled-icons/bootstrap";
-import { UserContext } from "../App";
-import NavBar from "../components/NavBar";
+import { CheckmarkOutline } from '@styled-icons/evaicons-outline/CheckmarkOutline';
+import { ChevronDown, ChevronUp } from 'styled-icons/bootstrap';
+import { UserContext } from '../App';
+import NavBar from '../components/NavBar';
 
 const Profile = () => {
   const { user, setUser } = useContext(UserContext);
-  const [value, setValue] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [updatePage, setUpdatePage] = useState("");
+  const [value, setValue] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [updatePage, setUpdatePage] = useState('');
   const items = [
-    { label: "Full Name", key: "fullName" },
-    { label: "Email", key: "email" },
-    { label: "Password", key: "password" },
-    { label: "Phone", key: "phone" },
-    { label: "Gender", key: "gender" },
+    { label: 'Full Name', key: 'fullName' },
+    { label: 'Email', key: 'email' },
+    { label: 'Password', key: 'password' },
+    { label: 'Phone', key: 'phone' },
+    { label: 'Gender', key: 'gender' },
   ];
 
   const handleUpdate = (
@@ -26,38 +26,38 @@ const Profile = () => {
     key: string
   ) => {
     event.preventDefault();
-    if (updatePage === "password" && value !== confirmPassword) {
-      toast.error("Your new password and confirm password does not match!");
+    if (updatePage === 'password' && value !== confirmPassword) {
+      toast.error('Your new password and confirm password does not match!');
     } else {
       axios
         .put(
           `http://localhost:5000/api/Staff/MyInfo/`,
           {
             ...user,
-            updatePassword: key == "password",
+            updatePassword: key == 'password',
             [key]: value,
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             },
           }
         )
         .then((response) => {
           console.log(response);
-          setValue("");
-          if (key === "gender") {
-            setUser({ ...user, gender: value === "M" ? "M" : "F" });
+          setValue('');
+          if (key === 'gender') {
+            setUser({ ...user, gender: value === 'M' ? 'M' : 'F' });
           } else {
             // @ts-ignore
             setUser({ ...user, [key]: value });
           }
-          toast("Successfully updated");
+          toast('Successfully updated');
         })
         .catch((err) => {
           console.error(err);
-          setValue("");
-          toast.error("Error occured while updating");
+          setValue('');
+          toast.error('Error occured while updating');
         });
     }
   };
@@ -66,7 +66,7 @@ const Profile = () => {
     <>
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-44 bg-[#6cb8cf] flex items-center px-12 col-span-2">
+        <div className="text-4xl font-bold w-full h-[20vh] bg-[#6cb8cf] flex items-center px-12 col-span-2">
           Profile
         </div>
         <div className="ml-10 mt-4 bg-neutral-100 shadow-lg w-1/3 h-32 px-10 flex items-center">
@@ -78,7 +78,7 @@ const Profile = () => {
           <div className="flex flex-col">
             <span className="text-xl font-medium">Role</span>
             <span className="text-neutral-600 text-lg">
-              {user.staffRole.split(/(?=[A-Z])/).join(" ")}
+              {user.staffRole.split(/(?=[A-Z])/).join(' ')}
             </span>
           </div>
         </div>
@@ -123,7 +123,7 @@ const Profile = () => {
                               <button
                                 onClick={() => setUpdatePage(item.key)}
                                 className={`${
-                                  active && "bg-emerald-500 text-white"
+                                  active && 'bg-emerald-500 text-white'
                                 } flex px-2 py-1 w-32 divide-y divide-gray-100 rounded-sm text-left`}
                               >
                                 {item.label}
@@ -138,7 +138,7 @@ const Profile = () => {
               )}
             </Menu>
           </div>
-          {updatePage !== "" && (
+          {updatePage !== '' && (
             <form
               className="bg-neutral-100 w-1/2 shadow-lg flex flex-col py-6 px-10"
               onSubmit={(event) => handleUpdate(event, updatePage)}
@@ -147,10 +147,10 @@ const Profile = () => {
                 <div className="text-lg">
                   {updatePage.charAt(0).toUpperCase() + updatePage.slice(1)}
                 </div>
-                {updatePage !== "gender" ? (
+                {updatePage !== 'gender' ? (
                   <>
                     <input
-                      type={updatePage === "password" ? "password" : "text"}
+                      type={updatePage === 'password' ? 'password' : 'text'}
                       name={updatePage}
                       onChange={(event) => setValue(event.currentTarget.value)}
                       className="ml-6 border-[1px] px-2 border-black bg-transparent"
@@ -174,8 +174,8 @@ const Profile = () => {
                           className={({ active }) =>
                             `relative cursor-default select-none py-2 pl-10 pr-4 ${
                               active
-                                ? "bg-amber-100 text-amber-900"
-                                : "text-gray-900"
+                                ? 'bg-amber-100 text-amber-900'
+                                : 'text-gray-900'
                             }`
                           }
                         >
@@ -183,7 +183,7 @@ const Profile = () => {
                             <>
                               <span
                                 className={`block truncate ${
-                                  selected ? "font-medium" : "font-normal"
+                                  selected ? 'font-medium' : 'font-normal'
                                 }`}
                               >
                                 M
@@ -204,8 +204,8 @@ const Profile = () => {
                           className={({ active }) =>
                             `relative cursor-default select-none py-2 pl-10 pr-4 ${
                               active
-                                ? "bg-amber-100 text-amber-900"
-                                : "text-gray-900"
+                                ? 'bg-amber-100 text-amber-900'
+                                : 'text-gray-900'
                             }`
                           }
                         >
@@ -213,7 +213,7 @@ const Profile = () => {
                             <>
                               <span
                                 className={`block truncate ${
-                                  selected ? "font-medium" : "font-normal"
+                                  selected ? 'font-medium' : 'font-normal'
                                 }`}
                               >
                                 F
@@ -235,7 +235,7 @@ const Profile = () => {
                 )}
               </div>
               <div className="my-2 inline-flex justify-between">
-                {updatePage == "password" && (
+                {updatePage == 'password' && (
                   <>
                     <div className="text-lg">Confirm Password</div>
                     <input
@@ -258,8 +258,8 @@ const Profile = () => {
                 </button>
                 <button
                   onClick={() => {
-                    setValue("");
-                    setUpdatePage("");
+                    setValue('');
+                    setUpdatePage('');
                   }}
                   className="rounded-lg border-black bg-transparent border-2 px-4 py-1"
                 >
