@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ChevronDown, ChevronUp } from 'styled-icons/bootstrap';
-import NavBar from '../components/NavBar';
-import EquipmentType from '../type/Equipment';
+import NavBar from '../../components/NavBar';
+import EquipmentType from '../../type/Equipment';
 
 const EquipmentUpdate = () => {
   const [equipment, setEquipment] = useState<EquipmentType>();

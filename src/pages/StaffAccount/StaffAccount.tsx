@@ -2,8 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavBar from '../components/NavBar';
-import UserType from '../type/User';
+import NavBar from '../../components/NavBar';
+import UserType from '../../type/User';
 
 const StaffAccount = () => {
   const [staffs, setStaffs] = useState<UserType[]>([]);

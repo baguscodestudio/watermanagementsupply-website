@@ -9,35 +9,37 @@ import 'react-toastify/dist/ReactToastify.css';
 // Pages
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
-import Equipment from './pages/Equipment';
-import EquipmentCreate from './pages/EquipmentCreate';
+import Equipment from './pages/Equipment/Equipment';
+import EquipmentCreate from './pages/Equipment/EquipmentCreate';
+import EquipmentUpdate from './pages/Equipment/EquipmentUpdate';
+import EquipmentView from './pages/Equipment/EquipmentView';
 import Chemical from './pages/Chemical/Chemical';
 import ChemicalInsert from './pages/Chemical/ChemicalInsert';
 import BroadcastCreate from './pages/Broadcast/BroadcastCreate';
 import ChemicalUpdate from './pages/Chemical/ChemicalUpdate';
 import ManageRole from './pages/ManageRole';
-import CustomerAccount from './pages/CustomerAccount';
-import CustomerCreate from './pages/CustomerCreate';
-import StaffAccount from './pages/StaffAccount';
-import StaffCreate from './pages/StaffCreate';
-import StaffUpdate from './pages/StaffUpdate';
+import CustomerAccount from './pages/CustomerAccount/CustomerAccount';
+import CustomerCreate from './pages/CustomerAccount/CustomerCreate';
+import StaffAccount from './pages/StaffAccount/StaffAccount';
+import StaffCreate from './pages/StaffAccount/StaffCreate';
+import StaffUpdate from './pages/StaffAccount/StaffUpdate';
 import Broadcast from './pages/Broadcast/Broadcast';
-import WaterPumpUsage from './pages/WaterPumpUsage';
-import ViewIndividualPumpUsage from './pages/ViewIndividualPumpUsage';
-import WaterUsage from './pages/WaterUsage';
-import ViewIndividualWaterUsage from './pages/ViewIndividualWaterUsage';
+import WaterPumpUsage from './pages/WaterPumpUsage/WaterPumpUsage';
+import ViewIndividualPumpUsage from './pages/WaterPumpUsage/ViewIndividualPumpUsage';
+import WaterUsage from './pages/WaterUsage/WaterUsage';
+import ViewIndividualWaterUsage from './pages/WaterUsage/ViewIndividualWaterUsage';
 import Profile from './pages/Profile';
-import CustomerUpdate from './pages/CustomerUpdate';
+import CustomerUpdate from './pages/CustomerAccount/CustomerUpdate';
 import Bill from './pages/Bill/Bill';
+import BillView from './pages/Bill/BillView';
+import Reports from './pages/Report/Reports';
+import ReportView from './pages/Report/ReportView';
 
 import { Chart, registerables } from 'chart.js';
 
 import UserType from './type/User';
 import 'chartjs-adapter-moment';
-import BillView from './pages/Bill/BillView';
-import Reports from './pages/Report/Reports';
-import ReportView from './pages/Report/ReportView';
-import EquipmentUpdate from './pages/EquipmentUpdate';
+
 Chart.register(...registerables);
 
 const userObj = {
@@ -109,6 +111,10 @@ function App() {
               <Route path="/broadcast" element={<Broadcast />} />
               <Route path="/broadcast/create" element={<BroadcastCreate />} />
               <Route path="/equipment" element={<Equipment />} />
+              <Route
+                path="/equipment/:equipmentId"
+                element={<EquipmentView />}
+              />
               <Route path="/equipment/insert" element={<EquipmentCreate />} />
               <Route
                 path="/equipment/update/:equipmentId"

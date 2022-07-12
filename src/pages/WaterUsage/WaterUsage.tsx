@@ -1,23 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavBar from '../components/NavBar';
-import WaterPumpUsageType from '../type/WaterPumpUsage';
-import { Chart } from 'react-chartjs-2';
+import NavBar from '../../components/NavBar';
+import { Chart, getDatasetAtEvent } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js';
-import EquipmentType from '../type/Equipment';
+import type { InteractionItem } from 'chart.js';
+import WaterUsageType from '../../type/WaterUsage';
 import moment from 'moment';
 
-const ViewIndividualPumpUsage = () => {
-  const [waterPumpUsages, setWaterPumpUsages] = useState<WaterPumpUsageType[]>(
-    []
-  );
-  const [equipment, setEquipment] = useState<EquipmentType>();
-  const currentDate = new Date();
-  const previousDate = new Date();
-  const params = useParams();
-  previousDate.setDate(currentDate.getDate() - 7);
+const WaterUsage = () => {
+  const [waterPumpUsages, setWaterPumpUsages] = useState<WaterUsageType[]>([]);
+  const navigate = useNavigate();
   const [currentDateString, setCurrentDateString] = useState(
     moment().format('YYYY-MM-DD')
   );
@@ -26,54 +20,52 @@ const ViewIndividualPumpUsage = () => {
   );
   const chartRef = useRef<ChartJS>(null);
 
+  const dataValue: { [key: string]: any } = {};
+
   const labels: string[] = [];
-  const dataValue: {
-    [key: string]: any;
-  } = {};
   waterPumpUsages.map((waterPumpUsage, index) => {
-    if (waterPumpUsage.pumpId == params.pumpId) {
-      waterPumpUsage.data.map((sensordata, i) => {
-        if (dataValue[waterPumpUsage.pumpId]) {
-          dataValue[waterPumpUsage.pumpId].data.push({
-            x: moment(sensordata.timestamp),
-            y: sensordata.value,
-          });
-        } else {
-          let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
-            Math.random() * 255
-          )},${Math.floor(Math.random() * 255)})`;
-          dataValue[waterPumpUsage.pumpId] = {
-            label: waterPumpUsage.pumpId,
-            data: [
-              {
-                x: moment(sensordata.timestamp),
-                y: sensordata.value,
-              },
-            ],
-            borderColor: color,
-            backgroundColor: color,
-          };
-        }
+    let total = 0;
+    waterPumpUsage.data.map((sensordata, i) => (total += sensordata.value));
+    let average = total / waterPumpUsage.data.length;
+    if (dataValue[waterPumpUsage.customerId]) {
+      dataValue[waterPumpUsage.customerId].data.push({
+        x: moment(waterPumpUsage.date),
+        y: average,
       });
+    } else {
+      let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
+        Math.random() * 255
+      )},${Math.floor(Math.random() * 255)})`;
+      dataValue[waterPumpUsage.customerId] = {
+        label: waterPumpUsage.customerId,
+        data: [
+          {
+            x: moment(waterPumpUsage.date),
+            y: average,
+          },
+        ],
+        borderColor: color,
+        backgroundColor: color,
+      };
     }
   });
-
   const data = {
     labels: labels,
     datasets: Object.keys(dataValue).map((key) => dataValue[key]),
   };
 
+  const onClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    const { current: chart } = chartRef;
+    if (!chart) {
+      return;
+    }
+    let items: InteractionItem[] = getDatasetAtEvent(chart, event);
+    navigate(`/waterusage/${data.datasets[items[0].datasetIndex].label}`);
+  };
+
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/Equipment/EquipmentId/${params.pumpId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
-      .then((response) => setEquipment(response.data[0]))
-      .catch((err) => toast.error('Error while getting equipment'));
-    axios
-      .get(`http://localhost:5000/api/WaterPumpUsage/${params.pumpId}`, {
+      .get('http://localhost:5000/api/WaterUsage', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -85,7 +77,7 @@ const ViewIndividualPumpUsage = () => {
       .then((response) => setWaterPumpUsages(response.data))
       .catch((err) => {
         console.log(err);
-        toast.error('An error occured while getting Water Pump Usage');
+        toast.error('An error occured while getting Water Usage');
       });
   }, [previousDateString, currentDateString]);
 
@@ -94,7 +86,7 @@ const ViewIndividualPumpUsage = () => {
       <NavBar />
       <div className="w-full">
         <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFC0CB] flex items-center px-12">
-          Water Pump Usage
+          Customer Water Usage
         </div>
         <div className="w-full h-screen flex">
           <div className="h-full w-1/5 bg-neutral-300">
@@ -120,12 +112,38 @@ const ViewIndividualPumpUsage = () => {
                 className="w-56 border-2 px-2 border-black"
               />
             </div>
-            <Link
-              to="/pumpusage"
-              className="rounded-lg border-black bg-white border-2 px-4 py-1 ml-4 mt-4"
-            >
-              Back
-            </Link>
+            <div className=" mt-4 inline-flex w-full justify-around">
+              <button
+                onClick={() =>
+                  setPreviousDateString(
+                    moment().startOf('year').format('YYYY-MM-DD')
+                  )
+                }
+                className="rounded-lg border-black bg-white border-2 px-4 py-1"
+              >
+                This Year
+              </button>
+              <button
+                onClick={() =>
+                  setPreviousDateString(
+                    moment().startOf('month').format('YYYY-MM-DD')
+                  )
+                }
+                className="rounded-lg border-black bg-white border-2 px-4 py-1"
+              >
+                This Month
+              </button>
+              <button
+                onClick={() =>
+                  setPreviousDateString(
+                    moment().startOf('week').format('YYYY-MM-DD')
+                  )
+                }
+                className="rounded-lg border-black bg-white border-2 px-4 py-1"
+              >
+                This Week
+              </button>
+            </div>
           </div>
           <div className="w-4/5">
             <Chart
@@ -141,7 +159,7 @@ const ViewIndividualPumpUsage = () => {
                   },
                   title: {
                     display: true,
-                    text: equipment?.equipmentName,
+                    text: 'All Customer Water Usage',
                   },
                 },
                 scales: {
@@ -157,6 +175,7 @@ const ViewIndividualPumpUsage = () => {
                   },
                 },
               }}
+              onClick={onClick}
             />
           </div>
         </div>
@@ -165,4 +184,4 @@ const ViewIndividualPumpUsage = () => {
   );
 };
 
-export default ViewIndividualPumpUsage;
+export default WaterUsage;

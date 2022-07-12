@@ -2,8 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavBar from '../components/NavBar';
-import CustomerType from '../type/Customer';
+import NavBar from '../../components/NavBar';
+import CustomerType from '../../type/Customer';
 
 const CustomerAccount = () => {
   const [customers, setCustomers] = useState<CustomerType[]>([]);

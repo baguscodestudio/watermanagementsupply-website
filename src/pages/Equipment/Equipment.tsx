@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Menu } from '@styled-icons/entypo/Menu';
-import NavBar from '../components/NavBar';
-import EquipmentType from '../type/Equipment';
-import EquipmentCard from '../components/EquipmentCard';
+import NavBar from '../../components/NavBar';
+import EquipmentType from '../../type/Equipment';
+import EquipmentCard from '../../components/EquipmentCard';
 
 const Equipment = () => {
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);

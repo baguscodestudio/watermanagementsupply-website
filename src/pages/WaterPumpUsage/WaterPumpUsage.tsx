@@ -1,18 +1,19 @@
 import axios from 'axios';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavBar from '../components/NavBar';
+import NavBar from '../../components/NavBar';
+import WaterPumpUsageType from '../../type/WaterPumpUsage';
 import { Chart, getDatasetAtEvent } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js';
 import type { InteractionItem } from 'chart.js';
-import WaterUsageType from '../type/WaterUsage';
-import moment, { Moment } from 'moment';
-import { UserContext } from '../App';
+import moment from 'moment';
 
-const WaterUsage = () => {
-  const [waterPumpUsages, setWaterPumpUsages] = useState<WaterUsageType[]>([]);
-  const { user } = useContext(UserContext);
+const WaterPumpUsage = () => {
+  const [waterPumpUsages, setWaterPumpUsages] = useState<WaterPumpUsageType[]>(
+    []
+  );
+  const dataValue: { [key: string]: any } = {};
   const navigate = useNavigate();
   const [currentDateString, setCurrentDateString] = useState(
     moment().format('YYYY-MM-DD')
@@ -22,27 +23,13 @@ const WaterUsage = () => {
   );
   const chartRef = useRef<ChartJS>(null);
 
-  const dataValue: { [key: string]: any } = {};
-
-  const getCustomerName = async (customerId: string) => {
-    let response = await axios.get(
-      `http://localhost:5000/api/Customer/${customerId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      }
-    );
-    return response.data.fullName;
-  };
-
   const labels: string[] = [];
   waterPumpUsages.map((waterPumpUsage, index) => {
     let total = 0;
     waterPumpUsage.data.map((sensordata, i) => (total += sensordata.value));
     let average = total / waterPumpUsage.data.length;
-    if (dataValue[waterPumpUsage.customerId]) {
-      dataValue[waterPumpUsage.customerId].data.push({
+    if (dataValue[waterPumpUsage.pumpId]) {
+      dataValue[waterPumpUsage.pumpId].data.push({
         x: moment(waterPumpUsage.date),
         y: average,
       });
@@ -50,8 +37,8 @@ const WaterUsage = () => {
       let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
         Math.random() * 255
       )},${Math.floor(Math.random() * 255)})`;
-      dataValue[waterPumpUsage.customerId] = {
-        label: waterPumpUsage.customerId,
+      dataValue[waterPumpUsage.pumpId] = {
+        label: waterPumpUsage.pumpId,
         data: [
           {
             x: moment(waterPumpUsage.date),
@@ -70,16 +57,13 @@ const WaterUsage = () => {
 
   const onClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     const { current: chart } = chartRef;
-    if (!chart) {
-      return;
-    }
-    let items: InteractionItem[] = getDatasetAtEvent(chart, event);
-    navigate(`/waterusage/${data.datasets[items[0].datasetIndex].label}`);
+    let items: InteractionItem[] = getDatasetAtEvent(chart!, event);
+    navigate(`/pumpusage/${data.datasets[items[0].datasetIndex].label}`);
   };
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/WaterUsage', {
+      .get('http://localhost:5000/api/WaterPumpUsage', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -91,7 +75,7 @@ const WaterUsage = () => {
       .then((response) => setWaterPumpUsages(response.data))
       .catch((err) => {
         console.log(err);
-        toast.error('An error occured while getting Water Usage');
+        toast.error('An error occured while getting Water Pump Usage');
       });
   }, [previousDateString, currentDateString]);
 
@@ -100,7 +84,7 @@ const WaterUsage = () => {
       <NavBar />
       <div className="w-full">
         <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFC0CB] flex items-center px-12">
-          Customer Water Usage
+          Water Pump Usage
         </div>
         <div className="w-full h-screen flex">
           <div className="h-full w-1/5 bg-neutral-300">
@@ -173,7 +157,7 @@ const WaterUsage = () => {
                   },
                   title: {
                     display: true,
-                    text: 'All Customer Water Usage',
+                    text: 'All Pump Usage',
                   },
                 },
                 scales: {
@@ -198,4 +182,4 @@ const WaterUsage = () => {
   );
 };
 
-export default WaterUsage;
+export default WaterPumpUsage;

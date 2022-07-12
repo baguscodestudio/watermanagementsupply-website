@@ -1,20 +1,23 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavBar from '../components/NavBar';
-import WaterPumpUsageType from '../type/WaterPumpUsage';
-import { Chart, getDatasetAtEvent } from 'react-chartjs-2';
+import NavBar from '../../components/NavBar';
+import WaterPumpUsageType from '../../type/WaterPumpUsage';
+import { Chart } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js';
-import type { InteractionItem } from 'chart.js';
+import EquipmentType from '../../type/Equipment';
 import moment from 'moment';
 
-const WaterPumpUsage = () => {
+const ViewIndividualPumpUsage = () => {
   const [waterPumpUsages, setWaterPumpUsages] = useState<WaterPumpUsageType[]>(
     []
   );
-  const dataValue: { [key: string]: any } = {};
-  const navigate = useNavigate();
+  const [equipment, setEquipment] = useState<EquipmentType>();
+  const currentDate = new Date();
+  const previousDate = new Date();
+  const params = useParams();
+  previousDate.setDate(currentDate.getDate() - 7);
   const [currentDateString, setCurrentDateString] = useState(
     moment().format('YYYY-MM-DD')
   );
@@ -24,46 +27,53 @@ const WaterPumpUsage = () => {
   const chartRef = useRef<ChartJS>(null);
 
   const labels: string[] = [];
+  const dataValue: {
+    [key: string]: any;
+  } = {};
   waterPumpUsages.map((waterPumpUsage, index) => {
-    let total = 0;
-    waterPumpUsage.data.map((sensordata, i) => (total += sensordata.value));
-    let average = total / waterPumpUsage.data.length;
-    if (dataValue[waterPumpUsage.pumpId]) {
-      dataValue[waterPumpUsage.pumpId].data.push({
-        x: moment(waterPumpUsage.date),
-        y: average,
+    if (waterPumpUsage.pumpId == params.pumpId) {
+      waterPumpUsage.data.map((sensordata, i) => {
+        if (dataValue[waterPumpUsage.pumpId]) {
+          dataValue[waterPumpUsage.pumpId].data.push({
+            x: moment(sensordata.timestamp),
+            y: sensordata.value,
+          });
+        } else {
+          let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
+            Math.random() * 255
+          )},${Math.floor(Math.random() * 255)})`;
+          dataValue[waterPumpUsage.pumpId] = {
+            label: waterPumpUsage.pumpId,
+            data: [
+              {
+                x: moment(sensordata.timestamp),
+                y: sensordata.value,
+              },
+            ],
+            borderColor: color,
+            backgroundColor: color,
+          };
+        }
       });
-    } else {
-      let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
-        Math.random() * 255
-      )},${Math.floor(Math.random() * 255)})`;
-      dataValue[waterPumpUsage.pumpId] = {
-        label: waterPumpUsage.pumpId,
-        data: [
-          {
-            x: moment(waterPumpUsage.date),
-            y: average,
-          },
-        ],
-        borderColor: color,
-        backgroundColor: color,
-      };
     }
   });
+
   const data = {
     labels: labels,
     datasets: Object.keys(dataValue).map((key) => dataValue[key]),
   };
 
-  const onClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    const { current: chart } = chartRef;
-    let items: InteractionItem[] = getDatasetAtEvent(chart!, event);
-    navigate(`/pumpusage/${data.datasets[items[0].datasetIndex].label}`);
-  };
-
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/WaterPumpUsage', {
+      .get(`http://localhost:5000/api/Equipment/EquipmentId/${params.pumpId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => setEquipment(response.data[0]))
+      .catch((err) => toast.error('Error while getting equipment'));
+    axios
+      .get(`http://localhost:5000/api/WaterPumpUsage/${params.pumpId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -110,38 +120,12 @@ const WaterPumpUsage = () => {
                 className="w-56 border-2 px-2 border-black"
               />
             </div>
-            <div className=" mt-4 inline-flex w-full justify-around">
-              <button
-                onClick={() =>
-                  setPreviousDateString(
-                    moment().startOf('year').format('YYYY-MM-DD')
-                  )
-                }
-                className="rounded-lg border-black bg-white border-2 px-4 py-1"
-              >
-                This Year
-              </button>
-              <button
-                onClick={() =>
-                  setPreviousDateString(
-                    moment().startOf('month').format('YYYY-MM-DD')
-                  )
-                }
-                className="rounded-lg border-black bg-white border-2 px-4 py-1"
-              >
-                This Month
-              </button>
-              <button
-                onClick={() =>
-                  setPreviousDateString(
-                    moment().startOf('week').format('YYYY-MM-DD')
-                  )
-                }
-                className="rounded-lg border-black bg-white border-2 px-4 py-1"
-              >
-                This Week
-              </button>
-            </div>
+            <Link
+              to="/pumpusage"
+              className="rounded-lg border-black bg-white border-2 px-4 py-1 ml-4 mt-4"
+            >
+              Back
+            </Link>
           </div>
           <div className="w-4/5">
             <Chart
@@ -157,7 +141,7 @@ const WaterPumpUsage = () => {
                   },
                   title: {
                     display: true,
-                    text: 'All Pump Usage',
+                    text: equipment?.equipmentName,
                   },
                 },
                 scales: {
@@ -173,7 +157,6 @@ const WaterPumpUsage = () => {
                   },
                 },
               }}
-              onClick={onClick}
             />
           </div>
         </div>
@@ -182,4 +165,4 @@ const WaterPumpUsage = () => {
   );
 };
 
-export default WaterPumpUsage;
+export default ViewIndividualPumpUsage;

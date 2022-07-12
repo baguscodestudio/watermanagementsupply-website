@@ -1,13 +1,12 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavBar from '../components/NavBar';
-import WaterPumpUsageType from '../type/WaterPumpUsage';
+import NavBar from '../../components/NavBar';
 import { Chart } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js';
-import EquipmentType from '../type/Equipment';
-import WaterUsageType from '../type/WaterUsage';
+import EquipmentType from '../../type/Equipment';
+import WaterUsageType from '../../type/WaterUsage';
 import moment from 'moment';
 
 const ViewIndividualWaterUsage = () => {

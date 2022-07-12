@@ -3,10 +3,10 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavBar from '../components/NavBar';
-import EquipmentType from '../type/Equipment';
+import NavBar from '../../components/NavBar';
+import EquipmentType from '../../type/Equipment';
 
-const EquipmentUpdate = () => {
+const EquipmentView = () => {
   const [equipment, setEquipment] = useState<EquipmentType>();
   const params = useParams();
   const id = params.equipmentId;
@@ -110,4 +110,4 @@ const EquipmentUpdate = () => {
   );
 };
 
-export default EquipmentUpdate;
+export default EquipmentView;

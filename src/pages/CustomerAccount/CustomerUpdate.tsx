@@ -5,23 +5,23 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ChevronDown, ChevronUp } from 'styled-icons/bootstrap';
 import { CheckmarkOutline } from 'styled-icons/evaicons-outline';
-import NavBar from '../components/NavBar';
+import NavBar from '../../components/NavBar';
 
-const StaffUpdate = () => {
+const CustomerUpdate = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [updatePage, setUpdatePage] = useState('');
-  const [staff, setStaff] = useState({
+  const [customer, setCustomer] = useState({
     username: '',
     password: '',
     fullName: '',
     gender: 'M',
     email: '',
     phone: '',
-    type: 'Staff',
-    staffRole: '',
+    type: 'Customer',
+    lastMaintenance: '',
   });
   const params = useParams();
-  const id = params.staffId;
+  const id = params.customerId;
   const items = [
     { label: 'Username', key: 'username' },
     { label: 'Full Name', key: 'fullName' },
@@ -29,22 +29,23 @@ const StaffUpdate = () => {
     { label: 'Password', key: 'password' },
     { label: 'Phone', key: 'phone' },
     { label: 'Gender', key: 'gender' },
+    { label: 'Last Maintenance', key: 'lastMaintenance' },
   ];
   const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/Staff/${id}`, {
+      .get(`http://localhost:5000/api/Customer/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => {
-        setStaff(response.data);
+        setCustomer(response.data);
       })
       .catch((err) => {
         console.log(err);
-        toast.error('Error occured while getting the staff information');
+        toast.error('Error occured while getting the customer information');
       });
   }, []);
 
@@ -53,16 +54,16 @@ const StaffUpdate = () => {
     key: string
   ) => {
     event.preventDefault();
-    if (updatePage === 'password' && staff.password !== confirmPassword) {
+    if (updatePage === 'password' && customer.password !== confirmPassword) {
       toast.error('Password does not match!');
     } else {
       axios
         .put(
-          'http://localhost:5000/api/Staff',
+          'http://localhost:5000/api/Customer',
           {
             userId: id,
             updatePassword: updatePage === 'password',
-            ...staff,
+            ...customer,
           },
           {
             headers: {
@@ -71,12 +72,12 @@ const StaffUpdate = () => {
           }
         )
         .then((response) => {
-          toast('Successfully updated staff!');
-          navigate('/staff');
+          toast('Successfully updated customer!');
+          navigate('/customer');
         })
         .catch((err) => {
           console.log(err);
-          toast.error('Error while updating staff');
+          toast.error('Error while updating customer');
         });
     }
   };
@@ -86,28 +87,34 @@ const StaffUpdate = () => {
       <NavBar />
       <div className="w-full grid grid-cols-2">
         <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFA500] flex items-center px-12 col-span-2">
-          Staff
+          Customer
         </div>
         <div className="bg-neutral-100 w-1/2 h-[50vh] shadow-lg flex flex-col py-6 px-10 mt-12 ml-10">
           <div className="inline-flex justify-between w-64 py-2 border-b-2">
             <span>Username:</span>
-            <span>{staff.username}</span>
+            <span>{customer.username}</span>
           </div>
           <div className="inline-flex justify-between w-64 py-2 border-b-2">
             <span>Full Name:</span>
-            <span>{staff.fullName}</span>
+            <span>{customer.fullName}</span>
           </div>
           <div className="inline-flex justify-between w-64 py-2 border-b-2">
             <span>Email:</span>
-            <span>{staff.email}</span>
+            <span>{customer.email}</span>
           </div>
           <div className="inline-flex justify-between w-64 py-2 border-b-2">
             <span>Phone:</span>
-            <span>{staff.phone}</span>
+            <span>{customer.phone}</span>
+          </div>
+          <div className="inline-flex justify-between w-64 py-2 border-b-2">
+            <span>Gender:</span>
+            <span>{customer.gender}</span>
           </div>
           <div className="inline-flex justify-between w-64 py-2">
-            <span>Gender:</span>
-            <span>{staff.gender}</span>
+            <span>Last Maintenance:</span>
+            <span>
+              {new Date(customer.lastMaintenance).toLocaleDateString()}
+            </span>
           </div>
           <Menu as="div" className="relative mt-12">
             {({ open }) => (
@@ -167,11 +174,20 @@ const StaffUpdate = () => {
                         ? '^.*[a-zA-Z]+.*$'
                         : ''
                     }
-                    type={updatePage === 'password' ? 'password' : 'text'}
+                    type={
+                      updatePage === 'lastMaintenance'
+                        ? 'date'
+                        : updatePage === 'password'
+                        ? 'password'
+                        : 'text'
+                    }
                     onChange={(event) =>
-                      setStaff({
-                        ...staff,
-                        [updatePage]: event.currentTarget.value,
+                      setCustomer({
+                        ...customer,
+                        [updatePage]:
+                          updatePage === 'lastMaintenance'
+                            ? new Date(event.currentTarget.value).toISOString()
+                            : event.currentTarget.value,
                       })
                     }
                     className="ml-6 border-[1px] px-2 border-black bg-transparent"
@@ -179,12 +195,14 @@ const StaffUpdate = () => {
                 </>
               ) : (
                 <Listbox
-                  value={staff.gender}
-                  onChange={(value) => setStaff({ ...staff, gender: value })}
+                  value={customer.gender}
+                  onChange={(value) =>
+                    setCustomer({ ...customer, gender: value })
+                  }
                 >
                   <div className="relative mt-1 w-32">
                     <Listbox.Button className="relative w-full h-10 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md sm:text-sm">
-                      {staff.gender}
+                      {customer.gender}
                       <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                         <ChevronDown
                           className="h-5 w-5 text-gray-400"
@@ -296,4 +314,4 @@ const StaffUpdate = () => {
   );
 };
 
-export default StaffUpdate;
+export default CustomerUpdate;
