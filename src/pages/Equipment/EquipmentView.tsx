@@ -110,7 +110,7 @@ const EquipmentView = () => {
             to="/equipment"
             className="m-auto rounded-lg border-black bg-transparent border-2 px-4 py-1"
           >
-            Cancel
+            Back
           </Link>
         </div>
       </div>

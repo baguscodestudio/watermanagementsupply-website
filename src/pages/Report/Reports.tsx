@@ -26,7 +26,7 @@ const Reports = () => {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
-      .then((response) => setReports(response.data))
+      .then((response) => setReports(response.data.result))
       .catch((err) => {
         console.log(err);
         toast.error('An error occured while fetching reports');

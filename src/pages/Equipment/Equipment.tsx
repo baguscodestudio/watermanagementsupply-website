@@ -20,7 +20,7 @@ const Equipment = () => {
         },
       })
       .then((response) => {
-        setEquipments(response.data);
+        setEquipments(response.data.result);
       })
       .catch((err) => {
         console.log(err);

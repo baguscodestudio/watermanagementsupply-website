@@ -27,7 +27,7 @@ const Broadcast = () => {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
-      .then((response) => setBroadcasts(response.data))
+      .then((response) => setBroadcasts(response.data.result))
       .catch((err) => {
         console.log(err);
         toast.error('An error occured while getting broadcasts');

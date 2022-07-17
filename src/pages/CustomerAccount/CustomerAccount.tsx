@@ -16,7 +16,7 @@ const CustomerAccount = () => {
         },
       })
       .then((response) => {
-        setCustomers(response.data);
+        setCustomers(response.data.result);
       })
       .catch((err) => {
         console.log(err);

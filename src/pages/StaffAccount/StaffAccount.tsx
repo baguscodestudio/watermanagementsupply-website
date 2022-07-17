@@ -16,7 +16,7 @@ const StaffAccount = () => {
         },
       })
       .then((response) => {
-        setStaffs(response.data);
+        setStaffs(response.data.result);
       })
       .catch((err) => {
         console.log(err);
@@ -53,21 +53,6 @@ const StaffAccount = () => {
           Manage Staffs
         </div>
         <div className="w-full inline-flex">
-          {/* <div className="w-96 ml-24 mt-2">
-            <div className="text-xl my-4">Chemical Search</div>
-            <div className="border-2 border-black w-full items-center inline-flex p-4 justify-between">
-              <input
-                placeholder="Search for equipment name"
-                className="border-2 border-black h-8 px-2 py-1"
-              />
-              <button
-                id="search"
-                className="bg-transparent rounded-lg px-4 py-1 border-2 border-black"
-              >
-                Search
-              </button>
-            </div>
-          </div> */}
           <div className="flex flex-col mx-auto mt-2">
             <div className="my-4 text-xl">Create Staff Account</div>
             <Link

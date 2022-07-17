@@ -30,7 +30,7 @@ const ReportView = () => {
         `http://localhost:5000/api/ReportTicket`,
         {
           ...report,
-          status: 'closed',
+          status: 'Closed',
         },
         {
           headers: {

@@ -16,7 +16,7 @@ const Chemical = () => {
         },
       })
       .then((response) => {
-        setChemicals(response.data);
+        setChemicals(response.data.result);
       })
       .catch((err) => {
         console.log(err);
