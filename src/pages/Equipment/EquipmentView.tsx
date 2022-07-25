@@ -20,7 +20,7 @@ const EquipmentView = () => {
       })
       .then((response) => {
         // console.log(response);
-        setEquipment(response.data[0]);
+        setEquipment(response.data.result[0]);
       })
       .catch((err) => {
         console.log(err);

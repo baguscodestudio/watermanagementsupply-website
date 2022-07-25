@@ -64,7 +64,7 @@ function App() {
   const [user, setUser] = useState(userObj.user);
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col font-inter text-gray-900">
       <ToastContainer
         position="top-right"
         autoClose={5000}
