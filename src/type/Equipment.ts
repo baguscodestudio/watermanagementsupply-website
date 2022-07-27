@@ -8,10 +8,6 @@ export default interface EquipmentType {
   replacementPeriod: string;
   lifespan: number;
   cost: number;
-  maintenance?: {
-    maintenanceDate: string;
-    maintenanceSummary: string;
-    maintenanceDetails: string;
-    maintenanceCost: number;
-  }[];
+  imageUrl: string;
+  isActive: boolean;
 }

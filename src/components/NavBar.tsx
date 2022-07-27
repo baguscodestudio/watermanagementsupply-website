@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { UserContext } from '../App';
@@ -13,7 +13,7 @@ import { CustomerService } from '@styled-icons/remix-fill/CustomerService';
 import { QueryStats } from '@styled-icons/material-outlined/QueryStats';
 
 import LinkList from './LinkList';
-import { Menu } from '@headlessui/react';
+import { Menu, Transition } from '@headlessui/react';
 const NavBar = () => {
   const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
@@ -169,10 +169,49 @@ const NavBar = () => {
           <span className="text-xl">{user.username}</span>
           <span className="text-gray-500">{user.staffRole}</span>
         </div>
-        <Menu>
-          <Menu.Button className="ml-2">
+        <Menu as="div" className="relative ml-2">
+          <Menu.Button>
             <MoreHorizontalOutline size="28" />
           </Menu.Button>
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items
+              as="div"
+              className="bottom-14 origin-top-right absolute left-0 bg-gray-50 rounded-lg shadow-lg p-1 flex flex-col min-w-fit"
+            >
+              <Menu.Item>
+                <Link
+                  to="/profile"
+                  className="hover:bg-gray-300 rounded-lg px-4 py-1 transition-colors hover:text-gray-700"
+                >
+                  Profile
+                </Link>
+              </Menu.Item>
+              <Menu.Item>
+                <Link
+                  to="/profile/password"
+                  className="hover:bg-gray-300 rounded-lg px-4 py-1 transition-colors hover:text-gray-700 whitespace-nowrap"
+                >
+                  Change Password
+                </Link>
+              </Menu.Item>
+              <Menu.Item>
+                <button
+                  onClick={handleLogout}
+                  className="hover:bg-gray-300 rounded-lg px-4 py-1 transition-colors hover:text-gray-700 text-left"
+                >
+                  Logout
+                </button>
+              </Menu.Item>
+            </Menu.Items>
+          </Transition>
         </Menu>
       </div>
     </nav>

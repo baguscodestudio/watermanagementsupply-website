@@ -1,6 +1,6 @@
-import { useState, createContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import './App.css';
 
 import ProtectedRoutes from './ProtectedRoutes';
@@ -39,6 +39,8 @@ import { Chart, registerables } from 'chart.js';
 
 import UserType from './type/User';
 import 'chartjs-adapter-moment';
+import NotificationType from './type/Notification';
+import axios from 'axios';
 
 Chart.register(...registerables);
 
@@ -58,10 +60,38 @@ const userObj = {
   setUser: (user: UserType) => {},
 };
 
+interface NotificationContextValue {
+  notifications: NotificationType[];
+  setNotifications: (data: NotificationType[]) => void;
+}
+
+const notificationObj: NotificationContextValue = {
+  notifications: [],
+  setNotifications: (data) => {},
+};
+
 export const UserContext = createContext(userObj);
+export const NotificationContext = createContext(notificationObj);
 
 function App() {
   const [user, setUser] = useState(userObj.user);
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/Notification', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => {
+        setNotifications(response.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('Error while getting notifications');
+      });
+  }, []);
 
   return (
     <div className="h-screen flex flex-col font-inter text-gray-900">
@@ -80,55 +110,62 @@ function App() {
       <ToastContainer />
       <Router>
         <UserContext.Provider value={{ user, setUser }}>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route element={<ProtectedRoutes />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/pumpusage" element={<WaterPumpUsage />} />
-              <Route path="/waterusage" element={<WaterUsage />} />
-              <Route
-                path="/waterusage/:customerId"
-                element={<ViewIndividualWaterUsage />}
-              />
-              <Route
-                path="/pumpusage/:pumpId"
-                element={<ViewIndividualPumpUsage />}
-              />
-              <Route path="/staff/role" element={<ManageRole />} />
-              <Route path="/staff" element={<StaffAccount />} />
-              <Route path="/staff/create" element={<StaffCreate />} />
-              <Route path="/staff/update/:staffId" element={<StaffUpdate />} />
-              <Route path="/customer" element={<CustomerAccount />} />
-              <Route path="/customer/create" element={<CustomerCreate />} />
-              <Route
-                path="/customer/update/:customerId"
-                element={<CustomerUpdate />}
-              />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/reports/:reportId" element={<ReportView />} />
-              <Route path="/bill" element={<Bill />} />
-              <Route path="/bill/:billId" element={<BillView />} />
-              <Route path="/broadcast" element={<Broadcast />} />
-              <Route path="/broadcast/create" element={<BroadcastCreate />} />
-              <Route path="/equipment" element={<Equipment />} />
-              <Route
-                path="/equipment/:equipmentId"
-                element={<EquipmentView />}
-              />
-              <Route path="/equipment/insert" element={<EquipmentCreate />} />
-              <Route
-                path="/equipment/update/:equipmentId"
-                element={<EquipmentUpdate />}
-              />
-              <Route path="/chemical" element={<Chemical />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route
-                path="/chemical/update/:chemicalId"
-                element={<ChemicalUpdate />}
-              />
-              <Route path="/chemical/insert" element={<ChemicalInsert />} />
-            </Route>
-          </Routes>
+          <NotificationContext.Provider
+            value={{ notifications, setNotifications }}
+          >
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route element={<ProtectedRoutes />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/pumpusage" element={<WaterPumpUsage />} />
+                <Route path="/waterusage" element={<WaterUsage />} />
+                <Route
+                  path="/waterusage/:customerId"
+                  element={<ViewIndividualWaterUsage />}
+                />
+                <Route
+                  path="/pumpusage/:pumpId"
+                  element={<ViewIndividualPumpUsage />}
+                />
+                <Route path="/staff/role" element={<ManageRole />} />
+                <Route path="/staff" element={<StaffAccount />} />
+                <Route path="/staff/create" element={<StaffCreate />} />
+                <Route
+                  path="/staff/update/:staffId"
+                  element={<StaffUpdate />}
+                />
+                <Route path="/customer" element={<CustomerAccount />} />
+                <Route path="/customer/create" element={<CustomerCreate />} />
+                <Route
+                  path="/customer/update/:customerId"
+                  element={<CustomerUpdate />}
+                />
+                <Route path="/reports" element={<Reports />} />
+                <Route path="/reports/:reportId" element={<ReportView />} />
+                <Route path="/bill" element={<Bill />} />
+                <Route path="/bill/:billId" element={<BillView />} />
+                <Route path="/broadcast" element={<Broadcast />} />
+                <Route path="/broadcast/create" element={<BroadcastCreate />} />
+                <Route path="/equipment" element={<Equipment />} />
+                <Route
+                  path="/equipment/:equipmentId"
+                  element={<EquipmentView />}
+                />
+                <Route path="/equipment/insert" element={<EquipmentCreate />} />
+                <Route
+                  path="/equipment/update/:equipmentId"
+                  element={<EquipmentUpdate />}
+                />
+                <Route path="/chemical" element={<Chemical />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route
+                  path="/chemical/update/:chemicalId"
+                  element={<ChemicalUpdate />}
+                />
+                <Route path="/chemical/insert" element={<ChemicalInsert />} />
+              </Route>
+            </Routes>
+          </NotificationContext.Provider>
         </UserContext.Provider>
       </Router>
     </div>
