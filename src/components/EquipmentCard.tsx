@@ -1,84 +1,54 @@
 import axios from 'axios';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import moment from 'moment';
+
+import { PriceTag3 } from '@styled-icons/remix-line/PriceTag3';
+import { Calendar } from '@styled-icons/bootstrap/Calendar';
+import { Activity } from '@styled-icons/evaicons-solid/Activity';
+
 import EquipmentType from '../type/Equipment';
 
-const EquipmentCard = ({
-  equipment,
-  fetchEquipments,
-}: {
-  equipment: EquipmentType;
-  fetchEquipments: () => void;
-}) => {
-  const handleDelete = (id: string) => {
-    axios
-      .delete(`http://localhost:5000/api/Equipment/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
-      .then((response) => {
-        toast('Successfully deleted Equipment');
-        fetchEquipments();
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error('Error while deleting equipment');
-      });
-  };
-
+const EquipmentCard = ({ equipment }: { equipment: EquipmentType }) => {
   return (
-    <div className="rounded-lg border-2 border-black flex px-4 py-3">
-      <div className="bg-neutral-300 h-full w-1/3"></div>
-      <div className="flex flex-col px-4 w-2/3">
-        <div className="text-2xl">{equipment.equipmentName}</div>
-        <div className="leading-tight">
-          ID: {equipment.equipmentId}
-          <br />
-          Installation Date:{' '}
-          {new Date(equipment.installationDate).toDateString()}
-          <br />
-          Guarantee Date: {new Date(equipment.guaranteeDate).toDateString()}
-          <br />
-          Specification:
-          <br />
-          {equipment.hardwareSpec}
+    <Link
+      to={`/equipment/${equipment.equipmentId}`}
+      className="w-full h-[10vh] inline-flex shadow-xl my-2 hover:scale-105 transition-transform hover:cursor-pointer"
+    >
+      <div
+        className={`w-3 h-full ${
+          equipment.isActive ? 'bg-emerald-500' : 'bg-red-500'
+        }`}
+      />
+      <div className="flex flex-col ml-4 mr-8 mt-1 w-2/12">
+        <span className="text-xl font-semibold">{equipment.equipmentName}</span>
+        <span className="text-gray-500">{equipment.type}</span>
+      </div>
+      <div className="bg-neutral-300 h-16 my-auto w-16 mx-4">
+        <img src={equipment.imageUrl} className="w-full h-full" />
+      </div>
+      <div className="h-4/5 w-[2px] bg-gray-200 mx-4 my-auto" />
+      <div className="inline-flex h-full w-1/2 items-center justify-around text-sm">
+        <div className="flex flex-col my-auto ml-4 mr-12">
+          <span className="text-green-700 font-medium mb-1">
+            <PriceTag3 size="20" /> ${equipment.cost}
+          </span>
+          <span className="mt-1">
+            <Calendar size="20" /> Installed:{' '}
+            {moment(equipment.installationDate).format('DD-MM-YYYY')}
+          </span>
         </div>
-        <div className="inline-flex w-full justify-between mt-auto">
-          <div className="flex flex-col w-2/3">
-            <span>Type:</span>
-            <div className="bg-neutral-300 rounded-full w-fit px-2">
-              {equipment.type}
-            </div>
-          </div>
-          <div className="flex flex-col w-1/3">
-            <span>Cost:</span>
-            <span className="font-bold text-green-500">${equipment.cost}</span>
-          </div>
-        </div>
-        <div className="inline-flex w-full justify-around mt-4">
-          <Link
-            to={`/equipment/${equipment.equipmentId}`}
-            className="rounded-xl px-4 text-lg border-[2px] border-black bg-[#B0C4DE]"
-          >
-            View
-          </Link>
-          <Link
-            to={`/equipment/update/${equipment.equipmentId}`}
-            className="rounded-xl px-4 text-lg border-[2px] border-black bg-[#FFDAB9]"
-          >
-            Update
-          </Link>
-          <button
-            onClick={() => handleDelete(equipment.equipmentId)}
-            className="rounded-xl px-4 text-lg border-[2px] border-black bg-[#FF3F29]"
-          >
-            Delete
-          </button>
+        <div className="flex flex-col my-auto ml-4 mr-12">
+          <span className="mb-1">
+            <Activity size="20" /> Lifespan: {equipment.lifespan}
+          </span>
+          <span className="mt-1">
+            <Calendar size="20" /> Replace:{' '}
+            {moment(equipment.replacementPeriod).format('DD-MM-YYYY')}
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

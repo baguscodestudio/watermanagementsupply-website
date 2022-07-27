@@ -11,6 +11,22 @@ const EquipmentView = () => {
   const params = useParams();
   const id = params.equipmentId;
 
+  const handleDelete = (id: string) => {
+    axios
+      .delete(`http://localhost:5000/api/Equipment/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => {
+        toast('Successfully deleted Equipment');
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('Error while deleting equipment');
+      });
+  };
+
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/Equipment/EquipmentId/${id}`, {

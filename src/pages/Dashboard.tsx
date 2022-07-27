@@ -3,7 +3,6 @@ import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { InfoOutline } from '@styled-icons/evaicons-outline/InfoOutline';
-import { Bell } from 'styled-icons/bootstrap';
 import { CircleFill } from '@styled-icons/bootstrap/CircleFill';
 import { Warning } from '@styled-icons/fluentui-system-regular/Warning';
 
@@ -14,12 +13,13 @@ import Paper from '../components/Paper';
 import ChemicalType from '../type/Chemical';
 import EquipmentType from '../type/Equipment';
 import moment from 'moment';
+import Header from '../components/Header';
 
 const Dashboard = () => {
-  const { user } = useContext(UserContext);
   const [chemicals, setChemicals] = useState<ChemicalType[]>([]);
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
   const { notifications } = useContext(NotificationContext);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     axios
@@ -62,12 +62,7 @@ const Dashboard = () => {
     <div className="w-full h-full flex">
       <NavBar />
       <div className="w-[85vw] h-full bg-gray-50">
-        <header className="w-full h-[10vh] shadow-lg inline-flex items-center bg-white">
-          <span className="ml-12 text-3xl font-semibold">
-            Welcome, {user.username}
-          </span>
-          <Bell size="24" className="ml-auto mr-12" />
-        </header>
+        <Header title={`Welcome, ${user.username}`} />
         <div className="grid grid-cols-12 grid-rows-2 h-[90vh] w-full p-12 gap-8">
           <Paper className="col-span-8 px-6 py-4 flex flex-col">
             <span className="text-lg font-semibold">Chemical Status</span>
