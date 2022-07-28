@@ -2,11 +2,19 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
+import { Search } from '@styled-icons/boxicons-regular/Search';
+import { Warning } from '@styled-icons/fluentui-system-regular/Warning';
+
+import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
 import ChecmicalType from '../../type/Chemical';
+import { formatter } from '../../utils';
 
 const Chemical = () => {
   const [chemicals, setChemicals] = useState<ChecmicalType[]>([]);
+  const [search, setSearch] = useState('');
+  const [finalSearch, setFinalSearch] = useState('');
 
   const fetchChemicals = () => {
     axios
@@ -41,6 +49,11 @@ const Chemical = () => {
       });
   };
 
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFinalSearch(search);
+  };
+
   useEffect(() => {
     fetchChemicals();
   }, []);
@@ -49,81 +62,63 @@ const Chemical = () => {
     <div className="w-full h-full flex">
       <NavBar />
       <div className="w-[85vw] h-full">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#8FBC8F] flex items-center px-12">
-          Chemical Inventory
-        </div>
-        <div className="w-full inline-flex">
-          {/* <div className="w-96 ml-24 mt-2">
-            <div className="text-xl my-4">Chemical Search</div>
-            <div className="border-2 border-black w-full items-center inline-flex p-4 justify-between">
-              <input
-                placeholder="Search for equipment name"
-                className="border-2 border-black h-8 px-2 py-1"
-              />
-              <button
-                id="search"
-                className="bg-transparent rounded-lg px-4 py-1 border-2 border-black"
-              >
-                Search
-              </button>
-            </div>
-          </div> */}
-          <div className="flex flex-col mx-auto mt-2">
-            <div className="my-4 text-xl">Insert chemical inventory</div>
-            <Link
-              to="/chemical/insert"
-              id="insert"
-              className="bg-transparent rounded-lg px-4 py-1 border-2 border-black text-center"
-            >
-              Insert
-            </Link>
+        <Header title="Assets" />
+        <div className="flex flex-col py-10 px-12">
+          <div className="underline underline-offset-8 text-2xl font-medium decoration-sky-500 decoration-[6px]">
+            Chemicals
           </div>
-        </div>
-        <table className="w-full mt-16">
-          <thead className="bg-[#00008B] text-white text-lg font-thin h-10">
-            <tr>
-              <th className="border-x-2">Chemical ID</th>
-              <th className="border-x-2">Chemical name</th>
-              <th className="border-x-2">Chemical quantity</th>
-              <th className="border-x-2">Chemical min quantity</th>
-              <th className="border-x-2">Chemical measure</th>
-              <th className="border-x-2">Chemical usage description</th>
-              <th className="border-x-2">Update</th>
-              <th className="border-x-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {chemicals.map((chemical, index) => (
-              <tr
-                key={index}
-                className="odd:bg-[#E5E5E5] even:bg-white h-8 text-center"
-              >
-                <td>{chemical.chemicalId}</td>
-                <td>{chemical.chemicalName}</td>
-                <td>{chemical.minQuantity}</td>
-                <td>{chemical.quantity}</td>
-                <td>{chemical.measureUnit}</td>
-                <td>{chemical.usageDescription}</td>
-                <td>
-                  <Link
-                    to={`/chemical/update/${chemical.chemicalId}`}
-                    className="underline underline-offset-2"
-                  >
-                    Update
-                  </Link>
-                </td>
-                <td>
-                  <button
-                    onClick={() => handleDelete(chemical.chemicalId)}
-                    className="underline underline-offset-2"
-                  >
-                    Delete
-                  </button>
-                </td>
+          <div className="w-full h-[4px] bg-gray-200 -z-10 mt-[2px]" />
+          <form
+            onSubmit={(event) => handleSearch(event)}
+            className="rounded-lg ring-1 ring-gray-500 w-full h-12 my-8 inline-flex items-center px-6"
+          >
+            <button type="submit" className="mr-4">
+              <Search size="24" />
+            </button>
+            <input
+              placeholder="Search for chemical name"
+              onChange={(event) => setSearch(event.currentTarget.value)}
+              id="search"
+              className="outline-none text-lg w-full"
+            />
+          </form>
+          <table>
+            <thead>
+              <tr className="text-sm text-gray-500 border-b-2 border-gray-200 h-10">
+                <th className="font-normal px-4 text-left w-2/12">Name</th>
+                <th className="font-normal px-4 w-1/12">Min Quantity</th>
+                <th className="font-normal px-4 w-2/12">Quantity</th>
+                <th className="font-normal px-4 w-1/12">Measure Unit</th>
+                <th className="font-normal px-4 text-left w-6/12">Desc</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {chemicals
+                .filter((chemical) =>
+                  chemical.chemicalName
+                    .toLowerCase()
+                    .includes(finalSearch.toLowerCase())
+                )
+                .map((chemical, index) => (
+                  <tr key={index} className="h-12 border-b-2 border-gray-200">
+                    <td className="px-4">{chemical.chemicalName}</td>
+                    <td className="text-center">{chemical.minQuantity}</td>
+                    <td className="text-center relative">
+                      {formatter.format(chemical.quantity)}
+                      {chemical.minQuantity > chemical.quantity && (
+                        <Warning
+                          size="24"
+                          className="absolute right-8 text-red-500"
+                        />
+                      )}
+                    </td>
+                    <td className="text-center">{chemical.measureUnit}</td>
+                    <td>{chemical.usageDescription}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

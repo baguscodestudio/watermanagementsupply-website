@@ -4,10 +4,8 @@ import { toast } from 'react-toastify';
 import { NotificationContext, UserContext } from '../App';
 
 import { Home } from '@styled-icons/ionicons-outline/Home';
-
 import { User } from '@styled-icons/boxicons-regular/User';
 import { MegaphoneLoud } from '@styled-icons/fluentui-system-filled/MegaphoneLoud';
-import { BellFill } from '@styled-icons/bootstrap/BellFill';
 import { MoreHorizontalOutline } from '@styled-icons/evaicons-outline/MoreHorizontalOutline';
 import { Devices } from '@styled-icons/boxicons-regular/Devices';
 import { CustomerService } from '@styled-icons/remix-fill/CustomerService';

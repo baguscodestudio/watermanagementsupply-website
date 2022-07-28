@@ -2,6 +2,8 @@ import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import moment from 'moment';
+
 import { InfoOutline } from '@styled-icons/evaicons-outline/InfoOutline';
 import { CircleFill } from '@styled-icons/bootstrap/CircleFill';
 import { Warning } from '@styled-icons/fluentui-system-regular/Warning';
@@ -10,10 +12,11 @@ import { NotificationContext, UserContext } from '../App';
 
 import NavBar from '../components/NavBar';
 import Paper from '../components/Paper';
+import Header from '../components/Header';
+
 import ChemicalType from '../type/Chemical';
 import EquipmentType from '../type/Equipment';
-import moment from 'moment';
-import Header from '../components/Header';
+import { formatter } from '../utils';
 
 const Dashboard = () => {
   const [chemicals, setChemicals] = useState<ChemicalType[]>([]);
@@ -89,7 +92,7 @@ const Dashboard = () => {
                         <td className="text-center">{chemical.chemicalName}</td>
                         <td className="text-center border-x-2">{`${chemical.minQuantity} ${chemical.measureUnit}`}</td>
                         <td className="text-center relative">
-                          {`${Math.round(chemical.quantity * 100) / 100} ${
+                          {`${formatter.format(chemical.quantity)} ${
                             chemical.measureUnit
                           }`}
                           {chemical.minQuantity > chemical.quantity && (
