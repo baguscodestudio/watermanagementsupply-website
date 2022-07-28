@@ -1,11 +1,12 @@
 import React, { Fragment, useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { UserContext } from '../App';
+import { NotificationContext, UserContext } from '../App';
 
 import { Home } from '@styled-icons/ionicons-outline/Home';
 
 import { User } from '@styled-icons/boxicons-regular/User';
+import { MegaphoneLoud } from '@styled-icons/fluentui-system-filled/MegaphoneLoud';
 import { BellFill } from '@styled-icons/bootstrap/BellFill';
 import { MoreHorizontalOutline } from '@styled-icons/evaicons-outline/MoreHorizontalOutline';
 import { Devices } from '@styled-icons/boxicons-regular/Devices';
@@ -16,6 +17,7 @@ import LinkList from './LinkList';
 import { Menu, Transition } from '@headlessui/react';
 const NavBar = () => {
   const { user, setUser } = useContext(UserContext);
+  const { setNotifications } = useContext(NotificationContext);
   const navigate = useNavigate();
   const paths = [
     {
@@ -23,7 +25,12 @@ const NavBar = () => {
       label: 'Dashboard',
       icon: <Home size="24" className="ml-8" />,
     },
-    { path: '/broadcast', label: 'Broadcast', roles: ['CustomerSupport'] },
+    {
+      path: '/broadcast',
+      label: 'Broadcast',
+      roles: ['CustomerSupport'],
+      icon: <MegaphoneLoud size="24" className="ml-8" />,
+    },
   ];
   const LINK_LIST = [
     {
@@ -116,6 +123,7 @@ const NavBar = () => {
       type: '',
       staffRole: '',
     });
+    setNotifications([]);
     toast('Successfully logged out!');
     navigate('/');
   };

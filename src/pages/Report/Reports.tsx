@@ -34,9 +34,9 @@ const Reports = () => {
   }, []);
 
   return (
-    <>
+    <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-full">
+      <div className="w-[85vw] h-full">
         <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFC0CB] flex items-center px-12">
           Reports
         </div>
@@ -90,7 +90,7 @@ const Reports = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

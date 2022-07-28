@@ -78,20 +78,22 @@ function App() {
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:5000/api/Notification', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
-      .then((response) => {
-        setNotifications(response.data.result);
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error('Error while getting notifications');
-      });
-  }, []);
+    if (user.staffRole === 'Technician') {
+      axios
+        .get('http://localhost:5000/api/Notification', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        })
+        .then((response) => {
+          setNotifications(response.data.result);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error('Error while getting notifications');
+        });
+    }
+  }, [user.staffRole]);
 
   return (
     <div className="h-screen flex flex-col font-inter text-gray-900">

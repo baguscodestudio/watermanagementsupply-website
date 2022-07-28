@@ -46,9 +46,9 @@ const Chemical = () => {
   }, []);
 
   return (
-    <>
+    <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-full">
+      <div className="w-[85vw] h-full">
         <div className="text-4xl font-bold w-full h-[20vh] bg-[#8FBC8F] flex items-center px-12">
           Chemical Inventory
         </div>
@@ -125,7 +125,7 @@ const Chemical = () => {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 };
 

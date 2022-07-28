@@ -35,9 +35,9 @@ const Broadcast = () => {
   }, []);
 
   return (
-    <>
+    <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-full">
+      <div className="w-[85vw] h-full">
         <div className="text-4xl font-bold w-full h-[20vh] bg-[#FA8072] flex items-center px-12">
           Broadcast Alert
         </div>
@@ -109,7 +109,7 @@ const Broadcast = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

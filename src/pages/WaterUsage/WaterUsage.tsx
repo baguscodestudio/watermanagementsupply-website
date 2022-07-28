@@ -82,9 +82,9 @@ const WaterUsage = () => {
   }, [previousDateString, currentDateString]);
 
   return (
-    <>
+    <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-full">
+      <div className="w-[85vw] h-full">
         <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFC0CB] flex items-center px-12">
           Customer Water Usage
         </div>
@@ -180,7 +180,7 @@ const WaterUsage = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
