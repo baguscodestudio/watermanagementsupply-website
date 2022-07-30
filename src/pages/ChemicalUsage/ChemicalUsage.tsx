@@ -1,23 +1,21 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Chart, getDatasetAtEvent } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js';
-import type { InteractionItem } from 'chart.js';
 import moment from 'moment';
 
 import { Search } from '@styled-icons/boxicons-regular/Search';
 
-import WaterUsageType from '../../type/WaterUsage';
-import CustomerType from '../../type/Customer';
+import ChemicalUsageType from '../../type/ChemicalUsage';
+import ChemicalType from '../../type/Chemical';
 
+import Header from '../../components/Header';
+import Pagination from '../../components/Pagination';
 import NavBar from '../../components/NavBar';
 import Paper from '../../components/Paper';
 import InputLabel from '../../components/InputLabel';
 import SelectTimeFrameLabel from '../../components/SelectTimeFrameLabel';
-import Header from '../../components/Header';
-import Pagination from '../../components/Pagination';
 
 const MODES: {
   label: string;
@@ -41,14 +39,14 @@ const MODES: {
   },
 ];
 
-const WaterUsage = () => {
-  const [waterPumpUsages, setWaterPumpUsages] = useState<WaterUsageType[]>([]);
-  const [selCust, setSelCust] = useState<string[]>([]);
+const ChemicalUsage = () => {
+  const [chemicalUsage, setChemicalUsage] = useState<ChemicalUsageType[]>([]);
+  const [chemicals, setChemicals] = useState<ChemicalType[]>([]);
   const [search, setSearch] = useState('');
   const [finalSearch, setFinalSearch] = useState('');
   const [page, setPage] = useState(0);
   const [mode, setMode] = useState(MODES[0]);
-  const [customers, setCustomers] = useState<CustomerType[]>([]);
+  const [selChem, setSelChem] = useState<string[]>([]);
   const [currentDateString, setCurrentDateString] = useState(
     moment().format('YYYY-MM-DD')
   );
@@ -58,7 +56,6 @@ const WaterUsage = () => {
 
   const chartRef = useRef<ChartJS>(null);
 
-  const navigate = useNavigate();
   const dataValue: { [key: string]: any } = {};
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
@@ -66,28 +63,28 @@ const WaterUsage = () => {
     setFinalSearch(search);
   };
 
-  const addSelectedCustomer = (cust: CustomerType) => {
-    if (selCust.includes(cust.userId)) {
-      let tempArr = [...selCust];
-      tempArr = tempArr.filter((id) => id !== cust.userId);
-      setSelCust(tempArr);
-    } else if (selCust.length < 5) {
-      let tempArr = [...selCust];
-      tempArr.push(cust.userId);
-      setSelCust(tempArr);
+  const addSelectedEquipment = (eq: ChemicalType) => {
+    if (selChem.includes(eq.chemicalId)) {
+      let tempArr = [...selChem];
+      tempArr = tempArr.filter((id) => id !== eq.chemicalId);
+      setSelChem(tempArr);
+    } else if (selChem.length < 5) {
+      let tempArr = [...selChem];
+      tempArr.push(eq.chemicalId);
+      setSelChem(tempArr);
     } else {
-      let tempArr = [...selCust];
+      let tempArr = [...selChem];
       tempArr.shift();
-      tempArr.push(cust.userId);
-      setSelCust(tempArr);
+      tempArr.push(eq.chemicalId);
+      setSelChem(tempArr);
     }
   };
 
-  const getCustomerName = (id: string) => {
-    if (customers) {
-      for (let i = 0; i < customers.length; i++) {
-        if (customers[i].userId === id) {
-          return customers[i].username;
+  const getChemicalName = (id: string) => {
+    if (chemicals) {
+      for (let i = 0; i < chemicals.length; i++) {
+        if (chemicals[i].chemicalId === id) {
+          return chemicals[i].chemicalName;
         }
       }
     } else {
@@ -95,12 +92,28 @@ const WaterUsage = () => {
     }
   };
 
+  const fetchChemicals = () => {
+    axios
+      .get('http://localhost:5000/api/Chemical', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => {
+        setChemicals(response.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('Error occured while getting chemicals');
+      });
+  };
+
   const labels: string[] = [];
-  waterPumpUsages.map((waterPumpUsage, index) => {
-    if (selCust.includes(waterPumpUsage.customerId)) {
-      waterPumpUsage.data.map((sensordata, i) => {
-        if (dataValue[waterPumpUsage.customerId]) {
-          dataValue[waterPumpUsage.customerId].data.push({
+  chemicalUsage.map((usage, index) => {
+    if (selChem.includes(usage.chemicalId)) {
+      usage.data.map((sensordata, i) => {
+        if (dataValue[usage.chemicalId]) {
+          dataValue[usage.chemicalId].data.push({
             x: moment(sensordata.timestamp),
             y: sensordata.value,
           });
@@ -108,8 +121,8 @@ const WaterUsage = () => {
           let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
             Math.random() * 255
           )},${Math.floor(Math.random() * 255)})`;
-          dataValue[waterPumpUsage.customerId] = {
-            label: getCustomerName(waterPumpUsage.customerId),
+          dataValue[usage.chemicalId] = {
+            label: getChemicalName(usage.chemicalId),
             data: [
               {
                 x: moment(sensordata.timestamp),
@@ -249,34 +262,13 @@ const WaterUsage = () => {
     datasets: Object.keys(dataValue).map((key) => dataValue[key]),
   };
 
-  const onClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    const { current: chart } = chartRef;
-    if (!chart) {
-      return;
-    }
-    let items: InteractionItem[] = getDatasetAtEvent(chart, event);
-    navigate(`/waterusage/${data.datasets[items[0].datasetIndex].label}`);
-  };
-
   useEffect(() => {
-    axios
-      .get('http://localhost:5000/api/Customer', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
-      .then((response) => {
-        setCustomers(response.data.result);
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error('Error occured while fetching customers');
-      });
+    fetchChemicals();
   }, []);
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/WaterUsage', {
+      .get('http://localhost:5000/api/ChemicalUsage', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -285,10 +277,10 @@ const WaterUsage = () => {
           toDate: currentDateString,
         },
       })
-      .then((response) => setWaterPumpUsages(response.data))
+      .then((response) => setChemicalUsage(response.data))
       .catch((err) => {
         console.log(err);
-        toast.error('An error occured while getting Water Usage');
+        toast.error('An error occured while getting Chemical Usage');
       });
   }, [previousDateString, currentDateString]);
 
@@ -296,7 +288,7 @@ const WaterUsage = () => {
     <div className="w-full h-full flex">
       <NavBar />
       <div className="w-[85vw] h-full">
-        <Header title="Customer Water Usage" />
+        <Header title="Chemical Usage" />
         <div className="w-full flex py-10 px-12 h-[90vh]">
           <div className="h-full w-1/5 rounded-lg shadow-xl p-4 flex flex-col">
             <form
@@ -310,37 +302,37 @@ const WaterUsage = () => {
                 <Search size="16" className="m-auto" />
               </button>
               <input
-                placeholder="Search for customer's name"
+                placeholder="Search for chemical name"
                 onChange={(event) => setSearch(event.currentTarget.value)}
                 id="search"
                 className="outline-none w-full"
               />
             </form>
-            <span className="px-4 text-lg font-semibold">Customers</span>
+            <span className="px-4 text-lg font-semibold">Chemicals</span>
             <div className="w-full h-[2px] bg-gray-900 my-2" />
             <table className="w-full text-center">
               <tbody>
-                {customers
-                  .filter((customer) =>
-                    customer.username
+                {chemicals
+                  .filter((chemical) =>
+                    chemical.chemicalName
                       .toLowerCase()
                       .includes(finalSearch.toLowerCase())
                   )
                   .slice(page * 15, page * 15 + 15)
-                  .map((customer, index) => (
+                  .map((chemical, index) => (
                     <tr
                       key={index}
-                      onClick={() => addSelectedCustomer(customer)}
+                      onClick={() => addSelectedEquipment(chemical)}
                       className="border-b-2 h-8 border-gray-200 last-of-type:border-none hover:cursor-pointer"
                     >
                       <td className="py-1">
                         <div
                           className={`${
-                            selCust.includes(customer.userId) &&
+                            selChem.includes(chemical.chemicalId) &&
                             'bg-gray-200 text-gray-500 rounded-lg'
                           }`}
                         >
-                          {customer.username}
+                          {chemical.chemicalName}
                         </div>
                       </td>
                     </tr>
@@ -349,7 +341,7 @@ const WaterUsage = () => {
             </table>
             <Pagination
               className="mt-auto mx-auto mb-6"
-              rows={customers.length}
+              rows={chemicals.length}
               rowsPerPage={15}
               page={page}
               setPage={setPage}
@@ -359,7 +351,7 @@ const WaterUsage = () => {
             <Chart
               ref={chartRef}
               type="line"
-              className="w-full h-auto"
+              className="h-4/5 mx-auto"
               data={data}
               options={{
                 responsive: true,
@@ -369,7 +361,7 @@ const WaterUsage = () => {
                   },
                   title: {
                     display: true,
-                    text: 'All Customer Water Usage',
+                    text: 'All Pump Usage',
                   },
                 },
                 scales: {
@@ -382,7 +374,6 @@ const WaterUsage = () => {
                   },
                 },
               }}
-              onClick={onClick}
             />
             <Paper className="w-full h-1/5 px-8 py-2 flex">
               <div className="flex flex-col mr-4">
@@ -419,4 +410,4 @@ const WaterUsage = () => {
   );
 };
 
-export default WaterUsage;
+export default ChemicalUsage;

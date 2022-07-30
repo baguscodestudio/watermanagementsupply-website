@@ -85,6 +85,11 @@ const NavBar = () => {
           label: 'Water Usage',
           path: '/waterusage',
         },
+        {
+          roles: ['Technician'],
+          label: 'Chemical Usage',
+          path: '/chemicalusage',
+        },
       ],
     },
     {

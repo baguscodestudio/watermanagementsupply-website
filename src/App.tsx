@@ -24,6 +24,7 @@ import StaffCreate from './pages/StaffAccount/StaffCreate';
 import StaffUpdate from './pages/StaffAccount/StaffUpdate';
 import Broadcast from './pages/Broadcast/Broadcast';
 import WaterPumpUsage from './pages/WaterPumpUsage/WaterPumpUsage';
+import ChemicalUsage from './pages/ChemicalUsage/ChemicalUsage';
 import ViewIndividualPumpUsage from './pages/WaterPumpUsage/ViewIndividualPumpUsage';
 import WaterUsage from './pages/WaterUsage/WaterUsage';
 import ViewIndividualWaterUsage from './pages/WaterUsage/ViewIndividualWaterUsage';
@@ -128,6 +129,7 @@ function App() {
                   path="/pumpusage/:pumpId"
                   element={<ViewIndividualPumpUsage />}
                 />
+                <Route path="/chemicalusage" element={<ChemicalUsage />} />
                 <Route path="/staff/role" element={<ManageRole />} />
                 <Route path="/staff" element={<StaffAccount />} />
                 <Route path="/staff/create" element={<StaffCreate />} />

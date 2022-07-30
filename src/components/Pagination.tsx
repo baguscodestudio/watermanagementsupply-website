@@ -46,6 +46,7 @@ const Pagination: React.FC<{
       </button>
       {pageNumbers.map((number, index) => (
         <button
+          key={index}
           className={`text-lg w-8 h-8 hover:bg-sky-500 hover:text-white transition-colors rounded-lg ${
             page === number - 1 && 'bg-sky-500 text-white'
           }`}
