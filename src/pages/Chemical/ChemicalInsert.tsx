@@ -2,7 +2,10 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Header from '../../components/Header';
+import InputLabel from '../../components/InputLabel';
 import NavBar from '../../components/NavBar';
+import TextAreaLabel from '../../components/TextAreaLabel';
 
 const ChemicalInsert = () => {
   const [chemical, setChemical] = useState({
@@ -40,106 +43,94 @@ const ChemicalInsert = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-full">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#F0E68C] flex items-center px-12">
-          Chemical Inventory
-        </div>
+      <div className="w-[85vw] h-full relative">
+        <Header title="Insert" />
         <form
-          className="flex flex-col ml-20 mt-24"
-          id="chemical-info"
+          className="flex flex-col py-10 px-12 h-[90vh] justify-center items-center"
           onSubmit={(event) => handleSubmit(event)}
+          id="chemical-info"
         >
-          <div className="text-2xl mb-14 underline">
-            Chemical Inventory Information
+          <div className="mb-8 inline-flex w-1/2">
+            <div className="flex flex-col mr-auto">
+              <span className="text-3xl">Chemical Information</span>
+              <span className="text-gray-500">Create Chemical</span>
+            </div>
+            <Link
+              to="/chemical"
+              className="rounded-lg border-gray-500 text-gray-500 bg-transparent border-2 px-4 py-1 h-fit my-auto ml-auto hover:shadow-lg hover:-translate-y-1 transition-all"
+            >
+              Cancel
+            </Link>
+            <button
+              type="submit"
+              className="rounded-lg px-4 h-fit py-1 my-auto ml-2 hover:shadow-lg hover:-translate-y-1 transition-all text-white bg-green-500 text-lg font-medium"
+            >
+              Create
+            </button>
           </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Chemical name:</div>
-            <input
-              name="name"
+          <div className="w-1/3 flex flex-col">
+            <InputLabel
               onChange={(event) =>
                 setChemical({
                   ...chemical,
                   chemicalName: event.currentTarget.value,
                 })
               }
-              className="w-56 border-2 px-2 border-black bg-transparent"
+              label="Name"
+              required={true}
+              className="w-full my-2"
             />
-          </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Chemical min quantity:</div>
-            <input
-              type="number"
-              onChange={(event) =>
-                setChemical({
-                  ...chemical,
-                  minQuantity: parseInt(event.currentTarget.value),
-                })
-              }
-              name="minQuantity"
-              className="w-56 border-2 px-2 border-black bg-transparent"
-            />
-          </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Chemical quantity:</div>
-            <input
-              type="number"
-              onChange={(event) =>
-                setChemical({
-                  ...chemical,
-                  quantity: parseInt(event.currentTarget.value),
-                })
-              }
-              name="quantity"
-              className="w-56 border-2 px-2 border-black bg-transparent"
-            />
-          </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Chemical measure unit:</div>
-            <input
-              name="measure-unit"
+            <InputLabel
+              label="Measure Unit"
               onChange={(event) =>
                 setChemical({
                   ...chemical,
                   measureUnit: event.currentTarget.value,
                 })
               }
-              className="w-56 border-2 px-2 border-black bg-transparent "
+              required={true}
+              className="w-1/3 mr-auto my-2"
             />
-          </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Chemical usage description:</div>
-            <textarea
-              name="usage-description"
+            <TextAreaLabel
               onChange={(event) =>
                 setChemical({
                   ...chemical,
                   usageDescription: event.currentTarget.value,
                 })
               }
-              rows={5}
-              cols={50}
-              className="w-56 border-2 px-2 border-black bg-transparent disabled:bg-neutral-100"
+              label="Description"
+              className="w-full my-2"
             />
-          </div>
-          <div className="inline-flex mt-16">
-            <button
-              type="submit"
-              className="rounded-lg border-black bg-transparent border-2 px-4 py-1 mr-12"
-            >
-              Submit
-            </button>
-            <Link
-              to="/chemical"
-              className="rounded-lg border-black bg-transparent border-2 px-4 py-1"
-            >
-              Cancel
-            </Link>
+            <div className="inline-flex justify-between w-full">
+              <InputLabel
+                onChange={(event) =>
+                  setChemical({
+                    ...chemical,
+                    minQuantity: parseInt(event.currentTarget.value),
+                  })
+                }
+                type="number"
+                label="Min Quantity"
+                className="w-5/12 my-2"
+              />
+              <InputLabel
+                onChange={(event) =>
+                  setChemical({
+                    ...chemical,
+                    quantity: parseInt(event.currentTarget.value),
+                  })
+                }
+                type="number"
+                label="Quantity"
+                className="w-5/12 my-2"
+              />
+            </div>
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 

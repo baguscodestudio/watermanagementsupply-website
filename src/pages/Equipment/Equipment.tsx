@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { Search } from '@styled-icons/boxicons-regular/Search';
-import { ChevronLeft, ChevronRight } from 'styled-icons/entypo';
+import { Plus } from '@styled-icons/boxicons-regular/Plus';
 
 import NavBar from '../../components/NavBar';
 import EquipmentType from '../../type/Equipment';
 import EquipmentCard from '../../components/EquipmentCard';
 import Header from '../../components/Header';
+import Pagination from '../../components/Pagination';
+import { Link } from 'react-router-dom';
 
 const Equipment = () => {
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
@@ -18,7 +20,7 @@ const Equipment = () => {
 
   const fetchEquipments = () => {
     axios
-      .get('http://localhost:5000/api/Equipment/', {
+      .get('http://localhost:5000/api/Equipment', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -30,21 +32,6 @@ const Equipment = () => {
         console.log(err);
         toast.error('Error occured while getting equipments');
       });
-  };
-
-  const generatePages = () => {
-    let pages = [];
-    for (let i = 0; i < Math.ceil(equipments.length / 4); i++) {
-      pages.push(
-        <button
-          className="text-lg w-8 h-8 hover:bg-sky-500 hover:text-white transition-colors rounded-lg"
-          onClick={() => setPage(i)}
-        >
-          {i + 1}
-        </button>
-      );
-    }
-    return pages;
   };
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
@@ -59,7 +46,13 @@ const Equipment = () => {
   return (
     <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-[85vw] h-full">
+      <div className="w-[85vw] h-full relative">
+        <Link
+          to="/equipment/insert"
+          className="absolute bottom-20 left-10 rounded-full w-12 h-12 text-white bg-green-500 hover:scale-105 hover:rotate-180 transition-all flex"
+        >
+          <Plus size="32" className="m-auto" />
+        </Link>
         <Header title="Assets" />
         <div className="flex flex-col py-10 px-12 h-[90vh]">
           <div className="underline underline-offset-8 text-2xl font-medium decoration-sky-500 decoration-[6px]">
@@ -93,18 +86,12 @@ const Equipment = () => {
                 <EquipmentCard key={index} equipment={equipment} />
               ))}
           </div>
-          <div
-            id="pagination"
-            className="ml-auto mt-8 inline-flex items-center"
-          >
-            <button className="hover:text-gray-500 transition-all">
-              <ChevronLeft size="24" />
-            </button>
-            {generatePages().map((pages, index) => pages)}
-            <button className="hover:text-gray-500 transition-all">
-              <ChevronRight size="24" />
-            </button>
-          </div>
+          <Pagination
+            rows={equipments.length}
+            rowsPerPage={4}
+            page={page}
+            setPage={setPage}
+          />
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { Plus } from '@styled-icons/boxicons-regular/Plus';
 import { Search } from '@styled-icons/boxicons-regular/Search';
 import { Warning } from '@styled-icons/fluentui-system-regular/Warning';
 
@@ -10,11 +11,14 @@ import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
 import ChecmicalType from '../../type/Chemical';
 import { formatter } from '../../utils';
+import Pagination from '../../components/Pagination';
 
 const Chemical = () => {
   const [chemicals, setChemicals] = useState<ChecmicalType[]>([]);
   const [search, setSearch] = useState('');
   const [finalSearch, setFinalSearch] = useState('');
+  const [page, setPage] = useState(0);
+  const navigate = useNavigate();
 
   const fetchChemicals = () => {
     axios
@@ -32,23 +36,6 @@ const Chemical = () => {
       });
   };
 
-  const handleDelete = (id: string) => {
-    axios
-      .delete(`http://localhost:5000/api/Chemical/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
-      .then((response) => {
-        toast('Successfully deleted chemical');
-        fetchChemicals();
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error('Error while deleting chemical');
-      });
-  };
-
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFinalSearch(search);
@@ -61,9 +48,15 @@ const Chemical = () => {
   return (
     <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-[85vw] h-full">
+      <div className="w-[85vw] h-full relative">
+        <Link
+          to="/chemical/insert"
+          className="absolute bottom-20 left-10 rounded-full w-12 h-12 text-white bg-green-500 hover:scale-105 hover:rotate-180 transition-all flex"
+        >
+          <Plus size="32" className="m-auto" />
+        </Link>
         <Header title="Assets" />
-        <div className="flex flex-col py-10 px-12">
+        <div className="flex flex-col py-10 px-12 h-[90vh]">
           <div className="underline underline-offset-8 text-2xl font-medium decoration-sky-500 decoration-[6px]">
             Chemicals
           </div>
@@ -99,25 +92,54 @@ const Chemical = () => {
                     .toLowerCase()
                     .includes(finalSearch.toLowerCase())
                 )
+                .slice(page * 9, page * 9 + 9)
                 .map((chemical, index) => (
-                  <tr key={index} className="h-12 border-b-2 border-gray-200">
-                    <td className="px-4">{chemical.chemicalName}</td>
-                    <td className="text-center">{chemical.minQuantity}</td>
-                    <td className="text-center relative">
-                      {formatter.format(chemical.quantity)}
-                      {chemical.minQuantity > chemical.quantity && (
-                        <Warning
-                          size="24"
-                          className="absolute right-8 text-red-500"
-                        />
-                      )}
+                  <tr
+                    key={index}
+                    onClick={() => navigate(`/chemical/${chemical.chemicalId}`)}
+                    className="h-12 border-b-2 border-gray-200 hover:text-gray-500 hover:cursor-pointer group border-collapse"
+                  >
+                    <td>
+                      <div className="px-4 py-1 group-hover:bg-gray-200 rounded-l-lg">
+                        {chemical.chemicalName}
+                      </div>
                     </td>
-                    <td className="text-center">{chemical.measureUnit}</td>
-                    <td>{chemical.usageDescription}</td>
+                    <td className="text-center">
+                      <div className="px-4 py-1 group-hover:bg-gray-200">
+                        {chemical.minQuantity}
+                      </div>
+                    </td>
+                    <td className="text-center relative">
+                      <div className="px-4 py-1 group-hover:bg-gray-200">
+                        {formatter.format(chemical.quantity)}
+                        {chemical.minQuantity > chemical.quantity && (
+                          <Warning
+                            size="24"
+                            className="absolute right-8 text-red-500"
+                          />
+                        )}
+                      </div>
+                    </td>
+                    <td className="text-center">
+                      <div className="px-4 py-1 group-hover:bg-gray-200">
+                        {chemical.measureUnit}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="px-4 py-1 group-hover:bg-gray-200 rounded-r-lg">
+                        {chemical.usageDescription}
+                      </div>
+                    </td>
                   </tr>
                 ))}
             </tbody>
           </table>
+          <Pagination
+            rows={chemicals.length}
+            rowsPerPage={9}
+            page={page}
+            setPage={setPage}
+          />
         </div>
       </div>
     </div>

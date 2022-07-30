@@ -114,7 +114,7 @@ const Dashboard = () => {
 
           <Paper className="col-span-4 px-6 py-4 flex flex-col">
             <span className="font-semibold text-xl mb-4">Notifications</span>
-            {notifications.map((notification, index) => (
+            {notifications.slice(0, 3).map((notification, index) => (
               <div
                 className={`inline-flex items-center p-1 rounded-lg ${
                   notification.isRead && 'bg-gray-100 text-gray-500'
@@ -135,6 +135,9 @@ const Dashboard = () => {
                 <InfoOutline size="48" />
               </div>
             ))}
+            <span className="ml-auto mr-4 mb-2 mt-auto text-gray-500 hover:text-gray-800 transition-colors">
+              View More
+            </span>
           </Paper>
           {user.staffRole === 'Technician' && (
             <Paper className="col-span-12 px-6 py-4 flex flex-col">

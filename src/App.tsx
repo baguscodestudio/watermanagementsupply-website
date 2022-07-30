@@ -11,7 +11,6 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Equipment from './pages/Equipment/Equipment';
 import EquipmentCreate from './pages/Equipment/EquipmentCreate';
-import EquipmentUpdate from './pages/Equipment/EquipmentUpdate';
 import EquipmentView from './pages/Equipment/EquipmentView';
 import Chemical from './pages/Chemical/Chemical';
 import ChemicalInsert from './pages/Chemical/ChemicalInsert';
@@ -154,14 +153,10 @@ function App() {
                   element={<EquipmentView />}
                 />
                 <Route path="/equipment/insert" element={<EquipmentCreate />} />
-                <Route
-                  path="/equipment/update/:equipmentId"
-                  element={<EquipmentUpdate />}
-                />
                 <Route path="/chemical" element={<Chemical />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route
-                  path="/chemical/update/:chemicalId"
+                  path="/chemical/:chemicalId"
                   element={<ChemicalUpdate />}
                 />
                 <Route path="/chemical/insert" element={<ChemicalInsert />} />

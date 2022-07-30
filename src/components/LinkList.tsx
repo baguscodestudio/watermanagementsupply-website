@@ -23,7 +23,6 @@ const LinkList: React.FC<LinkType> = ({ title, icon, roles, items }) => {
   const checkSublink = () => {
     for (let i = 0; i < items.length; i++) {
       if (items[i].path === location.pathname) {
-        console.log('iya sama nih');
         return true;
       }
     }

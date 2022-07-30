@@ -4,27 +4,19 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ChevronDown, ChevronUp } from 'styled-icons/bootstrap';
+import Header from '../../components/Header';
+import InputLabel from '../../components/InputLabel';
 import NavBar from '../../components/NavBar';
+import TextAreaLabel from '../../components/TextAreaLabel';
+import ChemicalType from '../../type/Chemical';
 
 const ChemicalUpdate = () => {
-  const [chemical, setChemical] = useState({
-    chemicalName: '',
-    minQuantity: 0,
-    quantity: 0,
-    measureUnit: '',
-    usageDescription: '',
-  });
+  const [chemical, setChemical] = useState<ChemicalType>();
+  const [previousChem, setPreviousChem] = useState<ChemicalType>();
   const params = useParams();
   const id = params.chemicalId;
-  const [updatePage, setUpdatePage] = useState('');
+  const [selectedImage, setSelectedImage] = useState<File>();
   const navigate = useNavigate();
-  const items = [
-    { label: 'Chemical Name', key: 'chemicalName' },
-    { label: 'Min Quantity', key: 'minQuanity' },
-    { label: 'Quantity', key: 'quantity' },
-    { label: 'Measure Unit', key: 'measureUnit' },
-    { label: 'Usage Description', key: 'usageDescription' },
-  ];
 
   useEffect(() => {
     axios
@@ -36,12 +28,33 @@ const ChemicalUpdate = () => {
       .then((response) => {
         // console.log(response);
         setChemical(response.data);
+        setPreviousChem(response.data);
       })
       .catch((err) => {
         console.log(err);
         toast.error('Error occured while getting the chemical information');
       });
   }, []);
+
+  const handleDelete = (id: string) => {
+    axios
+      .delete(`http://localhost:5000/api/Chemical/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => {
+        toast('Successfully deleted chemical');
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('Error while deleting chemical');
+      });
+  };
+
+  const checkChanges = () => {
+    return chemical === previousChem;
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -69,129 +82,115 @@ const ChemicalUpdate = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-full grid grid-cols-2">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFA500] flex items-center px-12 col-span-2">
-          Chemical Inventory
-        </div>
-        {updatePage !== '' ? (
-          <div className="">
-            <form
-              className="flex flex-col ml-20 mt-24"
-              id="chemical-info"
-              onSubmit={(event) => handleSubmit(event)}
-            >
-              <div className="text-2xl mb-14 underline">
-                Chemical Inventory Information
-              </div>
-              <div className="my-2 w-[27rem] inline-flex justify-between">
-                <div className="text-lg">
-                  {updatePage.charAt(0).toUpperCase() + updatePage.slice(1)}
-                </div>
-                <input
-                  name={updatePage}
-                  onChange={(event) =>
-                    setChemical({
-                      ...chemical,
-                      [updatePage]: event.currentTarget.value,
-                    })
-                  }
-                  className="w-56 border-2 px-2 border-black bg-transparent"
-                />
-              </div>
-              <div className="inline-flex mt-16">
-                <button
-                  type="submit"
-                  className="rounded-lg border-black bg-transparent border-2 px-4 py-1 mr-12"
-                >
-                  Update
-                </button>
-                <Link
-                  to="/chemical"
-                  className="rounded-lg border-black bg-transparent border-2 px-4 py-1"
-                >
-                  Cancel
-                </Link>
-              </div>
-            </form>
+      <div className="w-[85vw] h-full relative">
+        <Header
+          title={chemical ? chemical.chemicalName : 'Chemical View/Update'}
+        />
+        <form
+          className="flex flex-col py-10 px-12 h-[90vh] justify-center items-center"
+          onSubmit={(event) => handleSubmit(event)}
+          id="chemical-info"
+        >
+          <div className="mb-8 inline-flex w-1/3">
+            <div className="flex flex-col mx-auto">
+              <span className="text-5xl">Chemical Information</span>
+              <span className="text-gray-500 text-xl">Create Chemical</span>
+            </div>
           </div>
-        ) : (
-          <div></div>
-        )}
-        <div className="flex flex-col mt-24">
-          <div className="mx-auto text-4xl font-bold underline">
-            Chemical Inventory
+          <div className="w-1/3 flex flex-col">
+            <InputLabel
+              onChange={(event) => {
+                if (!event.currentTarget.value || !chemical) return;
+                setChemical({
+                  ...chemical,
+                  chemicalName: event.currentTarget.value,
+                });
+              }}
+              value={chemical?.chemicalName}
+              label="Name"
+              required={true}
+              className="w-full my-2"
+            />
+            <InputLabel
+              label="Measure Unit"
+              onChange={(event) => {
+                if (!event.currentTarget.value || !chemical) return;
+                setChemical({
+                  ...chemical,
+                  measureUnit: event.currentTarget.value,
+                });
+              }}
+              value={chemical?.measureUnit}
+              required={true}
+              className="w-1/3 mr-auto my-2"
+            />
+            <TextAreaLabel
+              onChange={(event) => {
+                if (!event.currentTarget.value || !chemical) return;
+                setChemical({
+                  ...chemical,
+                  usageDescription: event.currentTarget.value,
+                });
+              }}
+              value={chemical?.usageDescription}
+              label="Description"
+              className="w-full my-2"
+            />
+            <div className="inline-flex justify-between w-full">
+              <InputLabel
+                onChange={(event) => {
+                  if (!event.currentTarget.value || !chemical) return;
+                  setChemical({
+                    ...chemical,
+                    minQuantity: parseInt(event.currentTarget.value),
+                  });
+                }}
+                type="number"
+                value={chemical?.minQuantity}
+                label="Min Quantity"
+                className="w-5/12 my-2"
+              />
+              <InputLabel
+                onChange={(event) => {
+                  if (!event.currentTarget.value || !chemical) return;
+                  setChemical({
+                    ...chemical,
+                    quantity: parseInt(event.currentTarget.value),
+                  });
+                }}
+                type="number"
+                value={chemical?.quantity}
+                label="Quantity"
+                className="w-5/12 my-2"
+              />
+            </div>
+            <div className="inline-flex mt-4 ml-auto">
+              <Link
+                to="/chemical"
+                className="rounded-lg border-gray-500 text-gray-500 bg-transparent border-2 px-4 py-1 h-fit my-auto ml-auto hover:shadow-lg hover:-translate-y-1 transition-all"
+              >
+                Cancel
+              </Link>
+              <button
+                onClick={() => handleDelete(chemical?.chemicalId!)}
+                className="rounded-lg px-4 h-fit py-1 my-auto ml-2 hover:shadow-lg hover:-translate-y-1 transition-all text-white bg-red-500 text-lg font-medium"
+              >
+                Delete
+              </button>
+              <button
+                type="submit"
+                disabled={checkChanges()}
+                className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-green-500 font-medium text-lg"
+              >
+                Save
+              </button>
+            </div>
           </div>
-          <table className="mt-16 w-4/5 mx-auto">
-            <tr className="bg-neutral-100 border-[2px] border-black">
-              <th>Previous Inventory</th>
-            </tr>
-            <tr className="border-[2px] border-black">
-              <td className="flex flex-col px-6 py-4">
-                <div>
-                  <strong>Chemical name: </strong>
-                  {chemical.chemicalName}
-                </div>
-                <div>
-                  <strong>Chemical min quantity: </strong>
-                  {chemical.minQuantity}
-                </div>
-                <div>
-                  <strong>Chemical quantity: </strong>
-                  {chemical.quantity}
-                </div>
-                <div>
-                  <strong>Chemical measure: </strong>
-                  {chemical.measureUnit}
-                </div>
-                <div>
-                  <strong>Chemical usage description: </strong>
-                  {chemical.usageDescription}
-                </div>
-              </td>
-            </tr>
-          </table>
-          <Menu as="div" className="relative mt-12 mx-auto">
-            {({ open }) => (
-              <>
-                <Menu.Button className="h-full flex items-center px-4 py-1 justify-center hover:text-[#0e6e4b] bg-cyan-400 rounded-sm">
-                  {open ? (
-                    <>
-                      Update <ChevronDown size="16" />
-                    </>
-                  ) : (
-                    <>
-                      Update <ChevronUp size="16" />
-                    </>
-                  )}
-                </Menu.Button>
-                <Menu.Items className="absolute origin-top-left bg-white text-left text-black rounded-b-md">
-                  <div className="p-1">
-                    {items.map((item, index) => {
-                      return (
-                        <Menu.Item key={index}>
-                          {({ active }) => (
-                            <button
-                              onClick={() => setUpdatePage(item.key)}
-                              className={`${
-                                active && 'bg-emerald-500 text-white'
-                              } flex px-2 py-1 w-32 divide-y divide-gray-100 rounded-sm text-left`}
-                            >
-                              {item.label}
-                            </button>
-                          )}
-                        </Menu.Item>
-                      );
-                    })}
-                  </div>
-                </Menu.Items>
-              </>
-            )}
-          </Menu>
-        </div>
+        </form>
       </div>
-    </>
+    </div>
   );
 };
 
