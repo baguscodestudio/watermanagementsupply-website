@@ -2,53 +2,248 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NavBar from '../../components/NavBar';
 import { Chart, getDatasetAtEvent } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js';
 import type { InteractionItem } from 'chart.js';
-import WaterUsageType from '../../type/WaterUsage';
 import moment from 'moment';
+
+import { Search } from '@styled-icons/boxicons-regular/Search';
+
+import WaterUsageType from '../../type/WaterUsage';
+import CustomerType from '../../type/Customer';
+
+import NavBar from '../../components/NavBar';
+import Paper from '../../components/Paper';
+import InputLabel from '../../components/InputLabel';
+import SelectTimeFrameLabel from '../../components/SelectTimeFrameLabel';
+import Header from '../../components/Header';
+import Pagination from '../../components/Pagination';
+
+const MODES: {
+  label: string;
+  unit: 'day' | 'month' | 'week' | 'hour';
+}[] = [
+  {
+    label: 'Daily',
+    unit: 'day',
+  },
+  {
+    label: 'Monthly',
+    unit: 'month',
+  },
+  {
+    label: 'Weekly',
+    unit: 'week',
+  },
+  {
+    label: 'Hourly',
+    unit: 'hour',
+  },
+];
 
 const WaterUsage = () => {
   const [waterPumpUsages, setWaterPumpUsages] = useState<WaterUsageType[]>([]);
-  const navigate = useNavigate();
+  const [selCust, setSelCust] = useState<string[]>([]);
+  const [search, setSearch] = useState('');
+  const [finalSearch, setFinalSearch] = useState('');
+  const [page, setPage] = useState(0);
+  const [mode, setMode] = useState(MODES[0]);
+  const [customers, setCustomers] = useState<CustomerType[]>([]);
   const [currentDateString, setCurrentDateString] = useState(
     moment().format('YYYY-MM-DD')
   );
   const [previousDateString, setPreviousDateString] = useState(
     moment().add(-7, 'days').format('YYYY-MM-DD')
   );
+
   const chartRef = useRef<ChartJS>(null);
 
+  const navigate = useNavigate();
   const dataValue: { [key: string]: any } = {};
+
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFinalSearch(search);
+  };
+
+  const addSelectedCustomer = (cust: CustomerType) => {
+    if (selCust.includes(cust.userId)) {
+      let tempArr = [...selCust];
+      tempArr = tempArr.filter((id) => id !== cust.userId);
+      setSelCust(tempArr);
+    } else if (selCust.length < 5) {
+      let tempArr = [...selCust];
+      tempArr.push(cust.userId);
+      setSelCust(tempArr);
+    } else {
+      let tempArr = [...selCust];
+      tempArr.shift();
+      tempArr.push(cust.userId);
+      setSelCust(tempArr);
+    }
+  };
+
+  const getCustomerName = (id: string) => {
+    if (customers) {
+      for (let i = 0; i < customers.length; i++) {
+        if (customers[i].userId === id) {
+          return customers[i].username;
+        }
+      }
+    } else {
+      return id;
+    }
+  };
 
   const labels: string[] = [];
   waterPumpUsages.map((waterPumpUsage, index) => {
-    let total = 0;
-    waterPumpUsage.data.map((sensordata, i) => (total += sensordata.value));
-    let average = total / waterPumpUsage.data.length;
-    if (dataValue[waterPumpUsage.customerId]) {
-      dataValue[waterPumpUsage.customerId].data.push({
-        x: moment(waterPumpUsage.date),
-        y: average,
+    if (selCust.includes(waterPumpUsage.customerId)) {
+      waterPumpUsage.data.map((sensordata, i) => {
+        if (dataValue[waterPumpUsage.customerId]) {
+          dataValue[waterPumpUsage.customerId].data.push({
+            x: moment(sensordata.timestamp),
+            y: sensordata.value,
+          });
+        } else {
+          let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
+            Math.random() * 255
+          )},${Math.floor(Math.random() * 255)})`;
+          dataValue[waterPumpUsage.customerId] = {
+            label: getCustomerName(waterPumpUsage.customerId),
+            data: [
+              {
+                x: moment(sensordata.timestamp),
+                y: sensordata.value,
+              },
+            ],
+            borderColor: color,
+            backgroundColor: color,
+          };
+        }
       });
-    } else {
-      let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
-        Math.random() * 255
-      )},${Math.floor(Math.random() * 255)})`;
-      dataValue[waterPumpUsage.customerId] = {
-        label: waterPumpUsage.customerId,
-        data: [
-          {
-            x: moment(waterPumpUsage.date),
-            y: average,
-          },
-        ],
-        borderColor: color,
-        backgroundColor: color,
-      };
     }
   });
+
+  Object.keys(dataValue).map((key) => {
+    let set = dataValue[key];
+    if (mode.unit === 'day') {
+      let total = 0;
+      let count = 0;
+      let currentDate: string;
+      let calculated_data: { x: string; y: number }[] = [];
+      // console.log(set.data.length);
+      set.data.map((data: { x: string; y: number }) => {
+        // console.log(
+        //   data.y,
+        //   data.x,
+        //   moment(data.x).format('YYYY-MM-DD'),
+        //   currentDate
+        // );
+        if (
+          !currentDate ||
+          currentDate !== moment(data.x).format('YYYY-MM-DD')
+        ) {
+          // console.log(total, count, currentDate);
+          if (currentDate) {
+            calculated_data.push({
+              x: currentDate,
+              y: total / count,
+            });
+          }
+          currentDate = moment(data.x).format('YYYY-MM-DD');
+          total = 0;
+          count = 0;
+          count++;
+          total += data.y;
+          // console.log(data.y, currentDate);
+        } else if (currentDate === moment(data.x).format('YYYY-MM-DD')) {
+          // console.log(data.y, currentDate, count);
+          total += data.y;
+          count++;
+        }
+      });
+      set.data = calculated_data;
+    } else if (mode.unit === 'month') {
+      let total = 0;
+      let count = 0;
+      let currentDate: string;
+      let calculated_data: { x: string; y: number }[] = [];
+      set.data.map((data: { x: string; y: number }) => {
+        if (!currentDate || currentDate !== moment(data.x).format('YYYY-MM')) {
+          if (currentDate) {
+            calculated_data.push({
+              x: currentDate,
+              y: total / count,
+            });
+          }
+          currentDate = moment(data.x).format('YYYY-MM');
+          total = 0;
+          count = 0;
+          count++;
+          total += data.y;
+        } else if (currentDate === moment(data.x).format('YYYY-MM')) {
+          total += data.y;
+          count++;
+        }
+      });
+      set.data = calculated_data;
+    } else if (mode.unit === 'hour') {
+      let total = 0;
+      let count = 0;
+      let currentDate: string;
+      let calculated_data: { x: string; y: number }[] = [];
+      set.data.map((data: { x: string; y: number }) => {
+        if (
+          !currentDate ||
+          currentDate !== moment(data.x).format('YYYY-MM-DD HH')
+        ) {
+          if (currentDate) {
+            calculated_data.push({
+              x: currentDate,
+              y: total / count,
+            });
+          }
+          currentDate = moment(data.x).format('YYYY-MM-DD HH');
+          total = 0;
+          count = 0;
+          count++;
+          total += data.y;
+        } else if (currentDate === moment(data.x).format('YYYY-MM-DD HH')) {
+          total += data.y;
+          count++;
+        }
+      });
+      set.data = calculated_data;
+    } else if (mode.unit === 'week') {
+      let total = 0;
+      let count = 0;
+      let currentDate: string;
+      let calculated_data: { x: string; y: number }[] = [];
+      set.data.map((data: { x: string; y: number }) => {
+        if (
+          !currentDate ||
+          moment(currentDate).week() !== moment(data.x).week()
+        ) {
+          if (currentDate) {
+            calculated_data.push({
+              x: moment(currentDate).startOf('week').format('YYYY-MM-DD'),
+              y: total / count,
+            });
+          }
+          currentDate = moment(data.x).format('YYYY-MM-DD');
+          total = 0;
+          count = 0;
+          count++;
+          total += data.y;
+        } else if (moment(currentDate).week() === moment(data.x).week()) {
+          total += data.y;
+          count++;
+        }
+      });
+      set.data = calculated_data;
+    }
+  });
+
   const data = {
     labels: labels,
     datasets: Object.keys(dataValue).map((key) => dataValue[key]),
@@ -62,6 +257,22 @@ const WaterUsage = () => {
     let items: InteractionItem[] = getDatasetAtEvent(chart, event);
     navigate(`/waterusage/${data.datasets[items[0].datasetIndex].label}`);
   };
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/Customer', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => {
+        setCustomers(response.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('Error occured while fetching customers');
+      });
+  }, []);
 
   useEffect(() => {
     axios
@@ -85,67 +296,66 @@ const WaterUsage = () => {
     <div className="w-full h-full flex">
       <NavBar />
       <div className="w-[85vw] h-full">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFC0CB] flex items-center px-12">
-          Customer Water Usage
-        </div>
-        <div className="w-full h-screen flex">
-          <div className="h-full w-1/5 bg-neutral-300">
-            <div className="inline-flex w-full justify-between px-4 mb-2 mt-6">
-              <div>From date:</div>
+        <Header title="Customer Water Usage" />
+        <div className="w-full flex py-10 px-12 h-[90vh]">
+          <div className="h-full w-1/5 rounded-lg shadow-xl p-4 flex flex-col">
+            <form
+              onSubmit={(event) => handleSearch(event)}
+              className="rounded-lg ring-1 ring-gray-500 w-full h-8 my-4 inline-flex items-center px-2"
+            >
+              <button
+                type="submit"
+                className="mr-4 hover:bg-gray-500 hover:text-white rounded-full w-6 h-6 flex transition-colors"
+              >
+                <Search size="16" className="m-auto" />
+              </button>
               <input
-                onChange={(event) =>
-                  setPreviousDateString(event.currentTarget.value)
-                }
-                value={previousDateString}
-                type="date"
-                className="w-56 border-2 px-2 border-black"
+                placeholder="Search for equipment name"
+                onChange={(event) => setSearch(event.currentTarget.value)}
+                id="search"
+                className="outline-none w-full"
               />
-            </div>
-            <div className="inline-flex w-full justify-between px-4 my-2">
-              <div>To date:</div>
-              <input
-                onChange={(event) =>
-                  setCurrentDateString(event.currentTarget.value)
-                }
-                value={currentDateString}
-                type="date"
-                className="w-56 border-2 px-2 border-black"
-              />
-            </div>
-            <div className=" mt-4 inline-flex w-full justify-around">
-              <button
-                onClick={() =>
-                  setPreviousDateString(
-                    moment().startOf('year').format('YYYY-MM-DD')
+            </form>
+            <span className="px-4 text-lg font-semibold">Equipments</span>
+            <div className="w-full h-[2px] bg-gray-900 my-2" />
+            <table className="w-full text-center">
+              <tbody>
+                {customers
+                  .filter((customer) =>
+                    customer.username
+                      .toLowerCase()
+                      .includes(finalSearch.toLowerCase())
                   )
-                }
-                className="rounded-lg border-black bg-white border-2 px-4 py-1"
-              >
-                This Year
-              </button>
-              <button
-                onClick={() =>
-                  setPreviousDateString(
-                    moment().startOf('month').format('YYYY-MM-DD')
-                  )
-                }
-                className="rounded-lg border-black bg-white border-2 px-4 py-1"
-              >
-                This Month
-              </button>
-              <button
-                onClick={() =>
-                  setPreviousDateString(
-                    moment().startOf('week').format('YYYY-MM-DD')
-                  )
-                }
-                className="rounded-lg border-black bg-white border-2 px-4 py-1"
-              >
-                This Week
-              </button>
-            </div>
+                  .slice(page * 15, page * 15 + 15)
+                  .map((customer, index) => (
+                    <tr
+                      key={index}
+                      onClick={() => addSelectedCustomer(customer)}
+                      className="border-b-2 h-8 border-gray-200 last-of-type:border-none hover:cursor-pointer"
+                    >
+                      <td className="py-1">
+                        <div
+                          className={`${
+                            selCust.includes(customer.userId) &&
+                            'bg-gray-200 text-gray-500 rounded-lg'
+                          }`}
+                        >
+                          {customer.username}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+            <Pagination
+              className="mt-auto mx-auto mb-6"
+              rows={customers.length}
+              rowsPerPage={15}
+              page={page}
+              setPage={setPage}
+            />
           </div>
-          <div className="w-4/5">
+          <div className="w-4/5 flex flex-col pl-12">
             <Chart
               ref={chartRef}
               type="line"
@@ -155,7 +365,7 @@ const WaterUsage = () => {
                 responsive: true,
                 plugins: {
                   legend: {
-                    position: 'top' as const,
+                    position: 'bottom' as const,
                   },
                   title: {
                     display: true,
@@ -166,10 +376,7 @@ const WaterUsage = () => {
                   x: {
                     type: 'time',
                     time: {
-                      unit: 'day',
-                      displayFormats: {
-                        day: 'DD/MM/YYYY',
-                      },
+                      unit: mode.unit,
                       tooltipFormat: 'DD MMM YYYY',
                     },
                   },
@@ -177,6 +384,34 @@ const WaterUsage = () => {
               }}
               onClick={onClick}
             />
+            <Paper className="w-full h-1/5 px-8 py-2 flex">
+              <div className="flex flex-col mr-4">
+                <InputLabel
+                  className="mb-2"
+                  type="date"
+                  label="From"
+                  onChange={(event) =>
+                    setPreviousDateString(event.currentTarget.value)
+                  }
+                  value={previousDateString}
+                />
+                <InputLabel
+                  type="date"
+                  label="To"
+                  onChange={(event) =>
+                    setCurrentDateString(event.currentTarget.value)
+                  }
+                  value={currentDateString}
+                />
+              </div>
+              <div>
+                <SelectTimeFrameLabel
+                  value={mode}
+                  onChange={setMode}
+                  list={MODES}
+                />
+              </div>
+            </Paper>
           </div>
         </div>
       </div>

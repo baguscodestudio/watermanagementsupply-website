@@ -7,8 +7,9 @@ const Pagination: React.FC<{
   rows: number;
   rowsPerPage: number;
   page: number;
+  className?: string;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ rows, rowsPerPage, page, setPage }) => {
+}> = ({ rows, rowsPerPage, page, setPage, className }) => {
   let pageNumbers = [];
   const TOTAL_PAGE = Math.ceil(rows / rowsPerPage);
 
@@ -39,10 +40,7 @@ const Pagination: React.FC<{
     }
   }
   return (
-    <div
-      id="pagination"
-      className="ml-auto mt-auto mb-8 inline-flex items-center"
-    >
+    <div id="pagination" className={`${className}`}>
       <button className="hover:text-gray-500 transition-all">
         <ChevronLeft size="24" />
       </button>

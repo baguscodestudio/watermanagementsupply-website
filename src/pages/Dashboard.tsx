@@ -104,7 +104,7 @@ const Dashboard = () => {
                 </tbody>
               </table>
               <Link
-                to="/chemical"
+                to="/notifications"
                 className="ml-auto mr-12 mb-2 mt-auto text-gray-500 hover:text-gray-800 transition-colors"
               >
                 View More

@@ -87,6 +87,7 @@ const Equipment = () => {
               ))}
           </div>
           <Pagination
+            className="ml-auto mt-auto mb-8 inline-flex items-center"
             rows={equipments.length}
             rowsPerPage={4}
             page={page}

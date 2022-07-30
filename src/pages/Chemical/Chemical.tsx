@@ -135,6 +135,7 @@ const Chemical = () => {
             </tbody>
           </table>
           <Pagination
+            className="ml-auto mt-auto mb-8 inline-flex items-center"
             rows={chemicals.length}
             rowsPerPage={9}
             page={page}
