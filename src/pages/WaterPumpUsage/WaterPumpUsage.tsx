@@ -52,10 +52,10 @@ const WaterPumpUsage = () => {
   const [mode, setMode] = useState(MODES[0]);
   const [selEq, setSelEq] = useState<string[]>([]);
   const [currentDateString, setCurrentDateString] = useState(
-    moment().format('YYYY-MM-DD')
+    moment().utc().format('YYYY-MM-DD')
   );
   const [previousDateString, setPreviousDateString] = useState(
-    moment().add(-7, 'days').format('YYYY-MM-DD')
+    moment().utc().add(-7, 'days').format('YYYY-MM-DD')
   );
 
   const chartRef = useRef<ChartJS>(null);
@@ -119,7 +119,7 @@ const WaterPumpUsage = () => {
       waterPumpUsage.data.map((sensordata, i) => {
         if (dataValue[waterPumpUsage.pumpId]) {
           dataValue[waterPumpUsage.pumpId].data.push({
-            x: moment(sensordata.timestamp),
+            x: moment(sensordata.timestamp).utc(),
             y: sensordata.value,
           });
         } else {
@@ -130,7 +130,7 @@ const WaterPumpUsage = () => {
             label: getEquipmentName(waterPumpUsage.pumpId),
             data: [
               {
-                x: moment(sensordata.timestamp),
+                x: moment(sensordata.timestamp).utc(),
                 y: sensordata.value,
               },
             ],
@@ -149,36 +149,30 @@ const WaterPumpUsage = () => {
       let count = 0;
       let currentDate: string;
       let calculated_data: { x: string; y: number }[] = [];
-      // console.log(set.data.length);
       set.data.map((data: { x: string; y: number }) => {
-        // console.log(
-        //   data.y,
-        //   data.x,
-        //   moment(data.x).format('YYYY-MM-DD'),
-        //   currentDate
-        // );
         if (
           !currentDate ||
-          currentDate !== moment(data.x).format('YYYY-MM-DD')
+          currentDate !== moment(data.x).utc().format('YYYY-MM-DD')
         ) {
-          // console.log(total, count, currentDate);
           if (currentDate) {
             calculated_data.push({
               x: currentDate,
               y: total / count,
             });
           }
-          currentDate = moment(data.x).format('YYYY-MM-DD');
+          currentDate = moment(data.x).utc().format('YYYY-MM-DD');
           total = 0;
           count = 0;
           count++;
           total += data.y;
-          // console.log(data.y, currentDate);
-        } else if (currentDate === moment(data.x).format('YYYY-MM-DD')) {
-          // console.log(data.y, currentDate, count);
+        } else if (currentDate === moment(data.x).utc().format('YYYY-MM-DD')) {
           total += data.y;
           count++;
         }
+      });
+      calculated_data.push({
+        x: currentDate!,
+        y: total / count,
       });
       set.data = calculated_data;
     } else if (mode.unit === 'month') {
@@ -187,22 +181,29 @@ const WaterPumpUsage = () => {
       let currentDate: string;
       let calculated_data: { x: string; y: number }[] = [];
       set.data.map((data: { x: string; y: number }) => {
-        if (!currentDate || currentDate !== moment(data.x).format('YYYY-MM')) {
+        if (
+          !currentDate ||
+          currentDate !== moment(data.x).utc().format('YYYY-MM')
+        ) {
           if (currentDate) {
             calculated_data.push({
               x: currentDate,
               y: total / count,
             });
           }
-          currentDate = moment(data.x).format('YYYY-MM');
+          currentDate = moment(data.x).utc().format('YYYY-MM');
           total = 0;
           count = 0;
           count++;
           total += data.y;
-        } else if (currentDate === moment(data.x).format('YYYY-MM')) {
+        } else if (currentDate === moment(data.x).utc().format('YYYY-MM')) {
           total += data.y;
           count++;
         }
+      });
+      calculated_data.push({
+        x: currentDate!,
+        y: total / count,
       });
       set.data = calculated_data;
     } else if (mode.unit === 'hour') {
@@ -213,7 +214,7 @@ const WaterPumpUsage = () => {
       set.data.map((data: { x: string; y: number }) => {
         if (
           !currentDate ||
-          currentDate !== moment(data.x).format('YYYY-MM-DD HH')
+          currentDate !== moment(data.x).utc().format('YYYY-MM-DD HH')
         ) {
           if (currentDate) {
             calculated_data.push({
@@ -221,15 +222,21 @@ const WaterPumpUsage = () => {
               y: total / count,
             });
           }
-          currentDate = moment(data.x).format('YYYY-MM-DD HH');
+          currentDate = moment(data.x).utc().format('YYYY-MM-DD HH');
           total = 0;
           count = 0;
           count++;
           total += data.y;
-        } else if (currentDate === moment(data.x).format('YYYY-MM-DD HH')) {
+        } else if (
+          currentDate === moment(data.x).utc().format('YYYY-MM-DD HH')
+        ) {
           total += data.y;
           count++;
         }
+      });
+      calculated_data.push({
+        x: currentDate!,
+        y: total / count,
       });
       set.data = calculated_data;
     } else if (mode.unit === 'week') {
@@ -240,23 +247,29 @@ const WaterPumpUsage = () => {
       set.data.map((data: { x: string; y: number }) => {
         if (
           !currentDate ||
-          moment(currentDate).week() !== moment(data.x).week()
+          moment(currentDate).week() !== moment(data.x).utc().week()
         ) {
           if (currentDate) {
             calculated_data.push({
-              x: moment(currentDate).startOf('week').format('YYYY-MM-DD'),
+              x: moment(currentDate).utc().startOf('week').format('YYYY-MM-DD'),
               y: total / count,
             });
           }
-          currentDate = moment(data.x).format('YYYY-MM-DD');
+          currentDate = moment(data.x).utc().format('YYYY-MM-DD');
           total = 0;
           count = 0;
           count++;
           total += data.y;
-        } else if (moment(currentDate).week() === moment(data.x).week()) {
+        } else if (
+          moment(currentDate).utc().week() === moment(data.x).utc().week()
+        ) {
           total += data.y;
           count++;
         }
+      });
+      calculated_data.push({
+        x: moment(currentDate!).utc().startOf('week').format('YYYY-MM-DD'),
+        y: total / count,
       });
       set.data = calculated_data;
     }

@@ -66,7 +66,7 @@ const Reports = () => {
                       <td className="text-center">{report.title}</td>
                       <td className="text-center">{report.priority}</td>
                       <td className="text-center">
-                        {moment(report.createdAt).format('DD/MM/YYYY')}
+                        {moment(report.createdAt).utc().format('DD/MM/YYYY')}
                       </td>
                       <td className="text-center">{report.status}</td>
                     </tr>

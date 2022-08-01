@@ -83,13 +83,13 @@ const BillView = () => {
             <div className="inline-flex justify-between w-full">
               <span className="font-bold">Created At</span>
               <span className="">
-                {moment(bill?.createdAt).format('DD/MM/YYYY')}
+                {moment(bill?.createdAt).utc().format('DD/MM/YYYY')}
               </span>
             </div>
             <div className="inline-flex justify-between w-full">
               <span className="font-bold">Created At</span>
               <span className="">
-                {moment(bill?.deadline).format('DD/MM/YYYY')}
+                {moment(bill?.deadline).utc().format('DD/MM/YYYY')}
               </span>
             </div>
             {bill?.payment && (
@@ -103,7 +103,9 @@ const BillView = () => {
                   <div className="inline-flex justify-between w-full">
                     <span className="font-bold">Created At:</span>
                     <span className="">
-                      {moment(bill?.payment.createdAt).format('DD/MM/YYYY')}
+                      {moment(bill?.payment.createdAt)
+                        .utc()
+                        .format('DD/MM/YYYY')}
                     </span>
                   </div>
                   <div className="inline-flex justify-between w-full">

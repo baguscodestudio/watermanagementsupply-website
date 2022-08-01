@@ -35,7 +35,7 @@ const EquipmentCard = ({ equipment }: { equipment: EquipmentType }) => {
           </span>
           <span className="mt-1">
             <Calendar size="20" /> Installed:{' '}
-            {moment(equipment.installationDate).format('DD-MM-YYYY')}
+            {moment(equipment.installationDate).utc().format('DD-MM-YYYY')}
           </span>
         </div>
         <div className="flex flex-col my-auto ml-4 mr-12">
@@ -44,7 +44,7 @@ const EquipmentCard = ({ equipment }: { equipment: EquipmentType }) => {
           </span>
           <span className="mt-1">
             <Calendar size="20" /> Replace:{' '}
-            {moment(equipment.replacementPeriod).format('DD-MM-YYYY')}
+            {moment(equipment.replacementPeriod).utc().format('DD-MM-YYYY')}
           </span>
         </div>
       </div>

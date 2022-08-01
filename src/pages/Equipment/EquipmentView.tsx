@@ -198,9 +198,9 @@ const EquipmentView = () => {
                       installationDate: event.currentTarget.value,
                     });
                   }}
-                  value={moment(equipment?.installationDate).format(
-                    'YYYY-MM-DD'
-                  )}
+                  value={moment(equipment?.installationDate)
+                    .utc()
+                    .format('YYYY-MM-DD')}
                   type="date"
                   label="Installation Date"
                   className="w-5/12 my-2"
@@ -213,9 +213,9 @@ const EquipmentView = () => {
                       replacementPeriod: event.currentTarget.value,
                     });
                   }}
-                  value={moment(equipment?.replacementPeriod).format(
-                    'YYYY-MM-DD'
-                  )}
+                  value={moment(equipment?.replacementPeriod)
+                    .utc()
+                    .format('YYYY-MM-DD')}
                   type="date"
                   label="Replacement Date"
                   className="w-5/12 my-2"
@@ -229,7 +229,9 @@ const EquipmentView = () => {
                     guaranteeDate: event.currentTarget.value,
                   });
                 }}
-                value={moment(equipment?.guaranteeDate).format('YYYY-MM-DD')}
+                value={moment(equipment?.guaranteeDate)
+                  .utc()
+                  .format('YYYY-MM-DD')}
                 type="date"
                 label="Guarantee Date"
                 className="w-5/12 my-2"
