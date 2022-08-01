@@ -1,27 +1,49 @@
 import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ChevronThinLeft, ChevronThinRight } from 'styled-icons/entypo';
+
 import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
 import Pagination from '../../components/Pagination';
+
 import ReportType from '../../type/Report';
+
+import { Search } from '@styled-icons/boxicons-regular/Search';
+import { Plus } from '@styled-icons/boxicons-regular/Plus';
 
 const Reports = () => {
   const [reports, setReports] = useState<ReportType[]>([]);
   const [page, setPage] = useState(0);
+  const [search, setSearch] = useState('');
   const navigate = useNavigate();
 
-  const rightPage = () => {
-    if (page < Math.ceil(reports.length / 10)) setPage(page + 1);
-  };
-  const leftPage = () => {
-    if (page > 0) setPage(page - 1);
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (search !== '') {
+      axios
+        .get('http://localhost:5000/api/ReportTicket/Search', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          params: {
+            keyword: search,
+          },
+        })
+        .then((response) => {
+          setReports(response.data.result);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error('An error occured while searching for reports');
+        });
+    } else {
+      fetchReports();
+    }
   };
 
-  useEffect(() => {
+  const fetchReports = () => {
     axios
       .get('http://localhost:5000/api/ReportTicket', {
         headers: {
@@ -33,49 +55,90 @@ const Reports = () => {
         console.log(err);
         toast.error('An error occured while fetching reports');
       });
+  };
+
+  useEffect(() => {
+    fetchReports();
   }, []);
 
   return (
     <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-[85vw] h-full">
-        <Header title="Reports" />
-        <div className="w-full flex flex-col">
-          <div className="mx-auto mt-16 w-5/6 rounded-lg border-2 border-black">
-            <table className="w-full">
-              <thead>
-                <tr className="h-12 border-b-2 border-black">
-                  <th className="w-[15%]">Report Id</th>
-                  <th className="w-[15%]">Customer Id</th>
-                  <th className="w-[30%]">Title</th>
-                  <th className="w-[10%]">Priority</th>
-                  <th className="w-[15%]">Created At</th>
-                  <th className="w-[15%]">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reports
-                  .slice(page * 10, page * 10 + 10)
-                  .map((report, index) => (
-                    <tr
-                      className="h-8 hover:cursor-pointer hover:bg-slate-300"
-                      onClick={() => navigate(`/reports/${report.reportId}`)}
-                    >
-                      <td className="px-4">{report.reportId}</td>
-                      <td className="px-4">{report.customerId}</td>
-                      <td className="text-center">{report.title}</td>
-                      <td className="text-center">{report.priority}</td>
-                      <td className="text-center">
-                        {moment(report.createdAt).utc().format('DD/MM/YYYY')}
-                      </td>
-                      <td className="text-center">{report.status}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+      <div className="w-[85vw] h-full relative">
+        <Header title="Customer Related" />
+        <div className="flex flex-col py-10 px-12 h-[90vh]">
+          <div className="underline underline-offset-8 text-2xl font-medium decoration-sky-500 decoration-[6px]">
+            Broadcasts
           </div>
+          <div className="w-full h-[4px] bg-gray-200 -z-10 mt-[2px]" />
+          <form
+            onSubmit={(event) => handleSearch(event)}
+            className="rounded-lg ring-1 ring-gray-500 w-full h-12 my-8 inline-flex items-center px-6"
+          >
+            <button type="submit" className="mr-4">
+              <Search size="24" />
+            </button>
+            <input
+              placeholder="Search for chemical name"
+              onChange={(event) => setSearch(event.currentTarget.value)}
+              id="search"
+              className="outline-none text-lg w-full"
+            />
+          </form>
+          <table>
+            <thead>
+              <tr className="text-sm text-gray-500 border-b-2 border-gray-200 h-10">
+                <th className="font-normal px-4 text-left w-2/12">
+                  Created At
+                </th>
+                <th className="font-normal px-4 w-3/12">Title</th>
+                <th className="font-normal px-4 w-1/12">Status</th>
+                <th className="font-normal px-4 w-/12">Customer Id</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reports.slice(page * 9, page * 9 + 9).map((report, index) => (
+                <tr
+                  key={index}
+                  onClick={() => navigate(`/reports/${report.reportId}`)}
+                  className="h-12 border-b-2 border-gray-200 hover:text-gray-500 hover:cursor-pointer group border-collapse"
+                >
+                  <td>
+                    <div className="px-4 py-2 group-hover:bg-gray-200 rounded-l-lg">
+                      {moment(report.createdAt)
+                        .utc()
+                        .format('hh:mm:ss A DD/MM/YYYY')}
+                    </div>
+                  </td>
+                  <td className="">
+                    <div className="px-4 py-2 group-hover:bg-gray-200">
+                      {report.title}
+                    </div>
+                  </td>
+                  <td className="">
+                    <div className="px-4 py-1 group-hover:bg-gray-200">
+                      <div
+                        className={`px-4 py-1 text-white flex justify-center rounded-lg ${
+                          report.status === 'Closed'
+                            ? 'bg-red-500'
+                            : 'bg-emerald-500'
+                        }`}
+                      >
+                        {report.status}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="relative">
+                    <div className="px-4 py-2 group-hover:bg-gray-200 truncate">
+                      {report.customerId}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           <Pagination
-            className="mx-auto"
+            className="ml-auto mt-auto mb-8 inline-flex items-center"
             rows={reports.length}
             rowsPerPage={10}
             page={page}

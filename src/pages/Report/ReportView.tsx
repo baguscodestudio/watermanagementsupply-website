@@ -1,9 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
+import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
+import TextAreaLabel from '../../components/TextAreaLabel';
+import InputLabel from '../../components/InputLabel';
 import ReportType from '../../type/Report';
+import moment from 'moment';
+import { CircleFill } from 'styled-icons/bootstrap';
 
 const ReportView = () => {
   const [report, setReport] = useState<ReportType>();
@@ -49,44 +55,62 @@ const ReportView = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-full">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFC0CB] flex items-center px-12">
-          Reports
-        </div>
-        <div className="w-full flex flex-col">
-          <div className="m-auto mt-12 w-1/3 flex flex-col px-12 py-8 rounded-lg border-2 text-lg">
-            <div className="inline-flex justify-between w-full">
-              <span className="font-bold">Title:</span>
-              <span className="">{report?.title}</span>
+      <div className="w-[85vw] h-full relative">
+        <Header title="Broadcast" />
+        <div className="flex flex-col py-10 px-12 h-[90vh] items-center">
+          <div className="flex flex-col w-1/2">
+            <div className="w-full flex flex-col mb-4">
+              <span className="font-semibold text-4xl">{report?.title}</span>
+              <span className="text-gray-500 text-sm">{report?.reportId}</span>
+              <div className="inline-flex w-full justify-between">
+                <span className="text-lg text-gray-500">
+                  {moment(report?.createdAt)
+                    .utc()
+                    .format('hh:mm:ss A DD/MM/YYYY')}
+                </span>
+                <span className="text-lg text-gray-500">
+                  <CircleFill
+                    size="24"
+                    className={`${
+                      report?.status === 'Closed'
+                        ? 'text-red-500'
+                        : 'text-emerald-500'
+                    }`}
+                  />{' '}
+                  <span className="font-semibold text-gray-900">
+                    {report?.status}
+                  </span>
+                </span>
+              </div>
             </div>
-            <div className="inline-flex justify-between w-full">
-              <span className="font-bold">Customer ID:</span>
-              <span className="">{report?.customerId}</span>
-            </div>
-            <div className="inline-flex justify-between w-full">
-              <span className="font-bold">Priority:</span>
-              <span className="">{report?.priority}</span>
-            </div>
-            <div className="inline-flex justify-between w-full">
-              <span className="font-bold">Status:</span>
-              <span className="">{report?.status}</span>
-            </div>
-            <div className="flex flex-col justify-between w-full">
-              <span className="font-bold">Description:</span>
-              <span className="">{report?.description}</span>
+            <TextAreaLabel
+              label="Description"
+              rows={10}
+              value={report?.description}
+              className="mb-6 mt-2"
+              disabled={true}
+              onChange={() => ''}
+            />
+            <div className="inline-flex mr-auto">
+              <Link
+                to="/reports"
+                className="rounded-lg border-gray-500 text-gray-500 bg-transparent border-2 px-4 py-1 h-fit hover:shadow-lg hover:-translate-y-1 transition-all"
+              >
+                Back
+              </Link>
+              <button
+                onClick={markResolved}
+                className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-red-500 font-medium text-lg"
+              >
+                Mark as resolved
+              </button>
             </div>
           </div>
-          <button
-            onClick={markResolved}
-            className="mx-auto mt-16 rounded-lg ring-2 ring-red-800 bg-red-600 ring-offset-2 text-white px-4 py-1 hover:bg-red-200 hover:text-black transition-colors"
-          >
-            Mark as Resolved
-          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
