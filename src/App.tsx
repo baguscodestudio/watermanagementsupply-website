@@ -23,6 +23,7 @@ import StaffAccount from './pages/StaffAccount/StaffAccount';
 import StaffCreate from './pages/StaffAccount/StaffCreate';
 import StaffUpdate from './pages/StaffAccount/StaffUpdate';
 import Broadcast from './pages/Broadcast/Broadcast';
+import BroadcastView from './pages/Broadcast/BroadcastView';
 import WaterPumpUsage from './pages/WaterPumpUsage/WaterPumpUsage';
 import ChemicalUsage from './pages/ChemicalUsage/ChemicalUsage';
 import WaterUsage from './pages/WaterUsage/WaterUsage';
@@ -133,6 +134,7 @@ function App() {
                 <Route path="/bill" element={<Bill />} />
                 <Route path="/bill/:billId" element={<BillView />} />
                 <Route path="/broadcast" element={<Broadcast />} />
+                <Route path="/broadcast/:id" element={<BroadcastView />} />
                 <Route path="/broadcast/create" element={<BroadcastCreate />} />
                 <Route path="/equipment" element={<Equipment />} />
                 <Route

@@ -15,7 +15,6 @@ const ChemicalUpdate = () => {
   const [previousChem, setPreviousChem] = useState<ChemicalType>();
   const params = useParams();
   const id = params.chemicalId;
-  const [selectedImage, setSelectedImage] = useState<File>();
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -7,8 +7,18 @@ const TextAreaLabel: React.FC<{
   value?: string;
   className?: string;
   required?: boolean;
+  disabled?: boolean;
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
-}> = ({ label, rows, cols, required, value, className, onChange }) => {
+}> = ({
+  label,
+  disabled,
+  rows,
+  cols,
+  required,
+  value,
+  className,
+  onChange,
+}) => {
   return (
     <div
       className={`flex flex-col px-2 py-1 bg-gray-100 border-[1px] border-gray-200 ${className}`}
@@ -18,6 +28,7 @@ const TextAreaLabel: React.FC<{
         {required && <span className="text-red-500">*</span>}
       </span>
       <textarea
+        disabled={disabled}
         rows={rows ? rows : 5}
         cols={cols ? cols : 50}
         className="bg-transparent outline-none"

@@ -1,14 +1,19 @@
 import axios from 'axios';
+import moment from 'moment';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import BroadcastType from '../../type/Broadcast';
+
+import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
+import TextAreaLabel from '../../components/TextAreaLabel';
+import InputLabel from '../../components/InputLabel';
 
 const BroadcastCreate = () => {
   const [broadcast, setBroadcast] = useState({
     alertTitle: '',
     alertDescription: '',
-    // createdAt: new Date().toISOString(),
   });
 
   const navigate = useNavigate();
@@ -38,74 +43,59 @@ const BroadcastCreate = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-full">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FA8072] flex items-center px-12">
-          Broadcast Alert
-        </div>
-        <form
-          className="flex flex-col ml-20 mt-24"
-          id="broadcast-info"
-          onSubmit={(event) => handleSubmit(event)}
-        >
-          <div className="text-2xl mb-14 underline">Broadcast details</div>
-          {/* <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Date:</div>
-            <input
-              name="date"
-              disabled
-              value={new Date().toISOString()}
-              className="w-56 border-2 px-2 border-black bg-transparent"
-            />
-          </div> */}
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Title:</div>
-            <input
-              required
+      <div className="w-[85vw] h-full relative">
+        <Header title="Broadcast" />
+        <div className="flex flex-col py-10 px-12 h-[90vh] items-center">
+          <div className="w-1/2 flex flex-col">
+            <span className="font-semibold text-4xl">
+              Create an Announcement
+            </span>
+          </div>
+          <form onSubmit={handleSubmit} className="flex flex-col w-1/2">
+            <InputLabel
+              label="Title"
+              className="mt-6 mb-2"
+              required={true}
               onChange={(event) =>
                 setBroadcast({
                   ...broadcast,
                   alertTitle: event.currentTarget.value,
                 })
               }
-              name="alert-title"
-              className="w-56 border-2 px-2 border-black bg-transparent"
             />
-          </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Message:</div>
-            <textarea
-              required
-              name="message"
-              rows={6}
-              cols={75}
+            <TextAreaLabel
+              label="Description"
+              rows={10}
+              value={broadcast?.alertDescription}
+              className="mb-6 mt-2"
+              required={true}
               onChange={(event) =>
                 setBroadcast({
                   ...broadcast,
                   alertDescription: event.currentTarget.value,
                 })
               }
-              className="w-56 border-2 px-2 border-black bg-transparent "
             />
-          </div>
-          <div className="inline-flex mt-16">
-            <button
-              type="submit"
-              className="rounded-lg border-black bg-transparent border-2 px-4 py-1 mr-12"
-            >
-              Submit
-            </button>
-            <Link
-              to="/broadcast"
-              className="rounded-lg border-black bg-transparent border-2 px-4 py-1"
-            >
-              Cancel
-            </Link>
-          </div>
-        </form>
+            <div className="inline-flex mr-auto">
+              <Link
+                to="/broadcast"
+                className="rounded-lg border-gray-500 text-gray-500 bg-transparent border-2 px-4 py-1 h-fit hover:shadow-lg hover:-translate-y-1 transition-all"
+              >
+                Back
+              </Link>
+              <button
+                type="submit"
+                className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-green-500 font-medium text-lg"
+              >
+                Create
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
