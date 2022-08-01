@@ -93,7 +93,8 @@ const Reports = () => {
                 </th>
                 <th className="font-normal px-4 w-3/12">Title</th>
                 <th className="font-normal px-4 w-1/12">Status</th>
-                <th className="font-normal px-4 w-/12">Customer Id</th>
+                <th className="font-normal px-4 w-2/12">Customer Id</th>
+                <th className="font-normal px-4 w-4/12">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -129,8 +130,13 @@ const Reports = () => {
                     </div>
                   </td>
                   <td className="relative">
-                    <div className="px-4 py-2 group-hover:bg-gray-200 truncate">
+                    <div className="px-4 py-2 group-hover:bg-gray-200 text-center">
                       {report.customerId}
+                    </div>
+                  </td>
+                  <td className="relative">
+                    <div className="px-4 py-2 group-hover:bg-gray-200 truncate rounded-r-lg">
+                      {report.description}
                     </div>
                   </td>
                 </tr>

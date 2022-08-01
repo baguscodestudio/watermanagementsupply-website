@@ -3,24 +3,69 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import { ChevronThinLeft, ChevronThinRight } from 'styled-icons/entypo';
+import { Search } from '@styled-icons/boxicons-regular/Search';
+
 import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
+import Pagination from '../../components/Pagination';
+import Paper from '../../components/Paper';
+
 import BillType from '../../type/Bill';
+import CustomerType from '../../type/Customer';
+import { formatter } from '../../utils';
+import InputLabel from '../../components/InputLabel';
 
 const Bill = () => {
   const [bills, setBills] = useState<BillType[]>([]);
   const [page, setPage] = useState(0);
+  const [customers, setCustomers] = useState<CustomerType[]>([]);
+  const [selCustomer, setSelCustomer] = useState<string>('');
+  const [bill, setBill] = useState({
+    title: '',
+    deadline: '',
+    month: moment().month(),
+    year: moment().year(),
+  });
+  const [search, setSearch] = useState('');
   const navigate = useNavigate();
 
-  const rightPage = () => {
-    if (page < Math.ceil(bills.length / 10)) setPage(page + 1);
-  };
-  const leftPage = () => {
-    if (page > 0) setPage(page - 1);
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (search !== '') {
+      axios
+        .get('http://localhost:5000/api/Customer/Search', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          params: {
+            keyword: search,
+          },
+        })
+        .then((response) => setCustomers(response.data.result))
+        .catch((err) => {
+          console.log(err);
+          toast.error('An error occured while fetching customers');
+        });
+    } else fetchCustomers();
   };
 
-  useEffect(() => {
+  const fetchCustomers = () => {
+    axios
+      .get('http://localhost:5000/api/Customer', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => setCustomers(response.data.result))
+      .catch((err) => {
+        console.log(err);
+        toast.error('An error occured while fetching customers');
+      });
+  };
+
+  const fetchBills = () => {
     axios
       .get('http://localhost:5000/api/Bill', {
         headers: {
@@ -34,7 +79,91 @@ const Bill = () => {
         console.log(err);
         toast.error('An error occurred while fetching bills');
       });
+  };
+
+  useEffect(() => {
+    fetchCustomers();
+    fetchBills();
   }, []);
+
+  const handleSelectCustomer = (id: string) => {
+    if (selCustomer == id) {
+      setSelCustomer('');
+      fetchBills();
+    } else {
+      setSelCustomer(id);
+      axios
+        .get('http://localhost:5000/api/Bill', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          params: {
+            customerId: id,
+          },
+        })
+        .then((response) => {
+          setBills(response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error('An error occurred while fetching bills');
+        });
+    }
+  };
+
+  const getCustomerName = (id: string) => {
+    if (customers) {
+      for (let i = 0; i < customers.length; i++) {
+        if (customers[i].userId === id) {
+          return customers[i].username;
+        }
+      }
+    } else return id;
+  };
+
+  const billCustomer = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    axios
+      .post(
+        'http://localhost:5000/api/Bill',
+        {
+          ...bill,
+          customerId: selCustomer,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast(
+          `Successfully generated bill for customer ${getCustomerName(
+            selCustomer
+          )}`
+        );
+        axios
+          .get('http://localhost:5000/api/Bill', {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            params: {
+              customerId: selCustomer,
+            },
+          })
+          .then((response) => {
+            setBills(response.data);
+          })
+          .catch((err) => {
+            console.log(err);
+            toast.error('An error occurred while fetching bills');
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('An error occured while generating bill for customer');
+      });
+  };
 
   const generateBill = () => {
     axios
@@ -69,85 +198,226 @@ const Bill = () => {
       <NavBar />
       <div className="w-full">
         <Header title="Bills" />
-        <div className="w-full flex flex-col h-[80vh]">
-          <div className="w-5/6 mx-auto mt-4 border-black border-2 rounded-xl overflow-clip">
-            <table className="w-full">
-              <thead>
-                <tr className="h-10 border-b-2 border-black">
-                  <th>Customer ID</th>
-                  <th>Month</th>
-                  <th>Year</th>
-                  <th>Rate</th>
-                  <th>Amount</th>
-                  <th>Title</th>
-                  <th>Created</th>
-                  <th>Deadline</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
+        <div className="flex py-10 px-12 h-[90vh] items-center">
+          <div className="h-full w-1/5 rounded-lg shadow-xl p-4 flex flex-col">
+            <form
+              onSubmit={(event) => handleSearch(event)}
+              className="rounded-lg ring-1 ring-gray-500 w-full h-8 my-4 inline-flex items-center px-2"
+            >
+              <button
+                type="submit"
+                className="mr-4 hover:bg-gray-500 hover:text-white rounded-full w-6 h-6 flex transition-colors"
+              >
+                <Search size="16" className="m-auto" />
+              </button>
+              <input
+                placeholder="Search Customer"
+                onChange={(event) => setSearch(event.currentTarget.value)}
+                id="search"
+                className="outline-none w-full"
+              />
+            </form>
+            <span className="px-4 text-lg font-semibold">Customers</span>
+            <div className="w-full h-[2px] bg-gray-900 my-2" />
+            <table className="w-full text-center">
               <tbody>
-                {bills.slice(page * 10, page * 10 + 10).map((bill, index) => (
-                  <tr
-                    className="h-10 hover:cursor-pointer hover:bg-slate-300"
-                    onClick={() => navigate(`/bill/${bill.billId}`)}
-                  >
-                    <td className="px-4">{bill.customerId}</td>
-                    <td className="text-center">{bill.month}</td>
-                    <td className="text-center">{bill.year}</td>
-                    <td className="text-center">${bill.rate}</td>
-                    <td className="text-center">
-                      $
-                      {Math.round((bill.rate * bill.totalUsage * 100) / 1000) /
-                        100}
-                    </td>
-                    <td className="text-center">{bill.title}</td>
-                    <td className="text-center">
-                      {moment(bill.createdAt).utc().format('DD/MM/YYYY')}
-                    </td>
-                    <td className="text-center">
-                      {moment(bill.deadline).utc().format('DD/MM/YYYY')}
-                    </td>
-                    <td className="text-center">
-                      {bill.payment ? (
-                        <div className="mx-auto px-4 py-1 rounded-xl bg-lime-500 text-white w-1/2">
-                          Paid
+                {customers
+                  .slice(page * 15, page * 15 + 15)
+                  .map((customer, index) => (
+                    <tr
+                      key={index}
+                      onClick={() => handleSelectCustomer(customer.userId)}
+                      className="border-b-2 h-8 border-gray-200 last-of-type:border-none hover:cursor-pointer"
+                    >
+                      <td className="py-1">
+                        <div
+                          className={`${
+                            selCustomer.includes(customer.userId) &&
+                            'bg-gray-200 text-gray-500 rounded-lg'
+                          }`}
+                        >
+                          {customer.username}
                         </div>
-                      ) : (
-                        <button className="w-1/2 px-4 py-1 rounded-xl bg-red-500 text-white hover:bg-red-300 transition-colors">
-                          Unpaid
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
+            <Pagination
+              className="mt-auto mx-auto mb-6"
+              rows={customers.length}
+              rowsPerPage={15}
+              page={page}
+              setPage={setPage}
+            />
           </div>
-          <div className="inline-flex w-full justify-center mt-4">
-            <button
-              className="mx-4 hover:font-bold transition-all"
-              onClick={leftPage}
-            >
-              <ChevronThinLeft size="24" /> Back
-            </button>
-            <button
-              className="mx-4 hover:font-bold transition-all"
-              onClick={rightPage}
-            >
-              Next <ChevronThinRight size="24" />
-            </button>
-          </div>
-          <div className="mt-auto mb-24 mx-auto flex flex-col">
-            <span className="mb-4 font-semibold">
-              Generate Bills for every customer for{' '}
-              {moment().utc().format('MMMM')}
-            </span>
-            <button
-              onClick={generateBill}
-              className="ring-offset-2 ring-blue-800 ring-2 bg-blue-600 text-white rounded-lg px-4 py-1 hover:bg-blue-200 hover:text-black"
-            >
-              Generate Bills
-            </button>
+          <div className="w-4/5 flex flex-col pl-4 h-full">
+            <Paper className="w-full h-4/5 flex flex-col">
+              <table>
+                <thead>
+                  <tr className="text-sm text-gray-500 border-b-2 border-gray-200 h-10">
+                    <th className="font-normal px-4 text-left w-2/12">
+                      Customer
+                    </th>
+                    <th className="font-normal px-4 w-1/12">Month</th>
+                    <th className="font-normal px-4 w-1/12">Year</th>
+                    <th className="font-normal px-4 w-1/12">Rate</th>
+                    <th className="font-normal px-4 w-1/12">Amount</th>
+                    <th className="font-normal px-4 w-2/12">Title</th>
+                    <th className="font-normal px-4 w-2/12">Created at</th>
+                    <th className="font-normal px-4 w-2/12">Deadline</th>
+                    <th className="font-normal px-4 w-2/12">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {bills.slice(page * 9, page * 9 + 9).map((bill, index) => (
+                    <tr
+                      key={index}
+                      onClick={() => navigate(`/bill/${bill.billId}`)}
+                      className="h-12 border-b-2 border-gray-200 hover:text-gray-500 hover:cursor-pointer group border-collapse"
+                    >
+                      <td className="">
+                        <div className="px-4 py-2 group-hover:bg-gray-200 rounded-l-lg">
+                          {getCustomerName(bill.customerId)}
+                        </div>
+                      </td>
+                      <td className="text-center">
+                        <div className="px-4 py-2 group-hover:bg-gray-200">
+                          {bill.month}
+                        </div>
+                      </td>
+                      <td className="text-center">
+                        <div className="px-4 py-2 group-hover:bg-gray-200">
+                          {bill.year}
+                        </div>
+                      </td>
+                      <td className="text-center">
+                        <div className="px-4 py-2 group-hover:bg-gray-200">
+                          ${bill.rate}
+                        </div>
+                      </td>
+                      <td className="text-center">
+                        <div className="px-4 py-2 group-hover:bg-gray-200">
+                          $
+                          {formatter.format(
+                            (bill.totalUsage * bill.rate) / 1000
+                          )}
+                        </div>
+                      </td>
+                      <td>
+                        <div className="px-4 py-2 group-hover:bg-gray-200">
+                          {bill.title}
+                        </div>
+                      </td>
+                      <td className="text-center">
+                        <div className="px-4 py-2 group-hover:bg-gray-200">
+                          {moment(bill.createdAt).utc().format('DD/MM/YYYY')}
+                        </div>
+                      </td>
+                      <td className="text-center">
+                        <div className="px-4 py-2 group-hover:bg-gray-200">
+                          {moment(bill.deadline).utc().format('DD/MM/YYYY')}
+                        </div>
+                      </td>
+
+                      <td className="">
+                        <div className="px-4 py-1 group-hover:bg-gray-200 rounded-r-lg">
+                          <div
+                            className={`px-4 py-1 text-white flex justify-center rounded-lg ${
+                              bill.payment ? 'bg-emerald-500' : 'bg-red-500'
+                            }`}
+                          >
+                            {bill.payment ? 'Paid' : 'Unpaid'}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <Pagination
+                className="ml-auto mt-auto mb-8 inline-flex items-center"
+                rows={bills.length}
+                rowsPerPage={10}
+                page={page}
+                setPage={setPage}
+              />
+            </Paper>
+            <Paper className="mt-auto w-full inline-flex h-1/6 px-4 py-2 items-center">
+              <div className="mx-4 flex flex-col">
+                <span className="mb-4 font-semibold">
+                  Generate Bills for every customer for{' '}
+                  {moment().utc().format('MMMM')}
+                </span>
+                <button
+                  onClick={generateBill}
+                  className="ring-offset-2 ring-blue-800 ring-2 bg-blue-600 text-white rounded-lg px-4 py-1 hover:bg-blue-200 hover:text-black"
+                >
+                  Generate Bills
+                </button>
+              </div>
+              {selCustomer && (
+                <form className="flex h-full mx-4" onSubmit={billCustomer}>
+                  <div className="flex flex-col h-full mr-4 justify-around">
+                    <span className="font-semibold">
+                      Generate for {getCustomerName(selCustomer)}
+                    </span>
+                    <button
+                      className="px-4 py-1 bg-sky-500 rounded-lg text-white"
+                      type="submit"
+                    >
+                      Create Bill
+                    </button>
+                  </div>
+                  <div className="mx-4 h-full flex flex-col">
+                    <InputLabel
+                      label="Title"
+                      required={true}
+                      onChange={(event) =>
+                        setBill({ ...bill, title: event.currentTarget.value })
+                      }
+                    />
+                    <InputLabel
+                      label="Deadline"
+                      type="date"
+                      required={true}
+                      onChange={(event) =>
+                        setBill({
+                          ...bill,
+                          deadline: event.currentTarget.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="mx-4 h-full flex flex-col">
+                    <InputLabel
+                      label="Month"
+                      required={true}
+                      type="number"
+                      value={bill.month}
+                      onChange={(event) =>
+                        setBill({
+                          ...bill,
+                          month: parseInt(event.currentTarget.value),
+                        })
+                      }
+                    />
+                    <InputLabel
+                      label="Deadline"
+                      type="number"
+                      value={bill.year}
+                      required={true}
+                      onChange={(event) =>
+                        setBill({
+                          ...bill,
+                          year: parseInt(event.currentTarget.value),
+                        })
+                      }
+                    />
+                  </div>
+                </form>
+              )}
+            </Paper>
           </div>
         </div>
       </div>

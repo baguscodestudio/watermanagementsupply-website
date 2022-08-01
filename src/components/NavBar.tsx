@@ -175,7 +175,7 @@ const NavBar = () => {
         ))}
       </div>
       <div className="w-4/5 mt-auto mb-20 mx-auto inline-flex">
-        <img src="images/AvatarFill.png" className="w-12" />
+        <img src="/images/AvatarFill.png" className="w-12" />
         <div className="flex flex-col ml-4">
           <span className="text-xl">{user.username}</span>
           <span className="text-gray-500">{user.staffRole}</span>
