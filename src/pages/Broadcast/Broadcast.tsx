@@ -8,6 +8,7 @@ import BroadcastType from '../../type/Broadcast';
 import { Info } from '@styled-icons/fa-solid/Info';
 import { TextParagraph } from '@styled-icons/bootstrap/TextParagraph';
 import { CalendarDateFill } from '@styled-icons/bootstrap/CalendarDateFill';
+import Header from '../../components/Header';
 
 const Broadcast = () => {
   const [broadcasts, setBroadcasts] = useState<BroadcastType[]>([]);
@@ -38,9 +39,7 @@ const Broadcast = () => {
     <div className="w-full h-full flex">
       <NavBar />
       <div className="w-[85vw] h-full">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FA8072] flex items-center px-12">
-          Broadcast Alert
-        </div>
+        <Header title="Broadcast Alert" />
         <div className="w-full flex">
           <div className="w-1/5 p-6">
             <div className="flex flex-col items-start border-2 border-black rounded-lg p-4">

@@ -9,6 +9,7 @@ import { CircleFill } from '@styled-icons/bootstrap/CircleFill';
 import { Warning } from '@styled-icons/fluentui-system-regular/Warning';
 
 import { NotificationContext, UserContext } from '../App';
+import PumpScheduleType from '../type/PumpSchedule';
 
 import NavBar from '../components/NavBar';
 import Paper from '../components/Paper';
@@ -21,6 +22,7 @@ import { formatter } from '../utils';
 const Dashboard = () => {
   const [chemicals, setChemicals] = useState<ChemicalType[]>([]);
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
+  const [pumpSchedule, setPumpSchedule] = useState<PumpScheduleType[]>([]);
   const { notifications } = useContext(NotificationContext);
   const { user } = useContext(UserContext);
 
@@ -42,6 +44,17 @@ const Dashboard = () => {
         .catch((err) => {
           console.log(err);
           toast.error('Error while fetching chemicals');
+        });
+      axios
+        .get('http://localhost:5000/api/PumpSchedule', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        })
+        .then((response) => setPumpSchedule(response.data.result))
+        .catch((err) => {
+          console.log(err);
+          toast.error('Error while creating');
         });
       axios
         .get('http://localhost:5000/api/Equipment', {

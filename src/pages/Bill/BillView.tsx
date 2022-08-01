@@ -3,6 +3,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
 import BillType from '../../type/Bill';
 
@@ -45,13 +46,11 @@ const BillView = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-full">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFC0CB] flex items-center px-12">
-          Bill {bill?.billId}
-        </div>
-        <div className="w-full flex flex-col">
+      <div className="w-[85vw] h-full">
+        <Header title="Bill" />
+        <div className="w-full flex py-10 px-12 h-[90vh]">
           <div className="m-auto mt-12 w-1/3 flex flex-col px-12 py-8 rounded-lg border-2 text-lg">
             <div className="inline-flex justify-between w-full">
               <span className="font-bold">Bill ID:</span>
@@ -123,7 +122,7 @@ const BillView = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

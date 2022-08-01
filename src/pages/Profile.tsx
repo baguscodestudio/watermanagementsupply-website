@@ -7,6 +7,7 @@ import { CheckmarkOutline } from '@styled-icons/evaicons-outline/CheckmarkOutlin
 import { ChevronDown, ChevronUp } from 'styled-icons/bootstrap';
 import { UserContext } from '../App';
 import NavBar from '../components/NavBar';
+import Header from '../components/Header';
 
 const Profile = () => {
   const { user, setUser } = useContext(UserContext);
@@ -66,9 +67,7 @@ const Profile = () => {
     <div className="w-full h-full flex">
       <NavBar />
       <div className="w-[85vw] h-full">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#6cb8cf] flex items-center px-12 col-span-2">
-          Profile
-        </div>
+        <Header title="Profile" />
         <div className="ml-10 mt-4 bg-neutral-100 shadow-lg w-1/3 h-32 px-10 flex items-center">
           <div className="flex flex-col">
             <span className="text-2xl font-medium">{user.username}</span>

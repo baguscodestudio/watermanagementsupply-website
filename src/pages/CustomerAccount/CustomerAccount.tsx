@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
 import CustomerType from '../../type/Customer';
 
@@ -49,9 +50,7 @@ const CustomerAccount = () => {
     <div className="w-full h-full flex">
       <NavBar />
       <div className="w-[85vw] h-full">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFFACD] flex items-center px-12">
-          Manage Customers
-        </div>
+        <Header title="Manage Customer" />
         <div className="w-full inline-flex">
           {/* <div className="w-96 ml-24 mt-2">
             <div className="text-xl my-4">Chemical Search</div>

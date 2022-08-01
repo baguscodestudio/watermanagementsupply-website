@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ChevronThinLeft, ChevronThinRight } from 'styled-icons/entypo';
+import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
 import BillType from '../../type/Bill';
 
@@ -67,9 +68,7 @@ const Bill = () => {
     <div className="w-full h-full flex">
       <NavBar />
       <div className="w-full">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFC0CB] flex items-center px-12">
-          Bills
-        </div>
+        <Header title="Bills" />
         <div className="w-full flex flex-col h-[80vh]">
           <div className="w-5/6 mx-auto mt-4 border-black border-2 rounded-xl overflow-clip">
             <table className="w-full">

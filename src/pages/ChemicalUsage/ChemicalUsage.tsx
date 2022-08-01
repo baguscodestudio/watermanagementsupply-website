@@ -16,6 +16,7 @@ import NavBar from '../../components/NavBar';
 import Paper from '../../components/Paper';
 import InputLabel from '../../components/InputLabel';
 import SelectTimeFrameLabel from '../../components/SelectTimeFrameLabel';
+import EquipmentType from '../../type/Equipment';
 
 const MODES: {
   label: string;
@@ -45,14 +46,17 @@ const ChemicalUsage = () => {
   const [search, setSearch] = useState('');
   const [finalSearch, setFinalSearch] = useState('');
   const [page, setPage] = useState(0);
+  const [pageEq, setPageEq] = useState(0);
   const [mode, setMode] = useState(MODES[0]);
   const [selChem, setSelChem] = useState<string[]>([]);
+  const [selEq, setSelEq] = useState<string[]>([]);
   const [currentDateString, setCurrentDateString] = useState(
-    moment().format('YYYY-MM-DD')
+    moment().utc().format('YYYY-MM-DD')
   );
   const [previousDateString, setPreviousDateString] = useState(
-    moment().add(-7, 'days').format('YYYY-MM-DD')
+    moment().utc().add(-7, 'days').format('YYYY-MM-DD')
   );
+  const [equipments, setEquipments] = useState<EquipmentType[]>([]);
 
   const chartRef = useRef<ChartJS>(null);
 
@@ -63,7 +67,7 @@ const ChemicalUsage = () => {
     setFinalSearch(search);
   };
 
-  const addSelectedEquipment = (eq: ChemicalType) => {
+  const addSelectedChemical = (eq: ChemicalType) => {
     if (selChem.includes(eq.chemicalId)) {
       let tempArr = [...selChem];
       tempArr = tempArr.filter((id) => id !== eq.chemicalId);
@@ -80,11 +84,56 @@ const ChemicalUsage = () => {
     }
   };
 
+  const addSelectedEquipment = (eq: EquipmentType) => {
+    if (selEq.includes(eq.equipmentId)) {
+      let tempArr = [...selEq];
+      tempArr = tempArr.filter((id) => id !== eq.equipmentId);
+      setSelEq(tempArr);
+    } else if (selEq.length < 5) {
+      let tempArr = [...selEq];
+      tempArr.push(eq.equipmentId);
+      setSelEq(tempArr);
+    } else {
+      let tempArr = [...selEq];
+      tempArr.shift();
+      tempArr.push(eq.equipmentId);
+      setSelEq(tempArr);
+    }
+  };
+
+  const getEquipmentName = (id: string) => {
+    if (equipments) {
+      for (let i = 0; i < equipments.length; i++) {
+        if (equipments[i].equipmentId === id) {
+          return equipments[i].equipmentName;
+        }
+      }
+    } else {
+      return id;
+    }
+  };
+
+  const fetchEquipments = () => {
+    axios
+      .get('http://localhost:5000/api/Equipment', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => {
+        setEquipments(response.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('Error occured while getting equipments');
+      });
+  };
+
   const getChemicalName = (id: string) => {
     if (chemicals) {
       for (let i = 0; i < chemicals.length; i++) {
         if (chemicals[i].chemicalId === id) {
-          return chemicals[i].chemicalName;
+          return chemicals[i].chemicalName || id;
         }
       }
     } else {
@@ -110,22 +159,29 @@ const ChemicalUsage = () => {
 
   const labels: string[] = [];
   chemicalUsage.map((usage, index) => {
-    if (selChem.includes(usage.chemicalId)) {
+    if (
+      ((selChem.length === 0 && selEq.length !== 0) ||
+        selChem.includes(usage.chemicalId)) &&
+      ((selEq.length === 0 && selChem.length !== 0) ||
+        selEq.includes(usage.equipmentId))
+    ) {
       usage.data.map((sensordata, i) => {
-        if (dataValue[usage.chemicalId]) {
-          dataValue[usage.chemicalId].data.push({
-            x: moment(sensordata.timestamp),
+        if (dataValue[usage.chemicalId + usage.equipmentId]) {
+          dataValue[usage.chemicalId + usage.equipmentId].data.push({
+            x: moment(sensordata.timestamp).utc(),
             y: sensordata.value,
           });
         } else {
           let color = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
             Math.random() * 255
           )},${Math.floor(Math.random() * 255)})`;
-          dataValue[usage.chemicalId] = {
-            label: getChemicalName(usage.chemicalId),
+          dataValue[usage.chemicalId + usage.equipmentId] = {
+            label: `${getChemicalName(usage.chemicalId)} - ${getEquipmentName(
+              usage.equipmentId
+            )}`,
             data: [
               {
-                x: moment(sensordata.timestamp),
+                x: moment(sensordata.timestamp).utc(),
                 y: sensordata.value,
               },
             ],
@@ -144,36 +200,30 @@ const ChemicalUsage = () => {
       let count = 0;
       let currentDate: string;
       let calculated_data: { x: string; y: number }[] = [];
-      // console.log(set.data.length);
       set.data.map((data: { x: string; y: number }) => {
-        // console.log(
-        //   data.y,
-        //   data.x,
-        //   moment(data.x).format('YYYY-MM-DD'),
-        //   currentDate
-        // );
         if (
           !currentDate ||
-          currentDate !== moment(data.x).format('YYYY-MM-DD')
+          currentDate !== moment(data.x).utc().format('YYYY-MM-DD')
         ) {
-          // console.log(total, count, currentDate);
           if (currentDate) {
             calculated_data.push({
               x: currentDate,
               y: total / count,
             });
           }
-          currentDate = moment(data.x).format('YYYY-MM-DD');
+          currentDate = moment(data.x).utc().format('YYYY-MM-DD');
           total = 0;
           count = 0;
           count++;
           total += data.y;
-          // console.log(data.y, currentDate);
-        } else if (currentDate === moment(data.x).format('YYYY-MM-DD')) {
-          // console.log(data.y, currentDate, count);
+        } else if (currentDate === moment(data.x).utc().format('YYYY-MM-DD')) {
           total += data.y;
           count++;
         }
+      });
+      calculated_data.push({
+        x: currentDate!,
+        y: total / count,
       });
       set.data = calculated_data;
     } else if (mode.unit === 'month') {
@@ -182,22 +232,29 @@ const ChemicalUsage = () => {
       let currentDate: string;
       let calculated_data: { x: string; y: number }[] = [];
       set.data.map((data: { x: string; y: number }) => {
-        if (!currentDate || currentDate !== moment(data.x).format('YYYY-MM')) {
+        if (
+          !currentDate ||
+          currentDate !== moment(data.x).utc().format('YYYY-MM')
+        ) {
           if (currentDate) {
             calculated_data.push({
               x: currentDate,
               y: total / count,
             });
           }
-          currentDate = moment(data.x).format('YYYY-MM');
+          currentDate = moment(data.x).utc().format('YYYY-MM');
           total = 0;
           count = 0;
           count++;
           total += data.y;
-        } else if (currentDate === moment(data.x).format('YYYY-MM')) {
+        } else if (currentDate === moment(data.x).utc().format('YYYY-MM')) {
           total += data.y;
           count++;
         }
+      });
+      calculated_data.push({
+        x: currentDate!,
+        y: total / count,
       });
       set.data = calculated_data;
     } else if (mode.unit === 'hour') {
@@ -208,7 +265,7 @@ const ChemicalUsage = () => {
       set.data.map((data: { x: string; y: number }) => {
         if (
           !currentDate ||
-          currentDate !== moment(data.x).format('YYYY-MM-DD HH')
+          currentDate !== moment(data.x).utc().format('YYYY-MM-DD HH')
         ) {
           if (currentDate) {
             calculated_data.push({
@@ -216,15 +273,21 @@ const ChemicalUsage = () => {
               y: total / count,
             });
           }
-          currentDate = moment(data.x).format('YYYY-MM-DD HH');
+          currentDate = moment(data.x).utc().format('YYYY-MM-DD HH');
           total = 0;
           count = 0;
           count++;
           total += data.y;
-        } else if (currentDate === moment(data.x).format('YYYY-MM-DD HH')) {
+        } else if (
+          currentDate === moment(data.x).utc().format('YYYY-MM-DD HH')
+        ) {
           total += data.y;
           count++;
         }
+      });
+      calculated_data.push({
+        x: currentDate!,
+        y: total / count,
       });
       set.data = calculated_data;
     } else if (mode.unit === 'week') {
@@ -239,19 +302,23 @@ const ChemicalUsage = () => {
         ) {
           if (currentDate) {
             calculated_data.push({
-              x: moment(currentDate).startOf('week').format('YYYY-MM-DD'),
+              x: moment(currentDate).startOf('week').utc().format('YYYY-MM-DD'),
               y: total / count,
             });
           }
-          currentDate = moment(data.x).format('YYYY-MM-DD');
+          currentDate = moment(data.x).utc().format('YYYY-MM-DD');
           total = 0;
           count = 0;
           count++;
           total += data.y;
-        } else if (moment(currentDate).week() === moment(data.x).week()) {
+        } else if (moment(currentDate).week() === moment(data.x).utc().week()) {
           total += data.y;
           count++;
         }
+      });
+      calculated_data.push({
+        x: moment(currentDate!).startOf('week').utc().format('YYYY-MM-DD'),
+        y: total / count,
       });
       set.data = calculated_data;
     }
@@ -264,6 +331,7 @@ const ChemicalUsage = () => {
 
   useEffect(() => {
     fetchChemicals();
+    fetchEquipments();
   }, []);
 
   useEffect(() => {
@@ -290,63 +358,133 @@ const ChemicalUsage = () => {
       <div className="w-[85vw] h-full">
         <Header title="Chemical Usage" />
         <div className="w-full flex py-10 px-12 h-[90vh]">
-          <div className="h-full w-1/5 rounded-lg shadow-xl p-4 flex flex-col">
-            <form
-              onSubmit={(event) => handleSearch(event)}
-              className="rounded-lg ring-1 ring-gray-500 w-full h-8 my-4 inline-flex items-center px-2"
-            >
-              <button
-                type="submit"
-                className="mr-4 hover:bg-gray-500 hover:text-white rounded-full w-6 h-6 flex transition-colors"
+          <div className="h-full w-1/5">
+            <div className="w-full h-1/2 rounded-lg shadow-xl p-4 flex flex-col">
+              <form
+                onSubmit={(event) => handleSearch(event)}
+                className="rounded-lg ring-1 ring-gray-500 w-full h-8 my-4 inline-flex items-center px-2"
               >
-                <Search size="16" className="m-auto" />
-              </button>
-              <input
-                placeholder="Search for chemical name"
-                onChange={(event) => setSearch(event.currentTarget.value)}
-                id="search"
-                className="outline-none w-full"
+                <button
+                  type="submit"
+                  className="mr-4 hover:bg-gray-500 hover:text-white rounded-full w-6 h-6 flex transition-colors"
+                >
+                  <Search size="16" className="m-auto" />
+                </button>
+                <input
+                  placeholder="Chemical name"
+                  onChange={(event) => setSearch(event.currentTarget.value)}
+                  id="search"
+                  className="outline-none w-full"
+                />
+              </form>
+              <span className="px-4 text-lg font-semibold">Chemicals</span>
+              <div className="w-full h-[2px] bg-gray-900 my-2" />
+              <table className="w-full text-center">
+                <tbody>
+                  {chemicals
+                    .filter((chemical) =>
+                      chemical.chemicalName
+                        .toLowerCase()
+                        .includes(finalSearch.toLowerCase())
+                    )
+                    .slice(page * 5, page * 5 + 5)
+                    .map((chemical, index) => (
+                      <tr
+                        key={index}
+                        onClick={() => addSelectedChemical(chemical)}
+                        className="border-b-2 h-8 border-gray-200 last-of-type:border-none hover:cursor-pointer"
+                      >
+                        <td className="py-1">
+                          <div
+                            className={`${
+                              selChem.includes(chemical.chemicalId) &&
+                              'bg-gray-200 text-gray-500 rounded-lg'
+                            }`}
+                          >
+                            {chemical.chemicalName}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+              <Pagination
+                className="mt-auto mx-auto mb-4"
+                rows={chemicals.length}
+                rowsPerPage={5}
+                page={page}
+                setPage={setPage}
               />
-            </form>
-            <span className="px-4 text-lg font-semibold">Chemicals</span>
-            <div className="w-full h-[2px] bg-gray-900 my-2" />
-            <table className="w-full text-center">
-              <tbody>
-                {chemicals
-                  .filter((chemical) =>
-                    chemical.chemicalName
-                      .toLowerCase()
-                      .includes(finalSearch.toLowerCase())
-                  )
-                  .slice(page * 15, page * 15 + 15)
-                  .map((chemical, index) => (
-                    <tr
-                      key={index}
-                      onClick={() => addSelectedEquipment(chemical)}
-                      className="border-b-2 h-8 border-gray-200 last-of-type:border-none hover:cursor-pointer"
-                    >
-                      <td className="py-1">
-                        <div
-                          className={`${
-                            selChem.includes(chemical.chemicalId) &&
-                            'bg-gray-200 text-gray-500 rounded-lg'
-                          }`}
-                        >
-                          {chemical.chemicalName}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-            <Pagination
-              className="mt-auto mx-auto mb-6"
-              rows={chemicals.length}
-              rowsPerPage={15}
-              page={page}
-              setPage={setPage}
-            />
+            </div>
+            <div className="w-full h-1/2 rounded-lg shadow-xl p-4 flex flex-col">
+              <form
+                onSubmit={(event) => handleSearch(event)}
+                className="rounded-lg ring-1 ring-gray-500 w-full h-8 my-4 inline-flex items-center px-2"
+              >
+                <button
+                  type="submit"
+                  className="mr-4 hover:bg-gray-500 hover:text-white rounded-full w-6 h-6 flex transition-colors"
+                >
+                  <Search size="16" className="m-auto" />
+                </button>
+                <input
+                  placeholder="Search for equipment name"
+                  onChange={(event) => setSearch(event.currentTarget.value)}
+                  id="search"
+                  className="outline-none w-full"
+                />
+              </form>
+              <span className="px-4 text-lg font-semibold">Equipments</span>
+              <div className="w-full h-[2px] bg-gray-900 my-2" />
+              <table className="w-full text-center">
+                <tbody>
+                  {equipments
+                    .filter(
+                      (equipment) =>
+                        equipment.equipmentName
+                          .toLowerCase()
+                          .includes(finalSearch.toLowerCase()) &&
+                        equipment.type === 'Pump'
+                    )
+                    .slice(pageEq * 5, pageEq * 5 + 5)
+                    .map((equipment, index) => (
+                      <tr
+                        key={index}
+                        onClick={() => addSelectedEquipment(equipment)}
+                        className="border-b-2 h-8 border-gray-200 last-of-type:border-none hover:cursor-pointer"
+                      >
+                        <td className="py-1">
+                          <div
+                            className={`${
+                              selEq.includes(equipment.equipmentId) &&
+                              'bg-gray-200 text-gray-500 rounded-lg'
+                            }`}
+                          >
+                            {equipment.equipmentName}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+              <Pagination
+                className="mt-auto mx-auto mb-6"
+                rows={
+                  equipments.filter(
+                    (equipment) =>
+                      equipment.equipmentName
+                        .toLowerCase()
+                        .includes(finalSearch.toLowerCase()) &&
+                      equipment.type === 'Pump'
+                  ).length
+                }
+                rowsPerPage={5}
+                page={pageEq}
+                setPage={setPageEq}
+              />
+            </div>
           </div>
+
           <div className="w-4/5 flex flex-col pl-12">
             <Chart
               ref={chartRef}

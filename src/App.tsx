@@ -25,9 +25,7 @@ import StaffUpdate from './pages/StaffAccount/StaffUpdate';
 import Broadcast from './pages/Broadcast/Broadcast';
 import WaterPumpUsage from './pages/WaterPumpUsage/WaterPumpUsage';
 import ChemicalUsage from './pages/ChemicalUsage/ChemicalUsage';
-import ViewIndividualPumpUsage from './pages/WaterPumpUsage/ViewIndividualPumpUsage';
 import WaterUsage from './pages/WaterUsage/WaterUsage';
-import ViewIndividualWaterUsage from './pages/WaterUsage/ViewIndividualWaterUsage';
 import Profile from './pages/Profile';
 import CustomerUpdate from './pages/CustomerAccount/CustomerUpdate';
 import Bill from './pages/Bill/Bill';
@@ -121,14 +119,6 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/pumpusage" element={<WaterPumpUsage />} />
                 <Route path="/waterusage" element={<WaterUsage />} />
-                <Route
-                  path="/waterusage/:customerId"
-                  element={<ViewIndividualWaterUsage />}
-                />
-                <Route
-                  path="/pumpusage/:pumpId"
-                  element={<ViewIndividualPumpUsage />}
-                />
                 <Route path="/chemicalusage" element={<ChemicalUsage />} />
                 <Route path="/staff/role" element={<ManageRole />} />
                 <Route path="/staff" element={<StaffAccount />} />

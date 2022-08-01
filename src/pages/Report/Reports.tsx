@@ -4,7 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ChevronThinLeft, ChevronThinRight } from 'styled-icons/entypo';
+import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
+import Pagination from '../../components/Pagination';
 import ReportType from '../../type/Report';
 
 const Reports = () => {
@@ -37,9 +39,7 @@ const Reports = () => {
     <div className="w-full h-full flex">
       <NavBar />
       <div className="w-[85vw] h-full">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFC0CB] flex items-center px-12">
-          Reports
-        </div>
+        <Header title="Reports" />
         <div className="w-full flex flex-col">
           <div className="mx-auto mt-16 w-5/6 rounded-lg border-2 border-black">
             <table className="w-full">
@@ -74,20 +74,13 @@ const Reports = () => {
               </tbody>
             </table>
           </div>
-          <div className="inline-flex w-full justify-center mt-4">
-            <button
-              className="mx-4 hover:font-bold transition-all"
-              onClick={leftPage}
-            >
-              <ChevronThinLeft size="24" /> Back
-            </button>
-            <button
-              className="mx-4 hover:font-bold transition-all"
-              onClick={rightPage}
-            >
-              Next <ChevronThinRight size="24" />
-            </button>
-          </div>
+          <Pagination
+            className="mx-auto"
+            rows={reports.length}
+            rowsPerPage={10}
+            page={page}
+            setPage={setPage}
+          />
         </div>
       </div>
     </div>

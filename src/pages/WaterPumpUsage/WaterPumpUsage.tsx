@@ -354,7 +354,15 @@ const WaterPumpUsage = () => {
             </table>
             <Pagination
               className="mt-auto mx-auto mb-6"
-              rows={equipments.length}
+              rows={
+                equipments.filter(
+                  (equipment) =>
+                    equipment.equipmentName
+                      .toLowerCase()
+                      .includes(finalSearch.toLowerCase()) &&
+                    equipment.type === 'Pump'
+                ).length
+              }
               rowsPerPage={15}
               page={page}
               setPage={setPage}
