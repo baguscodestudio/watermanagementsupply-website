@@ -5,9 +5,10 @@ const InputLabel: React.FC<{
   className?: string;
   value?: string | number;
   type?: string;
+  pattern?: string;
   required?: boolean;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
-}> = ({ label, type, required, value, className, onChange }) => {
+}> = ({ label, type, required, pattern, value, className, onChange }) => {
   return (
     <div
       className={`flex flex-col px-2 py-1 bg-gray-100 border-[1px] border-gray-200 ${className}`}
@@ -20,6 +21,7 @@ const InputLabel: React.FC<{
         className="bg-transparent outline-none"
         type={type}
         value={value}
+        pattern={pattern}
         onChange={onChange}
         required={required}
       />

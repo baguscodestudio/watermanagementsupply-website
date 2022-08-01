@@ -8,44 +8,49 @@ import { ChevronDown, ChevronUp } from 'styled-icons/bootstrap';
 import { UserContext } from '../App';
 import NavBar from '../components/NavBar';
 import Header from '../components/Header';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import InputLabel from '../components/InputLabel';
 import SelectLabel from '../components/SelectLabel';
-
-const GENDERS = ['M', 'F'];
 
 const Profile = () => {
   const { user, setUser } = useContext(UserContext);
   const [prevUser, setPrevUser] = useState(user);
-  const [gender, setGender] = useState<'M' | 'F'>(user.gender);
+  const [confirmPass, setConfirmPass] = useState('');
+
+  const navigate = useNavigate();
 
   const checkChanges = () => {
-    return prevUser === user && gender === prevUser.gender;
+    return prevUser === user;
   };
 
   const handleUpdate = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    axios
-      .put(
-        'http://localhost:5000/api/Staff/MyInfo',
-        {
-          ...user,
-          gender: gender,
-          updatePassword: false,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    if (confirmPass !== user.password) {
+      toast.error('Password does not match!');
+      return;
+    } else {
+      axios
+        .put(
+          'http://localhost:5000/api/Staff/MyInfo',
+          {
+            ...user,
+            updatePassword: true,
           },
-        }
-      )
-      .then((response) => {
-        toast('Successfully updated profile');
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error('An error occured while updating your profile!');
-      });
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+          }
+        )
+        .then((response) => {
+          toast('Successfully updated password');
+          navigate('/dashboard');
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error('An error occured while updating your password!');
+        });
+    }
   };
 
   return (
@@ -63,7 +68,7 @@ const Profile = () => {
               className="max-w-full h-auto w-full"
             />
           </div>
-          <div className="w-1/2 flex flex-col">
+          <div className="w-1/3 flex flex-col">
             <div className="inline-flex items-center mt-4">
               <div className="flex flex-col">
                 <span className="font-semibold text-3xl">{user.username}</span>
@@ -85,46 +90,26 @@ const Profile = () => {
                 </button>
               </div>
             </div>
-            <div className="w-2/3 mt-8">
+            <div className="w-full mt-8">
               <InputLabel
-                label="Username"
+                label="Password"
+                required={true}
+                pattern="^(?=\P{Ll}*\p{Ll})(?=\P{Lu}*\p{Lu})(?=\P{N}*\p{N})(?=[\p{L}\p{N}]*[^\p{L}\p{N}])[\s\S]{8,}$"
+                type="password"
                 className="my-3"
-                value={user.username}
                 onChange={(event) => {
-                  setUser({ ...user, username: event.currentTarget.value });
+                  setUser({ ...user, password: event.currentTarget.value });
                 }}
               />
               <InputLabel
                 className="my-3"
-                label="Email"
+                label="Confirm Password"
+                pattern="^(?=\P{Ll}*\p{Ll})(?=\P{Lu}*\p{Lu})(?=\P{N}*\p{N})(?=[\p{L}\p{N}]*[^\p{L}\p{N}])[\s\S]{8,}$"
+                required={true}
+                type="password"
                 value={user.email}
                 onChange={(event) => {
-                  setUser({ ...user, email: event.currentTarget.value });
-                }}
-              />
-              <div className="inline-flex justify-between my-3 w-full">
-                <InputLabel
-                  className="w-[45%]"
-                  label="Phone"
-                  value={user.phone}
-                  onChange={(event) => {
-                    setUser({ ...user, phone: event.currentTarget.value });
-                  }}
-                />
-                <SelectLabel
-                  className="w-[45%]"
-                  title="Gender"
-                  value={gender}
-                  onChange={setGender}
-                  list={GENDERS}
-                />
-              </div>
-              <InputLabel
-                className="my-3"
-                label="Full Name"
-                value={user.fullName}
-                onChange={(event) => {
-                  setUser({ ...user, fullName: event.currentTarget.value });
+                  setConfirmPass(event.currentTarget.value);
                 }}
               />
             </div>

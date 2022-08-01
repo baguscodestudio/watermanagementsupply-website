@@ -27,6 +27,7 @@ import WaterPumpUsage from './pages/WaterPumpUsage/WaterPumpUsage';
 import ChemicalUsage from './pages/ChemicalUsage/ChemicalUsage';
 import WaterUsage from './pages/WaterUsage/WaterUsage';
 import Profile from './pages/Profile';
+import ProfilePassword from './pages/ProfilePassword';
 import CustomerUpdate from './pages/CustomerAccount/CustomerUpdate';
 import Bill from './pages/Bill/Bill';
 import BillView from './pages/Bill/BillView';
@@ -42,21 +43,15 @@ import axios from 'axios';
 
 Chart.register(...registerables);
 
-const userObj = {
-  user: {
-    userId: '',
-    username: '',
-    password: '',
-    createdAt: '',
-    fullName: '',
-    gender: 'M',
-    email: '',
-    phone: '',
-    type: '',
-    staffRole: '',
-  },
+const userObj: UserContextValue = {
+  user: {} as UserType,
   setUser: (user: UserType) => {},
 };
+
+interface UserContextValue {
+  user: UserType;
+  setUser: (user: UserType) => void;
+}
 
 interface NotificationContextValue {
   notifications: NotificationType[];
@@ -72,7 +67,7 @@ export const UserContext = createContext(userObj);
 export const NotificationContext = createContext(notificationObj);
 
 function App() {
-  const [user, setUser] = useState(userObj.user);
+  const [user, setUser] = useState<UserType>(userObj.user);
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
 
   useEffect(() => {
@@ -147,6 +142,7 @@ function App() {
                 <Route path="/equipment/insert" element={<EquipmentCreate />} />
                 <Route path="/chemical" element={<Chemical />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/profile/password" element={<ProfilePassword />} />
                 <Route
                   path="/chemical/:chemicalId"
                   element={<ChemicalUpdate />}
