@@ -204,7 +204,6 @@ const EquipmentView = () => {
                     .utc()
                     .format('YYYY-MM-DD')}
                   type="date"
-                  disabled={true}
                   label="Installation Date"
                   className="w-5/12 my-2"
                 />
@@ -213,15 +212,14 @@ const EquipmentView = () => {
                     if (!event.currentTarget.value || !equipment) return;
                     setEquipment({
                       ...equipment,
-                      replacementPeriod: event.currentTarget.value,
+                      guaranteeDate: event.currentTarget.value,
                     });
                   }}
-                  value={moment(equipment?.replacementPeriod)
+                  value={moment(equipment?.guaranteeDate)
                     .utc()
                     .format('YYYY-MM-DD')}
                   type="date"
-                  disabled={true}
-                  label="Replacement Date"
+                  label="Guarantee Date"
                   className="w-5/12 my-2"
                 />
               </div>
@@ -230,15 +228,15 @@ const EquipmentView = () => {
                   if (!event.currentTarget.value || !equipment) return;
                   setEquipment({
                     ...equipment,
-                    guaranteeDate: event.currentTarget.value,
+                    replacementPeriod: event.currentTarget.value,
                   });
                 }}
-                value={moment(equipment?.guaranteeDate)
+                value={moment(equipment?.replacementPeriod)
                   .utc()
                   .format('YYYY-MM-DD')}
                 type="date"
                 disabled={true}
-                label="Guarantee Date"
+                label="Replacement Date"
                 className="w-5/12 my-2"
               />
               <TextAreaLabel

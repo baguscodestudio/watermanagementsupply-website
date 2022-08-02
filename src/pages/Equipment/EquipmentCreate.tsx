@@ -142,25 +142,14 @@ const EquipmentCreate = () => {
                   onChange={(event) =>
                     setEquipment({
                       ...equipment,
-                      replacementPeriod: event.currentTarget.value,
+                      guaranteeDate: event.currentTarget.value,
                     })
                   }
                   type="date"
-                  label="Replacement Date"
+                  label="Guarantee Date"
                   className="w-5/12 my-2"
                 />
               </div>
-              <InputLabel
-                onChange={(event) =>
-                  setEquipment({
-                    ...equipment,
-                    guaranteeDate: event.currentTarget.value,
-                  })
-                }
-                type="date"
-                label="Guarantee Date"
-                className="w-5/12 my-2"
-              />
               <TextAreaLabel
                 onChange={(event) =>
                   setEquipment({
