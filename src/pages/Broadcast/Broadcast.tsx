@@ -86,7 +86,7 @@ const Broadcast = () => {
               <Search size="24" />
             </button>
             <input
-              placeholder="Search for chemical name"
+              placeholder="Search for broadcast"
               onChange={(event) => setSearch(event.currentTarget.value)}
               id="search"
               className="outline-none text-lg w-full"

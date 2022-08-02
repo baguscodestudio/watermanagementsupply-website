@@ -107,7 +107,6 @@ const Profile = () => {
                 pattern="^(?=\P{Ll}*\p{Ll})(?=\P{Lu}*\p{Lu})(?=\P{N}*\p{N})(?=[\p{L}\p{N}]*[^\p{L}\p{N}])[\s\S]{8,}$"
                 required={true}
                 type="password"
-                value={user.email}
                 onChange={(event) => {
                   setConfirmPass(event.currentTarget.value);
                 }}

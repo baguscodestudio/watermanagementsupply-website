@@ -126,7 +126,7 @@ function App() {
                 <Route path="/customer" element={<CustomerAccount />} />
                 <Route path="/customer/create" element={<CustomerCreate />} />
                 <Route
-                  path="/customer/update/:customerId"
+                  path="/customer/:customerId"
                   element={<CustomerUpdate />}
                 />
                 <Route path="/reports" element={<Reports />} />

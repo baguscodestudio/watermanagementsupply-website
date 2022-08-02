@@ -3,16 +3,18 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { formatter } from '../../utils';
+
 import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
 import Paper from '../../components/Paper';
+
 import BillType from '../../type/Bill';
-import CustomerType from '../../type/Customer';
-import { formatter } from '../../utils';
+import UserType from '../../type/User';
 
 const BillView = () => {
   const [bill, setBill] = useState<BillType>();
-  const [customer, setCustomer] = useState<CustomerType>();
+  const [customer, setCustomer] = useState<UserType>();
   const params = useParams();
   const navigate = useNavigate();
 

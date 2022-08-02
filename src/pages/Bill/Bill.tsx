@@ -3,24 +3,23 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { formatter } from '../../utils';
 
-import { ChevronThinLeft, ChevronThinRight } from 'styled-icons/entypo';
 import { Search } from '@styled-icons/boxicons-regular/Search';
 
 import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
 import Pagination from '../../components/Pagination';
 import Paper from '../../components/Paper';
+import InputLabel from '../../components/InputLabel';
 
 import BillType from '../../type/Bill';
-import CustomerType from '../../type/Customer';
-import { formatter } from '../../utils';
-import InputLabel from '../../components/InputLabel';
+import UserType from '../../type/User';
 
 const Bill = () => {
   const [bills, setBills] = useState<BillType[]>([]);
   const [page, setPage] = useState(0);
-  const [customers, setCustomers] = useState<CustomerType[]>([]);
+  const [customers, setCustomers] = useState<UserType[]>([]);
   const [selCustomer, setSelCustomer] = useState<string>('');
   const [bill, setBill] = useState({
     title: '',

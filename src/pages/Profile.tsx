@@ -1,14 +1,11 @@
-import { Listbox, Menu } from '@headlessui/react';
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { CheckmarkOutline } from '@styled-icons/evaicons-outline/CheckmarkOutline';
-import { ChevronDown, ChevronUp } from 'styled-icons/bootstrap';
 import { UserContext } from '../App';
 import NavBar from '../components/NavBar';
 import Header from '../components/Header';
-import { Link } from 'react-router-dom';
 import InputLabel from '../components/InputLabel';
 import SelectLabel from '../components/SelectLabel';
 
