@@ -45,7 +45,6 @@ const WaterUsage = () => {
   const [waterPumpUsages, setWaterPumpUsages] = useState<WaterUsageType[]>([]);
   const [selCust, setSelCust] = useState<string[]>([]);
   const [search, setSearch] = useState('');
-  const [finalSearch, setFinalSearch] = useState('');
   const [page, setPage] = useState(0);
   const [mode, setMode] = useState(MODES[0]);
   const [customers, setCustomers] = useState<CustomerType[]>([]);
@@ -63,7 +62,24 @@ const WaterUsage = () => {
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFinalSearch(search);
+    if (search !== '') {
+      axios
+        .get('http://localhost:5000/api/Customer/Search', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          params: {
+            keyword: search,
+          },
+        })
+        .then((response) => {
+          setCustomers(response.data.result);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error('Error occured while searching for customers');
+        });
+    } else fetchCustomers();
   };
 
   const addSelectedCustomer = (cust: CustomerType) => {
@@ -81,6 +97,22 @@ const WaterUsage = () => {
       tempArr.push(cust.userId);
       setSelCust(tempArr);
     }
+  };
+
+  const fetchCustomers = () => {
+    axios
+      .get('http://localhost:5000/api/Customer', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => {
+        setCustomers(response.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('Error occured while fetching customers');
+      });
   };
 
   const getCustomerName = (id: string) => {
@@ -275,19 +307,7 @@ const WaterUsage = () => {
   };
 
   useEffect(() => {
-    axios
-      .get('http://localhost:5000/api/Customer', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
-      .then((response) => {
-        setCustomers(response.data.result);
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error('Error occured while fetching customers');
-      });
+    fetchCustomers();
   }, []);
 
   useEffect(() => {
@@ -337,11 +357,6 @@ const WaterUsage = () => {
             <table className="w-full text-center">
               <tbody>
                 {customers
-                  .filter((customer) =>
-                    customer.username
-                      .toLowerCase()
-                      .includes(finalSearch.toLowerCase())
-                  )
                   .slice(page * 15, page * 15 + 15)
                   .map((customer, index) => (
                     <tr

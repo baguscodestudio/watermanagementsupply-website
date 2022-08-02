@@ -16,7 +16,6 @@ import Pagination from '../../components/Pagination';
 const Chemical = () => {
   const [chemicals, setChemicals] = useState<ChecmicalType[]>([]);
   const [search, setSearch] = useState('');
-  const [finalSearch, setFinalSearch] = useState('');
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
 
@@ -38,7 +37,24 @@ const Chemical = () => {
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFinalSearch(search);
+    if (search !== '') {
+      axios
+        .get('http://localhost:5000/api/Chemical/Search', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          params: {
+            keyword: search,
+          },
+        })
+        .then((response) => {
+          setChemicals(response.data.result);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error('Error occured while getting chemicals');
+        });
+    } else fetchChemicals();
   };
 
   useEffect(() => {
@@ -87,11 +103,6 @@ const Chemical = () => {
             </thead>
             <tbody>
               {chemicals
-                .filter((chemical) =>
-                  chemical.chemicalName
-                    .toLowerCase()
-                    .includes(finalSearch.toLowerCase())
-                )
                 .slice(page * 9, page * 9 + 9)
                 .map((chemical, index) => (
                   <tr

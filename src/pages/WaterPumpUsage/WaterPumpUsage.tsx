@@ -47,7 +47,6 @@ const WaterPumpUsage = () => {
   );
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
   const [search, setSearch] = useState('');
-  const [finalSearch, setFinalSearch] = useState('');
   const [page, setPage] = useState(0);
   const [mode, setMode] = useState(MODES[0]);
   const [selEq, setSelEq] = useState<string[]>([]);
@@ -65,7 +64,24 @@ const WaterPumpUsage = () => {
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFinalSearch(search);
+    if (search !== '') {
+      axios
+        .get('http://localhost:5000/api/Equipment/Search', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          params: {
+            keyword: search,
+          },
+        })
+        .then((response) => {
+          setEquipments(response.data.result);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error('Error occured while getting equipments');
+        });
+    } else fetchEquipments();
   };
 
   const addSelectedEquipment = (eq: EquipmentType) => {
@@ -337,13 +353,6 @@ const WaterPumpUsage = () => {
             <table className="w-full text-center">
               <tbody>
                 {equipments
-                  .filter(
-                    (equipment) =>
-                      equipment.equipmentName
-                        .toLowerCase()
-                        .includes(finalSearch.toLowerCase()) &&
-                      equipment.type === 'Pump'
-                  )
                   .slice(page * 15, page * 15 + 15)
                   .map((equipment, index) => (
                     <tr
@@ -367,15 +376,7 @@ const WaterPumpUsage = () => {
             </table>
             <Pagination
               className="mt-auto mx-auto mb-6"
-              rows={
-                equipments.filter(
-                  (equipment) =>
-                    equipment.equipmentName
-                      .toLowerCase()
-                      .includes(finalSearch.toLowerCase()) &&
-                    equipment.type === 'Pump'
-                ).length
-              }
+              rows={equipments.length}
               rowsPerPage={15}
               page={page}
               setPage={setPage}

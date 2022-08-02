@@ -15,7 +15,6 @@ import { Link } from 'react-router-dom';
 const Equipment = () => {
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
   const [search, setSearch] = useState('');
-  const [finalSearch, setFinalSearch] = useState('');
   const [page, setPage] = useState(0);
 
   const fetchEquipments = () => {
@@ -36,7 +35,24 @@ const Equipment = () => {
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFinalSearch(search);
+    if (search !== '') {
+      axios
+        .get('http://localhost:5000/api/Equipment/Search', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          params: {
+            keyword: search,
+          },
+        })
+        .then((response) => {
+          setEquipments(response.data.result);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error('Error occured while getting equipments');
+        });
+    } else fetchEquipments();
   };
 
   useEffect(() => {
@@ -76,11 +92,6 @@ const Equipment = () => {
           <div className="w-full h-[4px] bg-gray-200 -z-10 mt-[2px]" />
           <div className="flex flex-col my-4 pl-4">
             {equipments
-              .filter((equipment) =>
-                equipment.equipmentName
-                  .toLowerCase()
-                  .includes(finalSearch.toLowerCase())
-              )
               .slice(page * 4, page * 4 + 4)
               .map((equipment, index) => (
                 <EquipmentCard key={index} equipment={equipment} />

@@ -44,7 +44,7 @@ const ChemicalUsage = () => {
   const [chemicalUsage, setChemicalUsage] = useState<ChemicalUsageType[]>([]);
   const [chemicals, setChemicals] = useState<ChemicalType[]>([]);
   const [search, setSearch] = useState('');
-  const [finalSearch, setFinalSearch] = useState('');
+  const [searchChem, setSearchChem] = useState('');
   const [page, setPage] = useState(0);
   const [pageEq, setPageEq] = useState(0);
   const [mode, setMode] = useState(MODES[0]);
@@ -62,9 +62,49 @@ const ChemicalUsage = () => {
 
   const dataValue: { [key: string]: any } = {};
 
+  const handleSearchChem = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (searchChem !== '') {
+      axios
+        .get('http://localhost:5000/api/Chemical/Search', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          params: {
+            keyword: searchChem,
+          },
+        })
+        .then((response) => {
+          setChemicals(response.data.result);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error('Error occured while getting chemicals');
+        });
+    } else fetchChemicals();
+  };
+
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFinalSearch(search);
+    if (search !== '') {
+      axios
+        .get('http://localhost:5000/api/Equipment/Search', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          params: {
+            keyword: search,
+          },
+        })
+        .then((response) => {
+          setEquipments(response.data.result);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error('Error occured while getting equipments');
+        });
+    }
+    fetchEquipments();
   };
 
   const addSelectedChemical = (eq: ChemicalType) => {
@@ -361,7 +401,7 @@ const ChemicalUsage = () => {
           <div className="h-full w-1/5">
             <div className="w-full h-1/2 rounded-lg shadow-xl p-4 flex flex-col">
               <form
-                onSubmit={(event) => handleSearch(event)}
+                onSubmit={(event) => handleSearchChem(event)}
                 className="rounded-lg ring-1 ring-gray-500 w-full h-8 my-4 inline-flex items-center px-2"
               >
                 <button
@@ -372,7 +412,7 @@ const ChemicalUsage = () => {
                 </button>
                 <input
                   placeholder="Chemical name"
-                  onChange={(event) => setSearch(event.currentTarget.value)}
+                  onChange={(event) => setSearchChem(event.currentTarget.value)}
                   id="search"
                   className="outline-none w-full"
                 />
@@ -382,11 +422,6 @@ const ChemicalUsage = () => {
               <table className="w-full text-center">
                 <tbody>
                   {chemicals
-                    .filter((chemical) =>
-                      chemical.chemicalName
-                        .toLowerCase()
-                        .includes(finalSearch.toLowerCase())
-                    )
                     .slice(page * 5, page * 5 + 5)
                     .map((chemical, index) => (
                       <tr
@@ -439,13 +474,7 @@ const ChemicalUsage = () => {
               <table className="w-full text-center">
                 <tbody>
                   {equipments
-                    .filter(
-                      (equipment) =>
-                        equipment.equipmentName
-                          .toLowerCase()
-                          .includes(finalSearch.toLowerCase()) &&
-                        equipment.type === 'Pump'
-                    )
+                    .filter((equipment) => equipment.type === 'Pump')
                     .slice(pageEq * 5, pageEq * 5 + 5)
                     .map((equipment, index) => (
                       <tr
@@ -470,13 +499,8 @@ const ChemicalUsage = () => {
               <Pagination
                 className="mt-auto mx-auto mb-6"
                 rows={
-                  equipments.filter(
-                    (equipment) =>
-                      equipment.equipmentName
-                        .toLowerCase()
-                        .includes(finalSearch.toLowerCase()) &&
-                      equipment.type === 'Pump'
-                  ).length
+                  equipments.filter((equipment) => equipment.type === 'Pump')
+                    .length
                 }
                 rowsPerPage={5}
                 page={pageEq}
