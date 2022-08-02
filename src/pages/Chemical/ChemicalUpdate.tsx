@@ -44,6 +44,7 @@ const ChemicalUpdate = () => {
       })
       .then((response) => {
         toast('Successfully deleted chemical');
+        navigate('/chemical');
       })
       .catch((err) => {
         console.log(err);
@@ -56,6 +57,7 @@ const ChemicalUpdate = () => {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    console.log('submit trigger');
     event.preventDefault();
     axios
       .put(
@@ -173,6 +175,7 @@ const ChemicalUpdate = () => {
                 Cancel
               </Link>
               <button
+                type="button"
                 onClick={() => handleDelete(chemical?.chemicalId!)}
                 className="rounded-lg px-4 h-fit py-1 my-auto ml-2 hover:shadow-lg hover:-translate-y-1 transition-all text-white bg-red-500 text-lg font-medium"
               >

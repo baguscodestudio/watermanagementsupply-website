@@ -44,7 +44,11 @@ const StaffUpdate = () => {
   }, []);
 
   const checkChanges = () => {
-    return prevStaff === staff;
+    return (
+      prevStaff === staff &&
+      staff?.gender === gender &&
+      staff.staffRole === role
+    );
   };
 
   const handleDelete = () => {
@@ -74,9 +78,10 @@ const StaffUpdate = () => {
           'http://localhost:5000/api/Staff',
           {
             userId: id,
-            staffRole: role,
             updatePassword: staff?.password === confirmPassword,
             ...staff,
+            staffRole: role,
+            gender: gender,
           },
           {
             headers: {
@@ -182,7 +187,7 @@ const StaffUpdate = () => {
                   <SelectLabel
                     title="Staff Role"
                     list={ROLES}
-                    value={staff ? staff.staffRole : ROLES[0]}
+                    value={role}
                     onChange={setRole}
                   />
                 </>
@@ -227,6 +232,7 @@ const StaffUpdate = () => {
                 Cancel
               </Link>
               <button
+                type="button"
                 onClick={handleDelete}
                 className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-red-500 font-medium text-lg"
               >

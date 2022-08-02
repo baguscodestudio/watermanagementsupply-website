@@ -27,6 +27,7 @@ const EquipmentView = () => {
       })
       .then((response) => {
         toast('Successfully deleted Equipment');
+        navigate('/equipment');
       })
       .catch((err) => {
         console.log(err);
@@ -156,6 +157,7 @@ const EquipmentView = () => {
                 </button>
               </div>
               <button
+                type="button"
                 onClick={() => handleDelete(equipment?.equipmentId!)}
                 className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-red-500 font-medium w-[45%]"
               >
@@ -202,6 +204,7 @@ const EquipmentView = () => {
                     .utc()
                     .format('YYYY-MM-DD')}
                   type="date"
+                  disabled={true}
                   label="Installation Date"
                   className="w-5/12 my-2"
                 />
@@ -217,6 +220,7 @@ const EquipmentView = () => {
                     .utc()
                     .format('YYYY-MM-DD')}
                   type="date"
+                  disabled={true}
                   label="Replacement Date"
                   className="w-5/12 my-2"
                 />
@@ -233,6 +237,7 @@ const EquipmentView = () => {
                   .utc()
                   .format('YYYY-MM-DD')}
                 type="date"
+                disabled={true}
                 label="Guarantee Date"
                 className="w-5/12 my-2"
               />

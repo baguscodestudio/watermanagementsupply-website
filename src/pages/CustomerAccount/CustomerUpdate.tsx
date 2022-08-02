@@ -60,7 +60,7 @@ const CustomerUpdate = () => {
   };
 
   const checkChanges = () => {
-    return prevCustomer === customer;
+    return prevCustomer === customer && customer?.gender === gender;
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -75,6 +75,7 @@ const CustomerUpdate = () => {
             userId: id,
             updatePassword: confirmPassword === customer?.password,
             ...customer,
+            gender: gender,
           },
           {
             headers: {
@@ -233,6 +234,7 @@ const CustomerUpdate = () => {
                 Cancel
               </Link>
               <button
+                type="button"
                 onClick={handleDelete}
                 className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-red-500 font-medium text-lg"
               >

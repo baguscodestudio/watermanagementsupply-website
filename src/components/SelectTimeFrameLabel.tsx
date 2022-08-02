@@ -24,7 +24,7 @@ const SelectTimeFrameLabel: React.FC<{
             <ChevronDown size="20" className="ml-4" />
           </div>
         </Listbox.Button>
-        <Listbox.Options className="absolute mt-1 bg-gray-200 shadow-lg rounded-md p-1">
+        <Listbox.Options className="absolute mt-1 bg-gray-200 shadow-lg rounded-md p-1 z-10">
           {list.map((data, index) => (
             <Listbox.Option key={index} as={Fragment} value={data}>
               {({ selected }) => (
