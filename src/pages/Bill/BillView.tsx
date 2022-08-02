@@ -10,11 +10,11 @@ import NavBar from '../../components/NavBar';
 import Paper from '../../components/Paper';
 
 import BillType from '../../type/Bill';
-import UserType from '../../type/User';
+import CustomerType from '../../type/Customer';
 
 const BillView = () => {
   const [bill, setBill] = useState<BillType>();
-  const [customer, setCustomer] = useState<UserType>();
+  const [customer, setCustomer] = useState<CustomerType>();
   const params = useParams();
   const navigate = useNavigate();
 

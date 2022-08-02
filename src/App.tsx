@@ -119,10 +119,7 @@ function App() {
                 <Route path="/staff/role" element={<ManageRole />} />
                 <Route path="/staff" element={<StaffAccount />} />
                 <Route path="/staff/create" element={<StaffCreate />} />
-                <Route
-                  path="/staff/update/:staffId"
-                  element={<StaffUpdate />}
-                />
+                <Route path="/staff/:staffId" element={<StaffUpdate />} />
                 <Route path="/customer" element={<CustomerAccount />} />
                 <Route path="/customer/create" element={<CustomerCreate />} />
                 <Route

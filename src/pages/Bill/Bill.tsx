@@ -14,12 +14,12 @@ import Paper from '../../components/Paper';
 import InputLabel from '../../components/InputLabel';
 
 import BillType from '../../type/Bill';
-import UserType from '../../type/User';
+import CustomerType from '../../type/Customer';
 
 const Bill = () => {
   const [bills, setBills] = useState<BillType[]>([]);
   const [page, setPage] = useState(0);
-  const [customers, setCustomers] = useState<UserType[]>([]);
+  const [customers, setCustomers] = useState<CustomerType[]>([]);
   const [selCustomer, setSelCustomer] = useState<string>('');
   const [bill, setBill] = useState({
     title: '',

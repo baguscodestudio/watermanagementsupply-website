@@ -6,16 +6,20 @@ const SelectLabel: React.FC<{
   title: string;
   value: string;
   onChange: any;
+  required?: boolean;
   className?: string;
   list: string[];
-}> = ({ value, onChange, list, className, title }) => {
+}> = ({ value, onChange, list, className, required, title }) => {
   return (
     <Listbox value={value} onChange={onChange}>
       <div className={`relative ${className}`}>
         <Listbox.Button
           className={`w-full px-2 py-1 border-gray-200 border-[1px] bg-gray-100 flex flex-col`}
         >
-          <span className="text-sm text-gray-500 text-left">{title}</span>
+          <span className="text-sm text-gray-500 text-left">
+            {title}
+            {required && <span className="text-red-500">*</span>}
+          </span>
           <div className="inline-flex items-center">
             {value}
             <ChevronDown size="20" className="ml-4" />

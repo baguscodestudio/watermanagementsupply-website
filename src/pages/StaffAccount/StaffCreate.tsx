@@ -2,10 +2,19 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import NavBar from '../../components/NavBar';
+import Header from '../../components/Header';
+import InputLabel from '../../components/InputLabel';
+import SelectLabel from '../../components/SelectLabel';
+
+const GENDERS = ['M', 'F'];
+const ROLES = ['UserAdmin', 'Technician', 'CustomerSupport'];
 
 const StaffCreate = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [gender, setGender] = useState(GENDERS[0]);
+  const [role, setRole] = useState(ROLES[0]);
   const [staff, setStaff] = useState({
     username: '',
     password: '',
@@ -29,6 +38,7 @@ const StaffCreate = () => {
           'http://localhost:5000/api/Staff',
           {
             ...staff,
+            staffRole: role,
           },
           {
             headers: {
@@ -48,168 +58,129 @@ const StaffCreate = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-full">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#D8BFD8] flex items-center px-12">
-          Staff
-        </div>
+      <div className="w-[85vw] h-full">
+        <Header title="Create Staff Account" />
         <form
-          className="flex flex-col ml-20 mt-24"
-          id="staff-info"
-          onSubmit={(event) => handleSubmit(event)}
+          onSubmit={handleSubmit}
+          className="w-full h-[90vh] flex px-12 py-8 justify-center"
         >
-          <div className="text-2xl mb-14 underline">Personal Information</div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Username:</div>
-            <input
-              name="username"
-              pattern="^.*[a-zA-Z]+.*$"
-              required
-              onChange={(event) =>
-                setStaff({
-                  ...staff,
-                  username: event.currentTarget.value,
-                })
-              }
-              className="w-56 border-2 px-2 border-black bg-transparent"
+          <div className="mr-8 mt-8">
+            <img
+              src={'/images/AvatarFill.png'}
+              className="max-w-full h-auto w-full"
             />
           </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Name:</div>
-            <input
-              name="full-name"
-              required
-              pattern="^.*[a-zA-Z]+.*$"
-              onChange={(event) =>
-                setStaff({
-                  ...staff,
-                  fullName: event.currentTarget.value,
-                })
-              }
-              className="w-56 border-2 px-2 border-black bg-transparent"
-            />
-          </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Gender:</div>
-            <div className="inline-flex w-56 justify-start">
-              <div className="mr-2">
-                <input
-                  type="radio"
-                  name="gender"
-                  onChange={(event) =>
+          <div className="w-1/3 flex flex-col mt-8">
+            <div className="w-full">
+              <InputLabel
+                label="Username"
+                className="my-3"
+                required={true}
+                value={staff?.username}
+                onChange={(event) => {
+                  if (!staff) return;
+                  setStaff({
+                    ...staff,
+                    username: event.currentTarget.value,
+                  });
+                }}
+              />
+              <InputLabel
+                label="Password"
+                required={true}
+                pattern="^(?=\P{Ll}*\p{Ll})(?=\P{Lu}*\p{Lu})(?=\P{N}*\p{N})(?=[\p{L}\p{N}]*[^\p{L}\p{N}])[\s\S]{8,}$"
+                type="password"
+                className="my-3"
+                onChange={(event) => {
+                  setStaff({
+                    ...staff,
+                    password: event.currentTarget.value,
+                  });
+                }}
+              />
+              <InputLabel
+                className="my-3"
+                label="Confirm Password"
+                pattern="^(?=\P{Ll}*\p{Ll})(?=\P{Lu}*\p{Lu})(?=\P{N}*\p{N})(?=[\p{L}\p{N}]*[^\p{L}\p{N}])[\s\S]{8,}$"
+                required={true}
+                type="password"
+                onChange={(event) => {
+                  setConfirmPassword(event.currentTarget.value);
+                }}
+              />
+              <InputLabel
+                className="my-3"
+                label="Email"
+                value={staff?.email}
+                onChange={(event) => {
+                  if (!staff) return;
+                  setStaff({
+                    ...staff,
+                    email: event.currentTarget.value,
+                  });
+                }}
+              />
+              <div className="inline-flex justify-between my-3 w-full">
+                <InputLabel
+                  className="w-[45%]"
+                  label="Phone"
+                  value={staff?.phone}
+                  onChange={(event) => {
+                    if (!staff) return;
                     setStaff({
                       ...staff,
-                      gender: 'M',
-                    })
-                  }
-                  className="mr-2"
+                      phone: event.currentTarget.value,
+                    });
+                  }}
                 />
-                Male
-              </div>
-              <div className="mr-2">
-                <input
-                  type="radio"
-                  name="gender"
-                  onChange={(event) =>
-                    setStaff({
-                      ...staff,
-                      gender: 'F',
-                    })
-                  }
-                  className="mr-2"
+                <SelectLabel
+                  className="w-[45%]"
+                  title="Gender"
+                  value={gender ? gender : 'M'}
+                  onChange={setGender}
+                  list={GENDERS}
                 />
-                Female
               </div>
+              <InputLabel
+                className="my-3"
+                label="Full Name"
+                value={staff?.fullName}
+                onChange={(event) => {
+                  if (!staff) return;
+                  setStaff({
+                    ...staff,
+                    fullName: event.currentTarget.value,
+                  });
+                }}
+              />
+              <SelectLabel
+                title="Staff Role"
+                required={true}
+                list={ROLES}
+                onChange={setRole}
+                value={role}
+              />
             </div>
-          </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Password:</div>
-            <input
-              type="password"
-              required
-              pattern="^(?=\P{Ll}*\p{Ll})(?=\P{Lu}*\p{Lu})(?=\P{N}*\p{N})(?=[\p{L}\p{N}]*[^\p{L}\p{N}])[\s\S]{8,}$"
-              onChange={(event) =>
-                setStaff({
-                  ...staff,
-                  password: event.currentTarget.value,
-                })
-              }
-              name="password"
-              className="w-56 border-2 px-2 border-black bg-transparent"
-            />
-          </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Confirm password:</div>
-            <input
-              type="password"
-              required
-              onChange={(event) =>
-                setConfirmPassword(event.currentTarget.value)
-              }
-              name="password-confirm"
-              className="w-56 border-2 px-2 border-black bg-transparent"
-            />
-          </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Phone number:</div>
-            <input
-              name="phone-number"
-              required
-              onChange={(event) =>
-                setStaff({
-                  ...staff,
-                  phone: event.currentTarget.value,
-                })
-              }
-              className="w-56 border-2 px-2 border-black bg-transparent "
-            />
-          </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Email:</div>
-            <input
-              name="email"
-              required
-              type="email"
-              onChange={(event) =>
-                setStaff({
-                  ...staff,
-                  email: event.currentTarget.value,
-                })
-              }
-              className="w-56 border-2 px-2 border-black bg-transparent disabled:bg-neutral-100"
-            />
-          </div>
-          <div className="my-2 w-[27rem] inline-flex justify-between">
-            <div className="text-lg">Role:</div>
-            <input
-              name="role"
-              onChange={(event) =>
-                setStaff({
-                  ...staff,
-                  staffRole: event.currentTarget.value,
-                })
-              }
-              className="w-56 border-2 px-2 border-black bg-transparent disabled:bg-neutral-100"
-            />
-          </div>
-          <div className="inline-flex mt-16">
-            <button
-              type="submit"
-              className="rounded-lg border-black bg-transparent border-2 px-4 py-1 mr-12"
-            >
-              Submit
-            </button>
-            <Link
-              to="/staff"
-              className="rounded-lg border-black bg-transparent border-2 px-4 py-1"
-            >
-              Cancel
-            </Link>
+            <div className="my-4 inline-flex">
+              <Link
+                to="/staff"
+                className="rounded-lg border-gray-500 text-gray-500 bg-transparent border-2 px-4 py-1 h-fit my-auto ml-auto hover:shadow-lg hover:-translate-y-1 transition-all"
+              >
+                Cancel
+              </Link>
+              <button
+                type="submit"
+                className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-green-500 font-medium text-lg"
+              >
+                Create
+              </button>
+            </div>
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -3,33 +3,26 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ChevronDown, ChevronUp } from 'styled-icons/bootstrap';
-import { CheckmarkOutline } from 'styled-icons/evaicons-outline';
+
 import NavBar from '../../components/NavBar';
+import Header from '../../components/Header';
+import InputLabel from '../../components/InputLabel';
+import SelectLabel from '../../components/SelectLabel';
+import UserType from '../../type/User';
+
+const GENDERS = ['M', 'F'];
+const ROLES = ['UserAdmin', 'Technician', 'CustomerSupport'];
+const MODE = ['Update Password', 'Profile'];
 
 const StaffUpdate = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [updatePage, setUpdatePage] = useState('');
-  const [staff, setStaff] = useState({
-    username: '',
-    password: '',
-    fullName: '',
-    gender: 'M',
-    email: '',
-    phone: '',
-    type: 'Staff',
-    staffRole: '',
-  });
+  const [gender, setGender] = useState(GENDERS[0]);
+  const [mode, setMode] = useState(MODE[1]);
+  const [role, setRole] = useState(ROLES[0]);
+  const [staff, setStaff] = useState<UserType>();
+  const [prevStaff, setPrevStaff] = useState<UserType>();
   const params = useParams();
   const id = params.staffId;
-  const items = [
-    { label: 'Username', key: 'username' },
-    { label: 'Full Name', key: 'fullName' },
-    { label: 'Email', key: 'email' },
-    { label: 'Password', key: 'password' },
-    { label: 'Phone', key: 'phone' },
-    { label: 'Gender', key: 'gender' },
-  ];
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,6 +34,8 @@ const StaffUpdate = () => {
       })
       .then((response) => {
         setStaff(response.data);
+        setPrevStaff(response.data);
+        setRole(response.data.staffRole);
       })
       .catch((err) => {
         console.log(err);
@@ -48,20 +43,39 @@ const StaffUpdate = () => {
       });
   }, []);
 
-  const handleSubmit = (
-    event: React.FormEvent<HTMLFormElement>,
-    key: string
-  ) => {
+  const checkChanges = () => {
+    return prevStaff === staff;
+  };
+
+  const handleDelete = () => {
+    axios
+      .delete(`http://localhost:5000/api/staff/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => {
+        toast('Successfully deleted staff account');
+        navigate('/staff');
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('An error occured while deleting staff account');
+      });
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (updatePage === 'password' && staff.password !== confirmPassword) {
-      toast.error('Password does not match!');
+    if (confirmPassword && staff?.password !== confirmPassword) {
+      toast.error('Password and Confirm Password does not match!');
     } else {
       axios
         .put(
           'http://localhost:5000/api/Staff',
           {
             userId: id,
-            updatePassword: updatePage === 'password',
+            staffRole: role,
+            updatePassword: staff?.password === confirmPassword,
             ...staff,
           },
           {
@@ -82,217 +96,154 @@ const StaffUpdate = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-full grid grid-cols-2">
-        <div className="text-4xl font-bold w-full h-[20vh] bg-[#FFA500] flex items-center px-12 col-span-2">
-          Staff
-        </div>
-        <div className="bg-neutral-100 w-1/2 h-[50vh] shadow-lg flex flex-col py-6 px-10 mt-12 ml-10">
-          <div className="inline-flex justify-between w-64 py-2 border-b-2">
-            <span>Username:</span>
-            <span>{staff.username}</span>
+      <div className="w-[85vw] h-full">
+        <Header title="Staff View or Update" />
+        <form
+          onSubmit={handleSubmit}
+          className="w-full h-[90vh] flex px-12 py-8 justify-center"
+        >
+          <div className="mr-8">
+            <img
+              src={'/images/AvatarFill.png'}
+              className="max-w-full h-auto w-full"
+            />
           </div>
-          <div className="inline-flex justify-between w-64 py-2 border-b-2">
-            <span>Full Name:</span>
-            <span>{staff.fullName}</span>
-          </div>
-          <div className="inline-flex justify-between w-64 py-2 border-b-2">
-            <span>Email:</span>
-            <span>{staff.email}</span>
-          </div>
-          <div className="inline-flex justify-between w-64 py-2 border-b-2">
-            <span>Phone:</span>
-            <span>{staff.phone}</span>
-          </div>
-          <div className="inline-flex justify-between w-64 py-2">
-            <span>Gender:</span>
-            <span>{staff.gender}</span>
-          </div>
-          <Menu as="div" className="relative mt-12">
-            {({ open }) => (
-              <>
-                <Menu.Button className="h-full flex items-center px-4 py-1 justify-center hover:text-[#0e6e4b] bg-cyan-500 rounded-sm">
-                  {open ? (
-                    <>
-                      Update <ChevronDown size="16" />
-                    </>
-                  ) : (
-                    <>
-                      Update <ChevronUp size="16" />
-                    </>
-                  )}
-                </Menu.Button>
-                <Menu.Items className="absolute origin-top-left bg-white text-left text-black rounded-b-md">
-                  <div className="p-1">
-                    {items.map((item, index) => {
-                      return (
-                        <Menu.Item key={index}>
-                          {({ active }) => (
-                            <button
-                              onClick={() => setUpdatePage(item.key)}
-                              className={`${
-                                active && 'bg-emerald-500 text-white'
-                              } flex px-2 py-1 w-32 divide-y divide-gray-100 rounded-sm text-left`}
-                            >
-                              {item.label}
-                            </button>
-                          )}
-                        </Menu.Item>
-                      );
-                    })}
-                  </div>
-                </Menu.Items>
-              </>
-            )}
-          </Menu>
-        </div>
-        {updatePage !== '' && (
-          <form
-            className="bg-neutral-100 w-1/2 shadow-lg flex flex-col py-6 px-10 mt-12"
-            onSubmit={(event) => handleSubmit(event, updatePage)}
-          >
-            <div className="my-2 inline-flex justify-between items-center">
-              <div className="text-lg">
-                {updatePage.charAt(0).toUpperCase() + updatePage.slice(1)}
+          <div className="w-1/3 flex flex-col">
+            <div className="inline-flex items-center mt-4">
+              <div className="flex flex-col">
+                <span className="font-semibold text-3xl">
+                  {staff?.username}
+                </span>
+                <span className="text-gray-500 text-lg">{staff?.fullName}</span>
               </div>
-              {updatePage !== 'gender' ? (
+            </div>
+            <div className="w-full mt-8">
+              {mode === 'Profile' ? (
                 <>
-                  <input
-                    name={updatePage}
-                    pattern={
-                      updatePage === 'password'
-                        ? '^(?=P{Ll}*p{Ll})(?=P{Lu}*p{Lu})(?=P{N}*p{N})(?=[p{L}p{N}]*[^p{L}p{N}])[sS]{8,}$'
-                        : updatePage === 'fullName'
-                        ? '^.*[a-zA-Z]+.*$'
-                        : ''
-                    }
-                    type={updatePage === 'password' ? 'password' : 'text'}
-                    onChange={(event) =>
+                  <InputLabel
+                    label="Username"
+                    className="my-3"
+                    value={staff?.username}
+                    onChange={(event) => {
+                      if (!staff) return;
                       setStaff({
                         ...staff,
-                        [updatePage]: event.currentTarget.value,
-                      })
-                    }
-                    className="ml-6 border-[1px] px-2 border-black bg-transparent"
+                        username: event.currentTarget.value,
+                      });
+                    }}
+                  />
+                  <InputLabel
+                    className="my-3"
+                    label="Email"
+                    value={staff?.email}
+                    onChange={(event) => {
+                      if (!staff) return;
+                      setStaff({
+                        ...staff,
+                        email: event.currentTarget.value,
+                      });
+                    }}
+                  />
+                  <div className="inline-flex justify-between my-3 w-full">
+                    <InputLabel
+                      className="w-[45%]"
+                      label="Phone"
+                      value={staff?.phone}
+                      onChange={(event) => {
+                        if (!staff) return;
+                        setStaff({
+                          ...staff,
+                          phone: event.currentTarget.value,
+                        });
+                      }}
+                    />
+                    <SelectLabel
+                      className="w-[45%]"
+                      title="Gender"
+                      value={gender ? gender : 'M'}
+                      onChange={setGender}
+                      list={GENDERS}
+                    />
+                  </div>
+                  <InputLabel
+                    className="my-3"
+                    label="Full Name"
+                    value={staff?.fullName}
+                    onChange={(event) => {
+                      if (!staff) return;
+                      setStaff({
+                        ...staff,
+                        fullName: event.currentTarget.value,
+                      });
+                    }}
+                  />
+                  <SelectLabel
+                    title="Staff Role"
+                    list={ROLES}
+                    value={staff ? staff.staffRole : ROLES[0]}
+                    onChange={setRole}
                   />
                 </>
               ) : (
-                <Listbox
-                  value={staff.gender}
-                  onChange={(value) => setStaff({ ...staff, gender: value })}
-                >
-                  <div className="relative mt-1 w-32">
-                    <Listbox.Button className="relative w-full h-10 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md sm:text-sm">
-                      {staff.gender}
-                      <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                        <ChevronDown
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </span>
-                    </Listbox.Button>
-                    <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                      <Listbox.Option
-                        value="M"
-                        className={({ active }) =>
-                          `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                            active
-                              ? 'bg-amber-100 text-amber-900'
-                              : 'text-gray-900'
-                          }`
-                        }
-                      >
-                        {({ selected }) => (
-                          <>
-                            <span
-                              className={`block truncate ${
-                                selected ? 'font-medium' : 'font-normal'
-                              }`}
-                            >
-                              M
-                            </span>
-                            {selected ? (
-                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                <CheckmarkOutline
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
-                                />
-                              </span>
-                            ) : null}
-                          </>
-                        )}
-                      </Listbox.Option>
-                      <Listbox.Option
-                        value="F"
-                        className={({ active }) =>
-                          `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                            active
-                              ? 'bg-amber-100 text-amber-900'
-                              : 'text-gray-900'
-                          }`
-                        }
-                      >
-                        {({ selected }) => (
-                          <>
-                            <span
-                              className={`block truncate ${
-                                selected ? 'font-medium' : 'font-normal'
-                              }`}
-                            >
-                              F
-                            </span>
-                            {selected ? (
-                              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                <CheckmarkOutline
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
-                                />
-                              </span>
-                            ) : null}
-                          </>
-                        )}
-                      </Listbox.Option>
-                    </Listbox.Options>
-                  </div>
-                </Listbox>
-              )}
-            </div>
-            <div className="my-2 inline-flex justify-between">
-              {updatePage == 'password' && (
                 <>
-                  <div className="text-lg">Confirm Password</div>
-                  <input
+                  <InputLabel
+                    label="Password"
+                    pattern="^(?=\P{Ll}*\p{Ll})(?=\P{Lu}*\p{Lu})(?=\P{N}*\p{N})(?=[\p{L}\p{N}]*[^\p{L}\p{N}])[\s\S]{8,}$"
                     type="password"
-                    name="confirmPassword"
-                    className="ml-6 border-[1px] px-2 border-black bg-transparent"
-                    onChange={(event) =>
-                      setConfirmPassword(event.currentTarget.value)
-                    }
+                    className="my-3"
+                    onChange={(event) => {
+                      if (!staff) return;
+                      setStaff({
+                        ...staff,
+                        password: event.currentTarget.value,
+                      });
+                    }}
+                  />
+                  <InputLabel
+                    className="my-3"
+                    label="Confirm Password"
+                    pattern="^(?=\P{Ll}*\p{Ll})(?=\P{Lu}*\p{Lu})(?=\P{N}*\p{N})(?=[\p{L}\p{N}]*[^\p{L}\p{N}])[\s\S]{8,}$"
+                    type="password"
+                    onChange={(event) => {
+                      setConfirmPassword(event.currentTarget.value);
+                    }}
                   />
                 </>
               )}
             </div>
-            <div className="inline-flex mt-16">
-              <button
-                type="submit"
-                className="rounded-lg border-black bg-transparent border-2 px-4 py-1 mr-12"
-              >
-                Submit
-              </button>
-              <button
-                onClick={() => {
-                  setUpdatePage('');
-                }}
-                className="rounded-lg border-black bg-transparent border-2 px-4 py-1"
+            <div className="my-4 inline-flex items-center">
+              <SelectLabel
+                list={MODE}
+                value={mode}
+                onChange={setMode}
+                title="Mode"
+              />
+              <Link
+                to="/staff"
+                className="rounded-lg border-gray-500 text-gray-500 bg-transparent border-2 px-4 py-1 h-fit my-auto ml-auto hover:shadow-lg hover:-translate-y-1 transition-all"
               >
                 Cancel
+              </Link>
+              <button
+                onClick={handleDelete}
+                className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-red-500 font-medium text-lg"
+              >
+                Delete
+              </button>
+              <button
+                type="submit"
+                disabled={checkChanges()}
+                className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-green-500 font-medium text-lg"
+              >
+                Save
               </button>
             </div>
-          </form>
-        )}
+          </div>
+        </form>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -9,16 +9,16 @@ import Header from '../../components/Header';
 import InputLabel from '../../components/InputLabel';
 import SelectLabel from '../../components/SelectLabel';
 
-import UserType from '../../type/User';
+import CustomerType from '../../type/Customer';
 
 const GENDERS = ['M', 'F'];
 const MODE = ['Update Password', 'Profile'];
 
 const CustomerUpdate = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [customer, setCustomer] = useState<UserType>();
+  const [customer, setCustomer] = useState<CustomerType>();
   const [mode, setMode] = useState(MODE[1]);
-  const [prevCustomer, setPrevCustomer] = useState<UserType>();
+  const [prevCustomer, setPrevCustomer] = useState<CustomerType>();
   const [gender, setGender] = useState<'M' | 'F'>();
   const params = useParams();
   const id = params.customerId;
@@ -176,6 +176,18 @@ const CustomerUpdate = () => {
                       setCustomer({
                         ...customer,
                         fullName: event.currentTarget.value,
+                      });
+                    }}
+                  />
+                  <InputLabel
+                    className="my-3"
+                    label="Address"
+                    value={customer?.address}
+                    onChange={(event) => {
+                      if (!customer) return;
+                      setCustomer({
+                        ...customer,
+                        address: event.currentTarget.value,
                       });
                     }}
                   />

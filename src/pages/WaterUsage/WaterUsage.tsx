@@ -10,7 +10,7 @@ import moment from 'moment';
 import { Search } from '@styled-icons/boxicons-regular/Search';
 
 import WaterUsageType from '../../type/WaterUsage';
-import UserType from '../../type/User';
+import CustomerType from '../../type/Customer';
 
 import NavBar from '../../components/NavBar';
 import Paper from '../../components/Paper';
@@ -48,7 +48,7 @@ const WaterUsage = () => {
   const [finalSearch, setFinalSearch] = useState('');
   const [page, setPage] = useState(0);
   const [mode, setMode] = useState(MODES[0]);
-  const [customers, setCustomers] = useState<UserType[]>([]);
+  const [customers, setCustomers] = useState<CustomerType[]>([]);
   const [currentDateString, setCurrentDateString] = useState(
     moment().utc().format('YYYY-MM-DD')
   );
@@ -66,7 +66,7 @@ const WaterUsage = () => {
     setFinalSearch(search);
   };
 
-  const addSelectedCustomer = (cust: UserType) => {
+  const addSelectedCustomer = (cust: CustomerType) => {
     if (selCust.includes(cust.userId)) {
       let tempArr = [...selCust];
       tempArr = tempArr.filter((id) => id !== cust.userId);

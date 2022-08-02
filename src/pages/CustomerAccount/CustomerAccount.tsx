@@ -2,17 +2,19 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+
 import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
-import UserType from '../../type/User';
-
-import { Search } from '@styled-icons/boxicons-regular/Search';
-import { Plus } from '@styled-icons/boxicons-regular/Plus';
 import Paper from '../../components/Paper';
 import Pagination from '../../components/Pagination';
 
+import CustomerType from '../../type/Customer';
+
+import { Search } from '@styled-icons/boxicons-regular/Search';
+import { Plus } from '@styled-icons/boxicons-regular/Plus';
+
 const CustomerAccount = () => {
-  const [customers, setCustomers] = useState<UserType[]>([]);
+  const [customers, setCustomers] = useState<CustomerType[]>([]);
   const [search, setSearch] = useState<string>('');
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
@@ -55,23 +57,6 @@ const CustomerAccount = () => {
       });
   };
 
-  const handleDelete = (id: string) => {
-    axios
-      .delete(`http://localhost:5000/api/Customer/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
-      .then((response) => {
-        toast('Successfully deleted customer');
-        fetchCustomers();
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error('Error while deleting customer');
-      });
-  };
-
   useEffect(() => {
     fetchCustomers();
   }, []);
@@ -86,7 +71,7 @@ const CustomerAccount = () => {
         >
           <Plus size="32" className="m-auto" />
         </Link>
-        <Header title="Customer Related" />
+        <Header title="Customer List" />
         <div className="flex flex-col py-10 px-12 h-[90vh]">
           <div className="underline underline-offset-8 text-2xl font-medium decoration-sky-500 decoration-[6px]">
             Customers
@@ -131,6 +116,10 @@ const CustomerAccount = () => {
                   <div className="flex flex-col w-1/6">
                     <span className="text-gray-500">Phone</span>
                     <span className="">{customer.phone}</span>
+                  </div>
+                  <div className="flex flex-col w-1/6">
+                    <span className="text-gray-500">Address</span>
+                    <span className="">{customer.address}</span>
                   </div>
                 </div>
               </Paper>

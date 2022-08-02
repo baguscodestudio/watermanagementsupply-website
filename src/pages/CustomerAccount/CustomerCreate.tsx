@@ -17,6 +17,7 @@ const CustomerCreate = () => {
     username: '',
     password: '',
     fullName: '',
+    address: '',
     gender: 'M',
     email: '',
     phone: '',
@@ -148,6 +149,18 @@ const CustomerCreate = () => {
                   setCustomer({
                     ...customer,
                     fullName: event.currentTarget.value,
+                  });
+                }}
+              />
+              <InputLabel
+                className="my-3"
+                label="Address"
+                value={customer?.address}
+                onChange={(event) => {
+                  if (!customer) return;
+                  setCustomer({
+                    ...customer,
+                    address: event.currentTarget.value,
                   });
                 }}
               />
