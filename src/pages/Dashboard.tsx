@@ -138,9 +138,9 @@ const Dashboard = () => {
                   <div className="inline-flex items-end">
                     <span className="font-semibold">{notification.type}</span>
                     <span className="text-gray-500 text-sm ml-2 font-light">
-                      {moment(notification.createdAt)
-                        .utc()
-                        .format('HH:mm:ss DD/MM/YYYY')}
+                      {moment(notification.createdAt).format(
+                        'HH:mm:ss DD/MM/YYYY'
+                      )}
                     </span>
                   </div>
                   <span className="text-sm">{notification.content}</span>

@@ -24,7 +24,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
           className="absolute origin-top-right right-0 bg-gray-50 shadow-lg p-2 rounded-lg flex flex-col"
         >
           {notifications.slice(0, 4).map((notification, index) => (
-            <Menu.Item>
+            <Menu.Item key={index}>
               <div
                 className={`inline-flex items-center p-1 rounded-lg w-[20vw] my-1 ${
                   notification.isRead && 'bg-gray-100 text-gray-500'
@@ -35,9 +35,9 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
                   <div className="inline-flex items-end">
                     <span className="font-semibold">{notification.type}</span>
                     <span className="text-gray-500 text-sm ml-2 font-light">
-                      {moment(notification.createdAt)
-                        .utc()
-                        .format('HH:mm:ss DD/MM/YYYY')}
+                      {moment(notification.createdAt).format(
+                        'HH:mm:ss DD/MM/YYYY'
+                      )}
                     </span>
                   </div>
                   <span className="text-sm">{notification.content}</span>

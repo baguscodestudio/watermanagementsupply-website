@@ -51,10 +51,10 @@ const ChemicalUsage = () => {
   const [selChem, setSelChem] = useState<string[]>([]);
   const [selEq, setSelEq] = useState<string[]>([]);
   const [currentDateString, setCurrentDateString] = useState(
-    moment().utc().format('YYYY-MM-DD')
+    moment().format('YYYY-MM-DD')
   );
   const [previousDateString, setPreviousDateString] = useState(
-    moment().utc().add(-7, 'days').format('YYYY-MM-DD')
+    moment().add(-7, 'days').format('YYYY-MM-DD')
   );
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
 
@@ -208,7 +208,7 @@ const ChemicalUsage = () => {
       usage.data.map((sensordata, i) => {
         if (dataValue[usage.chemicalId + usage.equipmentId]) {
           dataValue[usage.chemicalId + usage.equipmentId].data.push({
-            x: moment(sensordata.timestamp).utc(),
+            x: moment(sensordata.timestamp),
             y: sensordata.value,
           });
         } else {
@@ -221,7 +221,7 @@ const ChemicalUsage = () => {
             )}`,
             data: [
               {
-                x: moment(sensordata.timestamp).utc(),
+                x: moment(sensordata.timestamp),
                 y: sensordata.value,
               },
             ],
@@ -243,7 +243,7 @@ const ChemicalUsage = () => {
       set.data.map((data: { x: string; y: number }) => {
         if (
           !currentDate ||
-          currentDate !== moment(data.x).utc().format('YYYY-MM-DD')
+          currentDate !== moment(data.x).format('YYYY-MM-DD')
         ) {
           if (currentDate) {
             calculated_data.push({
@@ -251,12 +251,12 @@ const ChemicalUsage = () => {
               y: total / count,
             });
           }
-          currentDate = moment(data.x).utc().format('YYYY-MM-DD');
+          currentDate = moment(data.x).format('YYYY-MM-DD');
           total = 0;
           count = 0;
           count++;
           total += data.y;
-        } else if (currentDate === moment(data.x).utc().format('YYYY-MM-DD')) {
+        } else if (currentDate === moment(data.x).format('YYYY-MM-DD')) {
           total += data.y;
           count++;
         }
@@ -272,22 +272,19 @@ const ChemicalUsage = () => {
       let currentDate: string;
       let calculated_data: { x: string; y: number }[] = [];
       set.data.map((data: { x: string; y: number }) => {
-        if (
-          !currentDate ||
-          currentDate !== moment(data.x).utc().format('YYYY-MM')
-        ) {
+        if (!currentDate || currentDate !== moment(data.x).format('YYYY-MM')) {
           if (currentDate) {
             calculated_data.push({
               x: currentDate,
               y: total / count,
             });
           }
-          currentDate = moment(data.x).utc().format('YYYY-MM');
+          currentDate = moment(data.x).format('YYYY-MM');
           total = 0;
           count = 0;
           count++;
           total += data.y;
-        } else if (currentDate === moment(data.x).utc().format('YYYY-MM')) {
+        } else if (currentDate === moment(data.x).format('YYYY-MM')) {
           total += data.y;
           count++;
         }
@@ -305,7 +302,7 @@ const ChemicalUsage = () => {
       set.data.map((data: { x: string; y: number }) => {
         if (
           !currentDate ||
-          currentDate !== moment(data.x).utc().format('YYYY-MM-DD HH')
+          currentDate !== moment(data.x).format('YYYY-MM-DD HH')
         ) {
           if (currentDate) {
             calculated_data.push({
@@ -313,14 +310,12 @@ const ChemicalUsage = () => {
               y: total / count,
             });
           }
-          currentDate = moment(data.x).utc().format('YYYY-MM-DD HH');
+          currentDate = moment(data.x).format('YYYY-MM-DD HH');
           total = 0;
           count = 0;
           count++;
           total += data.y;
-        } else if (
-          currentDate === moment(data.x).utc().format('YYYY-MM-DD HH')
-        ) {
+        } else if (currentDate === moment(data.x).format('YYYY-MM-DD HH')) {
           total += data.y;
           count++;
         }
@@ -342,22 +337,22 @@ const ChemicalUsage = () => {
         ) {
           if (currentDate) {
             calculated_data.push({
-              x: moment(currentDate).startOf('week').utc().format('YYYY-MM-DD'),
+              x: moment(currentDate).startOf('week').format('YYYY-MM-DD'),
               y: total / count,
             });
           }
-          currentDate = moment(data.x).utc().format('YYYY-MM-DD');
+          currentDate = moment(data.x).format('YYYY-MM-DD');
           total = 0;
           count = 0;
           count++;
           total += data.y;
-        } else if (moment(currentDate).week() === moment(data.x).utc().week()) {
+        } else if (moment(currentDate).week() === moment(data.x).week()) {
           total += data.y;
           count++;
         }
       });
       calculated_data.push({
-        x: moment(currentDate!).startOf('week').utc().format('YYYY-MM-DD'),
+        x: moment(currentDate!).startOf('week').format('YYYY-MM-DD'),
         y: total / count,
       });
       set.data = calculated_data;

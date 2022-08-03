@@ -169,9 +169,9 @@ const Bill = () => {
       .post(
         'http://localhost:5000/api/Bill/GenerateBills',
         {
-          month: moment().utc().month(),
-          year: moment().utc().year(),
-          deadline: moment().utc().add(1, 'month').format('YYYY-MM-DD'),
+          month: moment().month(),
+          year: moment().year(),
+          deadline: moment().add(1, 'month').format('YYYY-MM-DD'),
         },
         {
           headers: {
@@ -181,9 +181,9 @@ const Bill = () => {
       )
       .then((response) => {
         toast(
-          `Successfully generated bills for every customer for ${moment()
-            .utc()
-            .format('MMMM')}`
+          `Successfully generated bills for every customer for ${moment().format(
+            'MMMM'
+          )}`
         );
       })
       .catch((err) => {
@@ -310,12 +310,12 @@ const Bill = () => {
                       </td>
                       <td className="text-center">
                         <div className="px-4 py-2 group-hover:bg-gray-200">
-                          {moment(bill.createdAt).utc().format('DD/MM/YYYY')}
+                          {moment(bill.createdAt).format('DD/MM/YYYY')}
                         </div>
                       </td>
                       <td className="text-center">
                         <div className="px-4 py-2 group-hover:bg-gray-200">
-                          {moment(bill.deadline).utc().format('DD/MM/YYYY')}
+                          {moment(bill.deadline).format('DD/MM/YYYY')}
                         </div>
                       </td>
 
@@ -346,7 +346,7 @@ const Bill = () => {
               <div className="mx-4 flex flex-col">
                 <span className="mb-4 font-semibold">
                   Generate Bills for every customer for{' '}
-                  {moment().utc().format('MMMM')}
+                  {moment().format('MMMM')}
                 </span>
                 <button
                   onClick={generateBill}

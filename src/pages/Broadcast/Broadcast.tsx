@@ -111,9 +111,9 @@ const Broadcast = () => {
                   >
                     <td>
                       <div className="px-4 py-1 group-hover:bg-gray-200 rounded-l-lg">
-                        {moment(broadcast.createdAt)
-                          .utc()
-                          .format('hh:mm:ss A DD/MM/YYYY')}
+                        {moment(broadcast.createdAt).format(
+                          'hh:mm:ss A DD/MM/YYYY'
+                        )}
                       </div>
                     </td>
                     <td className="">

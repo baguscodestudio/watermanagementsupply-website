@@ -71,12 +71,12 @@ const EquipmentView = () => {
         }
       )
       .then((response) => {
-        toast('Successfully created equipment!');
+        toast('Successfully updated equipment!');
         navigate('/equipment');
       })
       .catch((err) => {
         console.log(err);
-        toast.error('Error while inserting equipment');
+        toast.error('Error while updating equipment');
       });
   };
 
@@ -200,9 +200,9 @@ const EquipmentView = () => {
                       installationDate: event.currentTarget.value,
                     });
                   }}
-                  value={moment(equipment?.installationDate)
-                    .utc()
-                    .format('YYYY-MM-DD')}
+                  value={moment(equipment?.installationDate).format(
+                    'YYYY-MM-DD'
+                  )}
                   type="date"
                   label="Installation Date"
                   className="w-5/12 my-2"
@@ -215,9 +215,7 @@ const EquipmentView = () => {
                       guaranteeDate: event.currentTarget.value,
                     });
                   }}
-                  value={moment(equipment?.guaranteeDate)
-                    .utc()
-                    .format('YYYY-MM-DD')}
+                  value={moment(equipment?.guaranteeDate).format('YYYY-MM-DD')}
                   type="date"
                   label="Guarantee Date"
                   className="w-5/12 my-2"
@@ -231,9 +229,9 @@ const EquipmentView = () => {
                     replacementPeriod: event.currentTarget.value,
                   });
                 }}
-                value={moment(equipment?.replacementPeriod)
-                  .utc()
-                  .format('YYYY-MM-DD')}
+                value={moment(equipment?.replacementPeriod).format(
+                  'YYYY-MM-DD'
+                )}
                 type="date"
                 disabled={true}
                 label="Replacement Date"

@@ -82,11 +82,11 @@ const BillView = () => {
             </div>
             <span className="text-gray-500 inline-flex">
               <span className="w-1/6">Created:</span>
-              {moment(bill?.createdAt).utc().format('hh:mm:ss A DD/MM/YYYY')}
+              {moment(bill?.createdAt).format('hh:mm:ss A DD/MM/YYYY')}
             </span>
             <span className="text-gray-500 inline-flex">
               <span className="w-1/6">Deadline:</span>
-              {moment(bill?.deadline).utc().format('hh:mm:ss A DD/MM/YYYY')}
+              {moment(bill?.deadline).format('hh:mm:ss A DD/MM/YYYY')}
             </span>
           </div>
           <div className="h-[2px] w-1/2 mx-auto bg-gray-200" />
@@ -136,9 +136,9 @@ const BillView = () => {
                 <div className="inline-flex justify-between w-full">
                   <span className="font-bold">Created At:</span>
                   <span className="">
-                    {moment(bill?.payment.createdAt)
-                      .utc()
-                      .format('hh:mm:ss A DD/MM/YYYY')}
+                    {moment(bill?.payment.createdAt).format(
+                      'hh:mm:ss A DD/MM/YYYY'
+                    )}
                   </span>
                 </div>
                 <div className="inline-flex justify-between w-full">

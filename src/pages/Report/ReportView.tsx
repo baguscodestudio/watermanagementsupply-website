@@ -66,9 +66,7 @@ const ReportView = () => {
               <span className="text-gray-500 text-sm">{report?.reportId}</span>
               <div className="inline-flex w-full justify-between">
                 <span className="text-lg text-gray-500">
-                  {moment(report?.createdAt)
-                    .utc()
-                    .format('hh:mm:ss A DD/MM/YYYY')}
+                  {moment(report?.createdAt).format('hh:mm:ss A DD/MM/YYYY')}
                 </span>
                 <span className="text-lg text-gray-500">
                   <CircleFill

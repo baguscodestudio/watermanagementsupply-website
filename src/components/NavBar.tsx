@@ -46,11 +46,6 @@ const NavBar = () => {
           label: 'Staff Account',
           path: '/staff',
         },
-        {
-          roles: ['UserAdmin'],
-          label: 'Staff Role',
-          path: '/staff/role',
-        },
       ],
     },
     {
@@ -109,6 +104,23 @@ const NavBar = () => {
         },
       ],
     },
+    {
+      title: 'Assignments',
+      icon: <User size="24" className="ml-8" />,
+      roles: ['CustomerSupport', 'Technician'],
+      items: [
+        {
+          roles: ['CustomerSupport', 'Technician'],
+          label: 'Assignment List',
+          path: '/assignment',
+        },
+        {
+          roles: ['CustomerSupport', 'Technician'],
+          label: 'My Assignments',
+          path: '/assignment/self',
+        },
+      ],
+    },
   ];
 
   const handleLogout = () => {
@@ -132,7 +144,7 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="w-[15vw] border-r-2 border-gray-900 h-full flex flex-col">
+    <nav className="sticky top-0 w-[15vw] border-r-2 border-gray-900 h-screen flex flex-col">
       <div className="w-full h-[15vh]">{/* Potential Logo */}</div>
       <div className="w-full">
         {paths.map((path, index) => {
@@ -141,10 +153,9 @@ const NavBar = () => {
             !path.roles
           ) {
             return (
-              <>
+              <div key={index}>
                 <Link
                   to={path.path}
-                  key={index}
                   className="inline-flex w-full items-center h-12"
                 >
                   {useLocation().pathname === path.path ? (
@@ -159,8 +170,10 @@ const NavBar = () => {
                   {path.icon}
                   <span className="ml-8 text-xl">{path.label}</span>
                 </Link>
-                <div className="w-4/5 h-[2px] bg-gray-900 mx-auto">&nbsp;</div>
-              </>
+                <div key={index} className="w-4/5 h-[2px] bg-gray-900 mx-auto">
+                  &nbsp;
+                </div>
+              </div>
             );
           }
         })}

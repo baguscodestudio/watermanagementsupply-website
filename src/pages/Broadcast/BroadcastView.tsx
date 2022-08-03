@@ -39,9 +39,7 @@ const BroadcastView = () => {
               {broadcast?.alertTitle}
             </span>
             <span className="text-lg">
-              {moment(broadcast?.createdAt)
-                .utc()
-                .format('hh:mm:ss A DD/MM/YYYY')}
+              {moment(broadcast?.createdAt).format('hh:mm:ss A DD/MM/YYYY')}
             </span>
           </div>
           <div className="flex flex-col w-1/2">

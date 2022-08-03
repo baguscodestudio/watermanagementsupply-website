@@ -18,6 +18,7 @@ const Reports = () => {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
+  console.log(reports.length);
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -68,7 +69,7 @@ const Reports = () => {
         <Header title="Customer Related" />
         <div className="flex flex-col py-10 px-12 h-[90vh]">
           <div className="underline underline-offset-8 text-2xl font-medium decoration-sky-500 decoration-[6px]">
-            Broadcasts
+            Reports
           </div>
           <div className="w-full h-[4px] bg-gray-200 -z-10 mt-[2px]" />
           <form
@@ -79,7 +80,7 @@ const Reports = () => {
               <Search size="24" />
             </button>
             <input
-              placeholder="Search for chemical name"
+              placeholder="Search for report"
               onChange={(event) => setSearch(event.currentTarget.value)}
               id="search"
               className="outline-none text-lg w-full"
@@ -98,7 +99,7 @@ const Reports = () => {
               </tr>
             </thead>
             <tbody>
-              {reports.slice(page * 9, page * 9 + 9).map((report, index) => (
+              {reports.slice(page * 10, page * 10 + 10).map((report, index) => (
                 <tr
                   key={index}
                   onClick={() => navigate(`/reports/${report.reportId}`)}
@@ -106,9 +107,7 @@ const Reports = () => {
                 >
                   <td>
                     <div className="px-4 py-2 group-hover:bg-gray-200 rounded-l-lg">
-                      {moment(report.createdAt)
-                        .utc()
-                        .format('hh:mm:ss A DD/MM/YYYY')}
+                      {moment(report.createdAt).format('hh:mm:ss A DD/MM/YYYY')}
                     </div>
                   </td>
                   <td className="">

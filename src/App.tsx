@@ -34,6 +34,9 @@ import Bill from './pages/Bill/Bill';
 import BillView from './pages/Bill/BillView';
 import Reports from './pages/Report/Reports';
 import ReportView from './pages/Report/ReportView';
+import Assignment from './pages/Assignment/Assignment';
+import AssignmentCreate from './pages/Assignment/AssignmentCreate';
+import AssignmentSelf from './pages/Assignment/AssignmentSelf';
 
 import { Chart, registerables } from 'chart.js';
 
@@ -41,6 +44,7 @@ import UserType from './type/User';
 import 'chartjs-adapter-moment';
 import NotificationType from './type/Notification';
 import axios from 'axios';
+import AssignmentView from './pages/Assignment/AssignmentView';
 
 Chart.register(...registerables);
 
@@ -90,7 +94,7 @@ function App() {
   }, [user.staffRole]);
 
   return (
-    <div className="h-screen flex flex-col font-inter text-gray-900">
+    <div className="min-h-screen flex flex-col font-inter text-gray-900">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -116,6 +120,13 @@ function App() {
                 <Route path="/pumpusage" element={<WaterPumpUsage />} />
                 <Route path="/waterusage" element={<WaterUsage />} />
                 <Route path="/chemicalusage" element={<ChemicalUsage />} />
+                <Route path="/assignment" element={<Assignment />} />
+                <Route
+                  path="/assignment/create"
+                  element={<AssignmentCreate />}
+                />
+                <Route path="/assignment/:id" element={<AssignmentView />} />
+                <Route path="/assignment/self" element={<AssignmentSelf />} />
                 <Route path="/staff/role" element={<ManageRole />} />
                 <Route path="/staff" element={<StaffAccount />} />
                 <Route path="/staff/create" element={<StaffCreate />} />
