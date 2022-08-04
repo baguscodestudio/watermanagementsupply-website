@@ -29,7 +29,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (user.staffRole === 'Technician') {
       axios
-        .get('http://localhost:5000/api/Chemical', {
+        .get('http://localhost:5000/api/Chemical/BelowMinQuantity', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -86,7 +86,7 @@ const Dashboard = () => {
             <Paper className="col-span-8 px-6 py-4 flex flex-col">
               <span className="text-lg font-semibold">Chemical Status</span>
               <span className="text-sm text-gray-500">
-                Lowest chemical stocks
+                Chemicals under minimum quantity
               </span>
               <table className="mt-4 border-separate border-spacing-y-2">
                 <thead className="rounded-lg overflow-clip">
@@ -103,11 +103,9 @@ const Dashboard = () => {
                     .map((chemical, index) => (
                       <tr className="h-8">
                         <td className="text-center">{chemical.chemicalName}</td>
-                        <td className="text-center border-x-2">{`${chemical.minQuantity} ${chemical.measureUnit}`}</td>
+                        <td className="text-center border-x-2">{`${chemical.minQuantity}`}</td>
                         <td className="text-center relative">
-                          {`${formatter.format(chemical.quantity)} ${
-                            chemical.measureUnit
-                          }`}
+                          {`${formatter.format(chemical.quantity)}`}
                           {chemical.minQuantity > chemical.quantity && (
                             <Warning size="24" className="absolute right-8" />
                           )}
@@ -117,88 +115,97 @@ const Dashboard = () => {
                 </tbody>
               </table>
               <Link
-                to="/notifications"
+                to="/chemical"
                 className="ml-auto mr-12 mb-2 mt-auto text-gray-500 hover:text-gray-800 transition-colors"
               >
                 View More
               </Link>
             </Paper>
           )}
-
-          <Paper className="col-span-4 px-6 py-4 flex flex-col">
-            <span className="font-semibold text-xl mb-4">Notifications</span>
-            {notifications.slice(0, 3).map((notification, index) => (
-              <div
-                className={`inline-flex items-center p-1 rounded-lg ${
-                  notification.isRead && 'bg-gray-100 text-gray-500'
-                }`}
-                key={index}
-              >
-                <div className="flex flex-col">
-                  <div className="inline-flex items-end">
-                    <span className="font-semibold">{notification.type}</span>
-                    <span className="text-gray-500 text-sm ml-2 font-light">
-                      {moment(notification.createdAt).format(
-                        'HH:mm:ss DD/MM/YYYY'
-                      )}
-                    </span>
-                  </div>
-                  <span className="text-sm">{notification.content}</span>
-                </div>
-                <InfoOutline size="48" />
-              </div>
-            ))}
-            <span className="ml-auto mr-4 mb-2 mt-auto text-gray-500 hover:text-gray-800 transition-colors">
-              View More
-            </span>
-          </Paper>
           {user.staffRole === 'Technician' && (
-            <Paper className="col-span-12 px-6 py-4 flex flex-col">
-              <span className="text-lg font-semibold">Equipment Status</span>
-              <span className="text-sm text-gray-500">
-                Current scheduled equipments to run
-              </span>
-              <table>
-                <thead>
-                  <tr className="border-b-2 border-gray-200 h-10">
-                    <th className="font-normal text-gray-500 text-lg">Name</th>
-                    <th className="font-normal text-gray-500 text-lg">
-                      Status
-                    </th>
-                    <th className="font-normal text-gray-500 text-lg">
-                      Schedule
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {equipments.slice(0, 4).map((equipment, index) => (
-                    <tr className="border-b-2 border-gray-200 h-12" key={index}>
-                      <td className="px-8">{equipment.equipmentName}</td>
-                      <td className="text-center">
-                        {equipment.isActive ? (
-                          <>
-                            <CircleFill
-                              size="20"
-                              className="text-green-500 mr-2"
-                            />
-                            Running
-                          </>
-                        ) : (
-                          <>
-                            <CircleFill
-                              size="20"
-                              className="text-red-500 mr-2"
-                            />
-                            Inactive
-                          </>
-                        )}
-                      </td>
-                      <td className="text-center">14:00 - 18:00</td>
+            <>
+              <Paper className="col-span-4 px-6 py-4 flex flex-col">
+                <span className="font-semibold text-xl mb-4">
+                  Notifications
+                </span>
+                {notifications.slice(0, 3).map((notification, index) => (
+                  <div
+                    className={`inline-flex items-center p-1 rounded-lg ${
+                      notification.isRead && 'bg-gray-100 text-gray-500'
+                    }`}
+                    key={index}
+                  >
+                    <div className="flex flex-col">
+                      <div className="inline-flex items-end">
+                        <span className="font-semibold">
+                          {notification.type}
+                        </span>
+                        <span className="text-gray-500 text-sm ml-2 font-light">
+                          {moment(notification.createdAt).format(
+                            'HH:mm:ss DD/MM/YYYY'
+                          )}
+                        </span>
+                      </div>
+                      <span className="text-sm">{notification.content}</span>
+                    </div>
+                    <InfoOutline size="48" />
+                  </div>
+                ))}
+                <Link
+                  to="/notitifcations"
+                  className="ml-auto mr-4 mb-2 mt-auto text-gray-500 hover:text-gray-800 transition-colors"
+                >
+                  View More
+                </Link>
+              </Paper>
+              <Paper className="col-span-8 px-6 py-4 flex flex-col">
+                <span className="text-lg font-semibold">Equipment Status</span>
+                <span className="text-sm text-gray-500">
+                  Current scheduled equipments to run
+                </span>
+                <table>
+                  <thead>
+                    <tr className="border-b-2 border-gray-200 h-10">
+                      <th className="font-normal text-gray-500 text-lg">
+                        Name
+                      </th>
+                      <th className="font-normal text-gray-500 text-lg">
+                        Status
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Paper>
+                  </thead>
+                  <tbody>
+                    {equipments.slice(0, 4).map((equipment, index) => (
+                      <tr
+                        className="border-b-2 border-gray-200 h-12"
+                        key={index}
+                      >
+                        <td className="px-8">{equipment.equipmentName}</td>
+                        <td className="text-center">
+                          {equipment.isActive ? (
+                            <>
+                              <CircleFill
+                                size="20"
+                                className="text-green-500 mr-2"
+                              />
+                              Running
+                            </>
+                          ) : (
+                            <>
+                              <CircleFill
+                                size="20"
+                                className="text-red-500 mr-2"
+                              />
+                              Inactive
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </Paper>
+            </>
           )}
         </div>
       </div>

@@ -40,6 +40,9 @@ import AssignmentSelf from './pages/Assignment/AssignmentSelf';
 import AssignmentView from './pages/Assignment/AssignmentView';
 import Maintenance from './pages/Maintenance/Maintenance';
 import MaintenanceCreate from './pages/Maintenance/MaintenanceCreate';
+import MaintenanceView from './pages/Maintenance/MaintenanceView';
+import WaterRate from './pages/WaterRate/WaterRate';
+import Notifications from './pages/Notifications';
 
 import { Chart, registerables } from 'chart.js';
 
@@ -47,8 +50,6 @@ import UserType from './type/User';
 import 'chartjs-adapter-moment';
 import NotificationType from './type/Notification';
 import axios from 'axios';
-import MaintenanceView from './pages/Maintenance/MaintenanceView';
-import WaterRate from './pages/WaterRate/WaterRate';
 
 Chart.register(...registerables);
 
@@ -169,6 +170,7 @@ function App() {
                   element={<ChemicalUpdate />}
                 />
                 <Route path="/chemical/insert" element={<ChemicalInsert />} />
+                <Route path="/notifications" element={<Notifications />} />
               </Route>
             </Routes>
           </NotificationContext.Provider>

@@ -41,7 +41,7 @@ const AssignmentSelf = () => {
 
   const fetchAssignments = () => {
     axios
-      .get('http://localhost:5000/api/TaskAssignment/Staff/MyInfo', {
+      .get('http://localhost:5000/api/TaskAssignment/MyInfo', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

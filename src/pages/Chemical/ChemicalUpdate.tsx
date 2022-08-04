@@ -114,19 +114,6 @@ const ChemicalUpdate = () => {
               required={true}
               className="w-full my-2"
             />
-            <InputLabel
-              label="Measure Unit"
-              onChange={(event) => {
-                if (!event.currentTarget.value || !chemical) return;
-                setChemical({
-                  ...chemical,
-                  measureUnit: event.currentTarget.value,
-                });
-              }}
-              value={chemical?.measureUnit}
-              required={true}
-              className="w-1/3 mr-auto my-2"
-            />
             <TextAreaLabel
               onChange={(event) => {
                 if (!event.currentTarget.value || !chemical) return;

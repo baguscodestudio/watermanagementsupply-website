@@ -3,6 +3,5 @@ export default interface ChemicalType {
   chemicalName: string;
   minQuantity: number;
   quantity: number;
-  measureUnit: string;
   usageDescription: string;
 }

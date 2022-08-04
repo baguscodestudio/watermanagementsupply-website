@@ -97,7 +97,6 @@ const Chemical = () => {
                 <th className="font-normal px-4 text-left w-2/12">Name</th>
                 <th className="font-normal px-4 w-1/12">Min Quantity</th>
                 <th className="font-normal px-4 w-2/12">Quantity</th>
-                <th className="font-normal px-4 w-1/12">Measure Unit</th>
                 <th className="font-normal px-4 text-left w-6/12">Desc</th>
               </tr>
             </thead>
@@ -129,11 +128,6 @@ const Chemical = () => {
                             className="absolute right-8 text-red-500"
                           />
                         )}
-                      </div>
-                    </td>
-                    <td className="text-center">
-                      <div className="px-4 py-1 group-hover:bg-gray-200">
-                        {chemical.measureUnit}
                       </div>
                     </td>
                     <td>

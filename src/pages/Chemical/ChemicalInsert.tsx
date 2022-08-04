@@ -12,7 +12,6 @@ const ChemicalInsert = () => {
     chemicalName: '',
     minQuantity: 0,
     quantity: 0,
-    measureUnit: '',
     usageDescription: '',
   });
 
@@ -81,17 +80,6 @@ const ChemicalInsert = () => {
               label="Name"
               required={true}
               className="w-full my-2"
-            />
-            <InputLabel
-              label="Measure Unit"
-              onChange={(event) =>
-                setChemical({
-                  ...chemical,
-                  measureUnit: event.currentTarget.value,
-                })
-              }
-              required={true}
-              className="w-1/3 mr-auto my-2"
             />
             <TextAreaLabel
               onChange={(event) =>

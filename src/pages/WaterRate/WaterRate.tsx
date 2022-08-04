@@ -28,7 +28,7 @@ const WaterRate = () => {
     if (selWaterRate?.month === moment().month() + 1) {
       axios
         .put(
-          'http://locahost:5000/api/WaterRate',
+          'http://localhost:5000/api/WaterRate',
           {
             ...selWaterRate,
           },

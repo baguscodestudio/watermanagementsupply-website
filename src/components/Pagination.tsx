@@ -13,6 +13,19 @@ const Pagination: React.FC<{
   let pageNumbers = [];
   const TOTAL_PAGE = Math.ceil(rows / rowsPerPage);
 
+  const rightPage = () => {
+    console.log(TOTAL_PAGE);
+    if (TOTAL_PAGE > page + 1) {
+      setPage(page + 1);
+    }
+  };
+
+  const leftPage = () => {
+    if (page > 0) {
+      setPage(page - 1);
+    }
+  };
+
   if (page < 4) {
     let addedPages = 0;
     for (let i = 1; i <= TOTAL_PAGE && addedPages <= 3; i++) {
@@ -41,7 +54,10 @@ const Pagination: React.FC<{
   }
   return (
     <div id="pagination" className={`${className}`}>
-      <button className="hover:text-gray-500 transition-all">
+      <button
+        className="hover:text-gray-500 transition-all"
+        onClick={() => leftPage()}
+      >
         <ChevronLeft size="24" />
       </button>
       {pageNumbers.map((number, index) => (
@@ -55,7 +71,10 @@ const Pagination: React.FC<{
           {number}
         </button>
       ))}
-      <button className="hover:text-gray-500 transition-all">
+      <button
+        className="hover:text-gray-500 transition-all"
+        onClick={() => rightPage()}
+      >
         <ChevronRight size="24" />
       </button>
     </div>
