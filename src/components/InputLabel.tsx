@@ -6,12 +6,16 @@ const InputLabel: React.FC<{
   value?: string | number;
   disabled?: boolean;
   type?: string;
+  min?: number;
+  max?: number;
   pattern?: string;
   required?: boolean;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 }> = ({
   label,
   disabled,
+  min,
+  max,
   type,
   required,
   pattern,
@@ -31,6 +35,8 @@ const InputLabel: React.FC<{
         className="bg-transparent outline-none"
         type={type}
         disabled={disabled}
+        min={min}
+        max={max}
         value={value}
         pattern={pattern}
         onChange={onChange}

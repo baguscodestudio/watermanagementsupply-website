@@ -48,6 +48,7 @@ import 'chartjs-adapter-moment';
 import NotificationType from './type/Notification';
 import axios from 'axios';
 import MaintenanceView from './pages/Maintenance/MaintenanceView';
+import WaterRate from './pages/WaterRate/WaterRate';
 
 Chart.register(...registerables);
 
@@ -146,6 +147,7 @@ function App() {
                   element={<MaintenanceCreate />}
                 />
                 <Route path="/maintenance/:id" element={<MaintenanceView />} />
+                <Route path="/waterrate" element={<WaterRate />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/reports/:reportId" element={<ReportView />} />
                 <Route path="/bill" element={<Bill />} />

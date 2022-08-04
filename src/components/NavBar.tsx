@@ -107,6 +107,11 @@ const NavBar = () => {
           label: 'Reports',
           path: '/reports',
         },
+        {
+          roles: ['CustomerSupport'],
+          label: 'Water Rate',
+          path: '/waterrate',
+        },
       ],
     },
     {
