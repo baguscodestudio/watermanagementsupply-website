@@ -218,7 +218,10 @@ const ChemicalUsage = () => {
           dataValue[usage.chemicalId + usage.equipmentId] = {
             label: `${getChemicalName(usage.chemicalId)} - ${getEquipmentName(
               usage.equipmentId
-            )}`,
+            )} (${
+              chemicals.find((chem) => chem.chemicalId === usage.chemicalId)
+                ?.measureUnit
+            })`,
             data: [
               {
                 x: moment(sensordata.timestamp),

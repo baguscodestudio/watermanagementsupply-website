@@ -19,6 +19,7 @@ const Maintenance = () => {
   const [maintenances, setMaintenances] = useState<MaintenanceType[]>([]);
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
+  const [searchMt, setMtSearch] = useState('');
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
   const [selEquipment, setSelEquipment] = useState('');
   const navigate = useNavigate();
@@ -26,9 +27,33 @@ const Maintenance = () => {
   const handleSelectEquipment = (id: string) => {
     if (id === selEquipment) {
       setSelEquipment('');
+      fetchMaintenances();
     } else {
       setSelEquipment(id);
+      filterByEquipment(id);
     }
+  };
+
+  const handleMaintenanceSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (searchMt !== '') {
+      axios
+        .get('http://localhost:5000/api/Maintenance/Search', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+          params: {
+            keyword: searchMt,
+          },
+        })
+        .then((response) => setMaintenances(response.data.result))
+        .catch((err) => {
+          console.log(err);
+          toast.error(
+            'An error occured while searching for maintenance records'
+          );
+        });
+    } else fetchMaintenances();
   };
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
@@ -51,6 +76,20 @@ const Maintenance = () => {
           toast.error('Error occured while getting equipments');
         });
     } else fetchEquipments();
+  };
+
+  const filterByEquipment = (id: string) => {
+    axios
+      .get(`http://localhost:5000/api/Maintenance/Equipment/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => setMaintenances(response.data.result))
+      .catch((err) => {
+        console.log(err);
+        toast.error('An error occured while filtering by equipment');
+      });
   };
 
   const fetchEquipments = () => {
@@ -155,6 +194,20 @@ const Maintenance = () => {
             />
           </div>
           <div className="w-4/5 flex flex-col pl-4 h-full">
+            <form
+              onSubmit={(event) => handleMaintenanceSearch(event)}
+              className="rounded-lg ring-1 ring-gray-500 w-full h-12 my-8 inline-flex items-center px-6"
+            >
+              <button type="submit" className="mr-4">
+                <Search size="24" />
+              </button>
+              <input
+                placeholder="Search for maintenance"
+                onChange={(event) => setMtSearch(event.currentTarget.value)}
+                id="search"
+                className="outline-none text-lg w-full"
+              />
+            </form>
             <Paper className="w-full h-4/5 flex flex-col">
               <table>
                 <thead>

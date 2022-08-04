@@ -29,6 +29,23 @@ const MaintenanceView = () => {
     );
   };
 
+  const handleDelete = () => {
+    axios
+      .delete(`http://localhost:5000/api/Maintenance/${params.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => {
+        toast('Successfully deleted maintenance record!');
+        navigate('/maintenance');
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('An error occured while deleting maintenance record');
+      });
+  };
+
   const filteredEq =
     queryEq === ''
       ? equipments.map((eq) => eq.equipmentName)
@@ -180,6 +197,13 @@ const MaintenanceView = () => {
               >
                 Cancel
               </Link>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-red-500 font-medium text-lg"
+              >
+                Delete
+              </button>
               <button
                 type="submit"
                 disabled={checkChanges()}
