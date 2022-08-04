@@ -28,6 +28,8 @@ const Bill = () => {
     year: moment().year(),
   });
   const [search, setSearch] = useState('');
+  const [month, setMonth] = useState(0);
+  const [year, setYear] = useState(0);
   const navigate = useNavigate();
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
@@ -342,23 +344,46 @@ const Bill = () => {
                 setPage={setPage}
               />
             </Paper>
-            <Paper className="mt-auto w-full inline-flex h-1/6 px-4 py-2 items-center">
-              <div className="mx-4 flex flex-col">
-                <span className="mb-4 font-semibold">
-                  Generate Bills for every customer for{' '}
-                  {moment().format('MMMM')}
-                </span>
-                <button
-                  onClick={generateBill}
-                  className="ring-offset-2 ring-blue-800 ring-2 bg-blue-600 text-white rounded-lg px-4 py-1 hover:bg-blue-200 hover:text-black"
-                >
-                  Generate Bills
-                </button>
-              </div>
+            <Paper className="mt-auto w-full inline-flex h-1/5 px-4 py-2 items-start">
+              <form onSubmit={generateBill} className="mx-4 flex w-1/3">
+                <div className="flex flex-col w-1/2 px-2">
+                  <InputLabel
+                    label="Month"
+                    required={true}
+                    value={month}
+                    onChange={(event) => {
+                      setMonth(parseInt(event.currentTarget.value));
+                    }}
+                  />
+                  <InputLabel
+                    className="mt-2"
+                    label="Year"
+                    required={true}
+                    value={year}
+                    onChange={(event) => {
+                      setYear(parseInt(event.currentTarget.value));
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col w-1/2 px-2">
+                  <span className="mb-4 font-semibold">
+                    Generate Bills for every customer for{' '}
+                    {month !== 0 &&
+                      year !== 0 &&
+                      moment(`${month}/${year}`, 'M/YYYY').format('MMMM')}
+                  </span>
+                  <button
+                    type="submit"
+                    className="ring-offset-2 ring-blue-800 ring-2 bg-blue-600 text-white rounded-lg px-4 py-1 hover:bg-blue-200 hover:text-black"
+                  >
+                    Generate Bills
+                  </button>
+                </div>
+              </form>
               {selCustomer && (
                 <form className="flex h-full mx-4" onSubmit={billCustomer}>
-                  <div className="flex flex-col h-full mr-4 justify-around">
-                    <span className="font-semibold">
+                  <div className="flex flex-col h-full mr-4">
+                    <span className="font-semibold mb-4">
                       Generate for {getCustomerName(selCustomer)}
                     </span>
                     <button
@@ -402,7 +427,7 @@ const Bill = () => {
                       }
                     />
                     <InputLabel
-                      label="Deadline"
+                      label="Year"
                       type="number"
                       value={bill.year}
                       required={true}
