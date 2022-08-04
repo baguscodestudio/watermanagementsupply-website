@@ -9,14 +9,41 @@ import InputLabel from '../../components/InputLabel';
 import NavBar from '../../components/NavBar';
 import TextAreaLabel from '../../components/TextAreaLabel';
 import EquipmentType from '../../type/Equipment';
+import { extendedEquipment } from './Equipment';
 
 const EquipmentView = () => {
-  const [equipment, setEquipment] = useState<EquipmentType>();
-  const [previousEq, setPreviousEq] = useState<EquipmentType>();
+  const [equipment, setEquipment] = useState<extendedEquipment>();
+  const [previousEq, setPreviousEq] = useState<extendedEquipment>();
   const [selectedImage, setSelectedImage] = useState<File>();
+  const [mode, setMode] = useState('normal');
   const params = useParams();
   const id = params.equipmentId;
   const navigate = useNavigate();
+
+  const createSchedule = () => {
+    axios
+      .post(
+        'http://localhost:5000/api/PumpSchedule',
+        {
+          equipmentId: equipment?.equipmentId,
+          startTime: equipment?.startTime,
+          endTime: equipment?.endTime,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast('Successfully created schedule for equipment');
+        navigate('/equipment');
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('An error occured while creating schedule for equipment');
+      });
+  };
 
   const handleDelete = (id: string) => {
     axios
@@ -43,9 +70,37 @@ const EquipmentView = () => {
         },
       })
       .then((response) => {
-        // console.log(response);
-        setEquipment(response.data.result[0]);
-        setPreviousEq(response.data.result[0]);
+        if (response.data.result[0].type === 'Pump') {
+          axios
+            .get(`http://localhost:5000/api/PumpSchedule/${id}`, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+              },
+            })
+            .then((schedule) => {
+              setEquipment({
+                ...response.data.result[0],
+                ...schedule.data,
+              });
+              setPreviousEq({
+                ...response.data.result[0],
+                ...schedule.data,
+              });
+            })
+            .catch((err) => {
+              if (err.response.status === 404) {
+                setEquipment(response.data.result[0]);
+                setPreviousEq(response.data.result[0]);
+              } else {
+                toast.error(
+                  'Error occured while getting the equipment information'
+                );
+              }
+            });
+        } else {
+          setEquipment(response.data.result[0]);
+          setPreviousEq(response.data.result[0]);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -71,8 +126,37 @@ const EquipmentView = () => {
         }
       )
       .then((response) => {
-        toast('Successfully updated equipment!');
-        navigate('/equipment');
+        if (equipment?.startTime) {
+          axios
+            .post(
+              'http://localhost:5000/api/PumpSchedule',
+              {
+                equipmentId: equipment?.equipmentId,
+                startTime: equipment?.startTime,
+                endTime: equipment?.endTime,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem(
+                    'accessToken'
+                  )}`,
+                },
+              }
+            )
+            .then((response) => {
+              toast('Successfully updated equipment!');
+              navigate('/equipment');
+            })
+            .catch((err) => {
+              console.log(err);
+              toast.error(
+                'An error occured while creating schedule for equipment'
+              );
+            });
+        } else {
+          toast('Successfully updated equipment!');
+          navigate('/equipment');
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -148,13 +232,15 @@ const EquipmentView = () => {
                 >
                   Cancel
                 </Link>
-                <button
-                  type="submit"
-                  disabled={checkChanges()}
-                  className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-green-500 font-medium w-[45%]"
-                >
-                  Save
-                </button>
+                {mode === 'normal' && (
+                  <button
+                    type="submit"
+                    disabled={checkChanges()}
+                    className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-green-500 font-medium w-[45%]"
+                  >
+                    Save
+                  </button>
+                )}
               </div>
               <button
                 type="button"
@@ -164,120 +250,255 @@ const EquipmentView = () => {
                 Delete
               </button>
             </div>
-            <div className="w-2/3 flex flex-col px-4">
-              <InputLabel
-                onChange={(event) => {
-                  if (!event.currentTarget.value || !equipment) return;
-                  setEquipment({
-                    ...equipment,
-                    equipmentName: event.currentTarget.value,
-                  });
-                }}
-                value={equipment?.equipmentName}
-                label="Name"
-                required={true}
-                className="w-full my-2"
-              />
-              <InputLabel
-                label="Type"
-                onChange={(event) => {
-                  if (!event.currentTarget.value || !equipment) return;
-                  setEquipment({
-                    ...equipment,
-                    type: event.currentTarget.value,
-                  });
-                }}
-                value={equipment?.type}
-                required={true}
-                className="w-1/3 mr-auto my-2"
-              />
-              <div className="inline-flex justify-between w-full">
+            {mode === 'normal' ? (
+              <div className="w-2/3 flex flex-col px-4">
                 <InputLabel
                   onChange={(event) => {
                     if (!event.currentTarget.value || !equipment) return;
                     setEquipment({
                       ...equipment,
-                      installationDate: event.currentTarget.value,
+                      equipmentName: event.currentTarget.value,
                     });
                   }}
-                  value={moment(equipment?.installationDate).format(
+                  value={equipment?.equipmentName}
+                  label="Name"
+                  required={true}
+                  className="w-full my-2"
+                />
+                <InputLabel
+                  label="Type"
+                  onChange={(event) => {
+                    if (!event.currentTarget.value || !equipment) return;
+                    setEquipment({
+                      ...equipment,
+                      type: event.currentTarget.value,
+                    });
+                  }}
+                  value={equipment?.type}
+                  required={true}
+                  className="w-1/3 mr-auto my-2"
+                />
+                <div className="inline-flex justify-between w-full">
+                  <InputLabel
+                    onChange={(event) => {
+                      if (!event.currentTarget.value || !equipment) return;
+                      setEquipment({
+                        ...equipment,
+                        installationDate: event.currentTarget.value,
+                      });
+                    }}
+                    value={moment(equipment?.installationDate).format(
+                      'YYYY-MM-DD'
+                    )}
+                    type="date"
+                    label="Installation Date"
+                    className="w-5/12 my-2"
+                  />
+                  <InputLabel
+                    onChange={(event) => {
+                      if (!event.currentTarget.value || !equipment) return;
+                      setEquipment({
+                        ...equipment,
+                        guaranteeDate: event.currentTarget.value,
+                      });
+                    }}
+                    value={moment(equipment?.guaranteeDate).format(
+                      'YYYY-MM-DD'
+                    )}
+                    type="date"
+                    label="Guarantee Date"
+                    className="w-5/12 my-2"
+                  />
+                </div>
+                <InputLabel
+                  onChange={(event) => {
+                    if (!event.currentTarget.value || !equipment) return;
+                    setEquipment({
+                      ...equipment,
+                      replacementPeriod: event.currentTarget.value,
+                    });
+                  }}
+                  value={moment(equipment?.replacementPeriod).format(
                     'YYYY-MM-DD'
                   )}
                   type="date"
-                  label="Installation Date"
+                  disabled={true}
+                  label="Replacement Date"
                   className="w-5/12 my-2"
                 />
-                <InputLabel
+                <TextAreaLabel
                   onChange={(event) => {
                     if (!event.currentTarget.value || !equipment) return;
                     setEquipment({
                       ...equipment,
-                      guaranteeDate: event.currentTarget.value,
+                      hardwareSpec: event.currentTarget.value,
                     });
                   }}
-                  value={moment(equipment?.guaranteeDate).format('YYYY-MM-DD')}
-                  type="date"
-                  label="Guarantee Date"
-                  className="w-5/12 my-2"
+                  label="Hardware Specification"
+                  className="w-full my-2"
+                  value={equipment?.hardwareSpec}
                 />
-              </div>
-              <InputLabel
-                onChange={(event) => {
-                  if (!event.currentTarget.value || !equipment) return;
-                  setEquipment({
-                    ...equipment,
-                    replacementPeriod: event.currentTarget.value,
-                  });
-                }}
-                value={moment(equipment?.replacementPeriod).format(
-                  'YYYY-MM-DD'
+                <div className="inline-flex justify-between w-full">
+                  <InputLabel
+                    onChange={(event) => {
+                      if (!event.currentTarget.value || !equipment) return;
+                      setEquipment({
+                        ...equipment,
+                        lifespan: parseInt(event.currentTarget.value),
+                      });
+                    }}
+                    value={equipment?.lifespan}
+                    type="number"
+                    label="Lifespan"
+                    className="w-5/12 my-2"
+                  />
+                  <InputLabel
+                    onChange={(event) => {
+                      if (!event.currentTarget.value || !equipment) return;
+                      setEquipment({
+                        ...equipment,
+                        cost: parseFloat(event.currentTarget.value),
+                      });
+                    }}
+                    value={equipment?.cost}
+                    type="number"
+                    label="Equipment Cost"
+                    className="w-5/12 my-2"
+                  />
+                </div>
+                {equipment?.startTime && (
+                  <div className="inline-flex justify-between w-full">
+                    <InputLabel
+                      onChange={(event) => {
+                        if (!event.currentTarget.value || !equipment) return;
+                        setEquipment({
+                          ...equipment,
+                          startTime:
+                            moment(event.currentTarget.value, 'HH:mm').hour() *
+                              60 +
+                            moment(
+                              event.currentTarget.value,
+                              'HH:mm'
+                            ).minutes(),
+                        });
+                      }}
+                      value={
+                        equipment?.startTime &&
+                        moment()
+                          .startOf('day')
+                          .add(equipment.startTime, 'minutes')
+                          .format('HH:mm')
+                      }
+                      type="time"
+                      label="Start Time"
+                      className="w-5/12 my-2"
+                    />
+                    <InputLabel
+                      onChange={(event) => {
+                        if (!event.currentTarget.value || !equipment) return;
+                        setEquipment({
+                          ...equipment,
+                          endTime:
+                            moment(event.currentTarget.value, 'HH:mm').hour() *
+                              60 +
+                            moment(
+                              event.currentTarget.value,
+                              'HH:mm'
+                            ).minutes(),
+                        });
+                      }}
+                      value={
+                        equipment?.endTime &&
+                        moment()
+                          .startOf('day')
+                          .add(equipment?.endTime, 'minutes')
+                          .format('HH:mm')
+                      }
+                      type="time"
+                      label="End Time"
+                      className="w-5/12 my-2"
+                    />
+                  </div>
                 )}
-                type="date"
-                disabled={true}
-                label="Replacement Date"
-                className="w-5/12 my-2"
-              />
-              <TextAreaLabel
-                onChange={(event) => {
-                  if (!event.currentTarget.value || !equipment) return;
-                  setEquipment({
-                    ...equipment,
-                    hardwareSpec: event.currentTarget.value,
-                  });
-                }}
-                label="Hardware Specification"
-                className="w-full my-2"
-                value={equipment?.hardwareSpec}
-              />
-              <div className="inline-flex justify-between w-full">
-                <InputLabel
-                  onChange={(event) => {
-                    if (!event.currentTarget.value || !equipment) return;
-                    setEquipment({
-                      ...equipment,
-                      lifespan: parseInt(event.currentTarget.value),
-                    });
-                  }}
-                  value={equipment?.lifespan}
-                  type="number"
-                  label="Lifespan"
-                  className="w-5/12 my-2"
-                />
-                <InputLabel
-                  onChange={(event) => {
-                    if (!event.currentTarget.value || !equipment) return;
-                    setEquipment({
-                      ...equipment,
-                      cost: parseFloat(event.currentTarget.value),
-                    });
-                  }}
-                  value={equipment?.cost}
-                  type="number"
-                  label="Equipment Cost"
-                  className="w-5/12 my-2"
-                />
+                {equipment?.type === 'Pump' && !equipment?.startTime && (
+                  <div>
+                    <button
+                      onClick={() => setMode('schedule')}
+                      type="button"
+                      className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-green-500 font-medium w-[45%]"
+                    >
+                      Schedule
+                    </button>
+                  </div>
+                )}
               </div>
-            </div>
+            ) : (
+              <div className="w-2/3 flex flex-col px-4">
+                <div className="inline-flex justify-between w-full">
+                  <InputLabel
+                    onChange={(event) => {
+                      if (!event.currentTarget.value || !equipment) return;
+
+                      setEquipment({
+                        ...equipment,
+                        startTime:
+                          moment(event.currentTarget.value, 'HH:mm').hour() *
+                            60 +
+                          moment(event.currentTarget.value, 'HH:mm').minutes(),
+                      });
+                    }}
+                    value={
+                      equipment?.startTime &&
+                      moment()
+                        .startOf('day')
+                        .add(equipment.startTime, 'minutes')
+                        .format('HH:mm:ss')
+                    }
+                    type="time"
+                    label="Start Time"
+                    className="w-5/12 my-2"
+                  />
+                  <InputLabel
+                    onChange={(event) => {
+                      if (!event.currentTarget.value || !equipment) return;
+                      setEquipment({
+                        ...equipment,
+                        endTime:
+                          moment(event.currentTarget.value, 'HH:mm').hour() *
+                            60 +
+                          moment(event.currentTarget.value, 'HH:mm').minutes(),
+                      });
+                    }}
+                    value={
+                      equipment?.endTime &&
+                      moment()
+                        .startOf('day')
+                        .add(equipment.endTime, 'minutes')
+                        .format('HH:mm:ss')
+                    }
+                    type="time"
+                    label="End Time"
+                    className="w-5/12 my-2"
+                  />
+                </div>
+                <div className="inline-flex my-4">
+                  <button
+                    onClick={() => setMode('normal')}
+                    type="button"
+                    className="rounded-lg border-gray-500 text-gray-500 bg-transparent border-2 px-4 py-1 h-fit hover:shadow-lg hover:-translate-y-1 transition-all w-[45%]"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={createSchedule}
+                    type="button"
+                    className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-green-500 font-medium w-[45%]"
+                  >
+                    Create Schedule
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </form>
       </div>

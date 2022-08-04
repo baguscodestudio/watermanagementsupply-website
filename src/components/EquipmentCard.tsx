@@ -6,10 +6,42 @@ import moment from 'moment';
 import { PriceTag3 } from '@styled-icons/remix-line/PriceTag3';
 import { Calendar } from '@styled-icons/bootstrap/Calendar';
 import { Activity } from '@styled-icons/evaicons-solid/Activity';
+import { TimeFive } from '@styled-icons/boxicons-regular/TimeFive';
 
 import EquipmentType from '../type/Equipment';
+import { extendedEquipment } from '../pages/Equipment/Equipment';
 
-const EquipmentCard = ({ equipment }: { equipment: EquipmentType }) => {
+const EquipmentCard = ({
+  equipment,
+  pump,
+}: {
+  equipment: EquipmentType;
+  pump: extendedEquipment[];
+}) => {
+  const renderSchedule = () => {
+    let schedule = pump.find(
+      (pump) => pump.equipmentId === equipment.equipmentId
+    );
+    if (schedule)
+      return (
+        <div className="flex flex-col my-auto ml-4 mr-12">
+          <span className="mb-1">
+            <TimeFive size="20" /> Start:{' '}
+            {moment()
+              .startOf('day')
+              .add(schedule?.startTime, 'minutes')
+              .format('HH:mm')}
+          </span>
+          <span className="mt-1">
+            <TimeFive size="20" /> Stop:{' '}
+            {moment()
+              .startOf('day')
+              .add(schedule?.endTime, 'minutes')
+              .format('HH:mm')}
+          </span>
+        </div>
+      );
+  };
   return (
     <Link
       to={`/equipment/${equipment.equipmentId}`}
@@ -47,6 +79,7 @@ const EquipmentCard = ({ equipment }: { equipment: EquipmentType }) => {
             {moment(equipment.replacementPeriod).format('DD-MM-YYYY')}
           </span>
         </div>
+        {renderSchedule()}
       </div>
     </Link>
   );

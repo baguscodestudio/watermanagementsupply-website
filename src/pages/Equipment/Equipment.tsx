@@ -1,19 +1,24 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 import { Search } from '@styled-icons/boxicons-regular/Search';
 import { Plus } from '@styled-icons/boxicons-regular/Plus';
 
 import NavBar from '../../components/NavBar';
-import EquipmentType from '../../type/Equipment';
 import EquipmentCard from '../../components/EquipmentCard';
 import Header from '../../components/Header';
 import Pagination from '../../components/Pagination';
-import { Link } from 'react-router-dom';
+
+import PumpScheduleType from '../../type/PumpSchedule';
+import EquipmentType from '../../type/Equipment';
+
+export interface extendedEquipment extends EquipmentType, PumpScheduleType {}
 
 const Equipment = () => {
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
+  const [pump, setPump] = useState<extendedEquipment[]>([]);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(0);
 
@@ -32,6 +37,25 @@ const Equipment = () => {
         toast.error('Error occured while getting equipments');
       });
   };
+
+  useEffect(() => {
+    equipments.map((equipment) => {
+      if (equipment.type === 'Pump') {
+        axios
+          .get(
+            `http://localhost:5000/api/PumpSchedule/${equipment.equipmentId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+              },
+            }
+          )
+          .then((response) =>
+            setPump([...pump, { ...equipment, ...response.data }])
+          );
+      }
+    });
+  }, [equipments]);
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -94,7 +118,7 @@ const Equipment = () => {
             {equipments
               .slice(page * 4, page * 4 + 4)
               .map((equipment, index) => (
-                <EquipmentCard key={index} equipment={equipment} />
+                <EquipmentCard key={index} equipment={equipment} pump={pump} />
               ))}
           </div>
           <Pagination
