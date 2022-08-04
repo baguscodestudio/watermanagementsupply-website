@@ -63,6 +63,11 @@ const NavBar = () => {
           label: 'Chemical Inventory',
           path: '/chemical',
         },
+        {
+          roles: ['Technician'],
+          label: 'Maintenance List',
+          path: '/maintenance',
+        },
       ],
     },
     {

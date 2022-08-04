@@ -37,6 +37,9 @@ import ReportView from './pages/Report/ReportView';
 import Assignment from './pages/Assignment/Assignment';
 import AssignmentCreate from './pages/Assignment/AssignmentCreate';
 import AssignmentSelf from './pages/Assignment/AssignmentSelf';
+import AssignmentView from './pages/Assignment/AssignmentView';
+import Maintenance from './pages/Maintenance/Maintenance';
+import MaintenanceCreate from './pages/Maintenance/MaintenanceCreate';
 
 import { Chart, registerables } from 'chart.js';
 
@@ -44,7 +47,7 @@ import UserType from './type/User';
 import 'chartjs-adapter-moment';
 import NotificationType from './type/Notification';
 import axios from 'axios';
-import AssignmentView from './pages/Assignment/AssignmentView';
+import MaintenanceView from './pages/Maintenance/MaintenanceView';
 
 Chart.register(...registerables);
 
@@ -137,6 +140,12 @@ function App() {
                   path="/customer/:customerId"
                   element={<CustomerUpdate />}
                 />
+                <Route path="/maintenance" element={<Maintenance />} />
+                <Route
+                  path="/maintenance/create"
+                  element={<MaintenanceCreate />}
+                />
+                <Route path="/maintenance/:id" element={<MaintenanceView />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/reports/:reportId" element={<ReportView />} />
                 <Route path="/bill" element={<Bill />} />
