@@ -17,8 +17,8 @@ const Reports = () => {
   const [reports, setReports] = useState<ReportType[]>([]);
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
+  const [length, setLength] = useState(0);
   const navigate = useNavigate();
-  console.log(reports.length);
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,6 +34,7 @@ const Reports = () => {
         })
         .then((response) => {
           setReports(response.data.result);
+          setLength(response.data.metadata.count);
         })
         .catch((err) => {
           console.log(err);
@@ -50,8 +51,14 @@ const Reports = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
+        params: {
+          page: page + 1,
+        },
       })
-      .then((response) => setReports(response.data.result))
+      .then((response) => {
+        setReports(response.data.result);
+        setLength(response.data.metadata.count);
+      })
       .catch((err) => {
         console.log(err);
         toast.error('An error occured while fetching reports');
@@ -60,7 +67,7 @@ const Reports = () => {
 
   useEffect(() => {
     fetchReports();
-  }, []);
+  }, [page]);
 
   return (
     <div className="w-full h-full flex">
@@ -99,7 +106,7 @@ const Reports = () => {
               </tr>
             </thead>
             <tbody>
-              {reports.slice(page * 10, page * 10 + 10).map((report, index) => (
+              {reports.map((report, index) => (
                 <tr
                   key={index}
                   onClick={() => navigate(`/reports/${report.reportId}`)}
@@ -144,7 +151,7 @@ const Reports = () => {
           </table>
           <Pagination
             className="ml-auto mt-auto mb-8 inline-flex items-center"
-            rows={reports.length}
+            rows={length}
             rowsPerPage={10}
             page={page}
             setPage={setPage}

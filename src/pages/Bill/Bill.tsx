@@ -350,7 +350,6 @@ const Bill = () => {
                   <InputLabel
                     label="Month"
                     required={true}
-                    value={month}
                     onChange={(event) => {
                       setMonth(parseInt(event.currentTarget.value));
                     }}
@@ -359,7 +358,6 @@ const Bill = () => {
                     className="mt-2"
                     label="Year"
                     required={true}
-                    value={year}
                     onChange={(event) => {
                       setYear(parseInt(event.currentTarget.value));
                     }}
