@@ -19,7 +19,7 @@ import AssignmentType from '../../type/Assignment';
 import { Search } from '@styled-icons/boxicons-regular/Search';
 import { Plus } from '@styled-icons/boxicons-regular/Plus';
 
-const FILTERS = ['Staff', 'Customer', 'Equipment'];
+const FILTERS = ['Customer', 'Equipment'];
 
 const AssignmentSelf = () => {
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
@@ -217,60 +217,7 @@ const AssignmentSelf = () => {
   };
 
   const renderFilter = () => {
-    if (filter === 'Staff') {
-      return (
-        <div className="w-full h-5/6 rounded-lg shadow-xl p-4 flex flex-col">
-          <form
-            onSubmit={(event) => handleSearch(event)}
-            className="rounded-lg ring-1 ring-gray-500 w-full h-8 my-4 inline-flex items-center px-2"
-          >
-            <button
-              type="submit"
-              className="mr-4 hover:bg-gray-500 hover:text-white rounded-full w-6 h-6 flex transition-colors"
-            >
-              <Search size="16" className="m-auto" />
-            </button>
-            <input
-              placeholder="Staff name"
-              onChange={(event) => setSearch(event.currentTarget.value)}
-              id="search"
-              className="outline-none w-full"
-            />
-          </form>
-          <span className="px-4 text-lg font-semibold">Staffs</span>
-          <div className="w-full h-[2px] bg-gray-900 my-2" />
-          <table className="w-full text-center">
-            <tbody>
-              {staffs.slice(page * 10, page * 10 + 10).map((staff, index) => (
-                <tr
-                  key={index}
-                  onClick={() => addSelected(staff)}
-                  className="border-b-2 h-8 border-gray-200 last-of-type:border-none hover:cursor-pointer"
-                >
-                  <td className="py-1">
-                    <div
-                      className={`${
-                        sel.includes(staff.userId) &&
-                        'bg-gray-200 text-gray-500 rounded-lg'
-                      }`}
-                    >
-                      {staff.username}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Pagination
-            className="mt-auto mx-auto mb-4"
-            rows={staffs.length}
-            rowsPerPage={10}
-            page={page}
-            setPage={setPage}
-          />
-        </div>
-      );
-    } else if (filter === 'Customer') {
+    if (filter === 'Customer') {
       return (
         <div className="w-full h-5/6 rounded-lg shadow-xl p-4 flex flex-col">
           <form

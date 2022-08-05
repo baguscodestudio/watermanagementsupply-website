@@ -168,7 +168,6 @@ const WaterUsage = () => {
           !currentDate ||
           currentDate !== moment(data.x).format('YYYY-MM-DD')
         ) {
-          // console.log(total, count, currentDate);
           if (currentDate) {
             calculated_data.push({
               x: currentDate,
@@ -180,9 +179,7 @@ const WaterUsage = () => {
           count = 0;
           count++;
           total += data.y;
-          // console.log(data.y, currentDate);
         } else if (currentDate === moment(data.x).format('YYYY-MM-DD')) {
-          // console.log(data.y, currentDate, count);
           total += data.y;
           count++;
         }

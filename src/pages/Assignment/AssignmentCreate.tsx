@@ -95,8 +95,10 @@ const AssignmentCreate = () => {
         },
       })
       .then((response) => {
-        setStaffs(response.data.result);
-        setSelStaff(response.data.result[0].username);
+        let staffArr = response.data.result.filter(
+          (staff: UserType) => staff.staffRole !== 'UserAdmin'
+        );
+        setStaffs([...staffArr]);
       })
       .catch((err) => {
         console.log(err);
