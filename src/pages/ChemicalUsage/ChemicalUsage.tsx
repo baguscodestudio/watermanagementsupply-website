@@ -216,9 +216,9 @@ const ChemicalUsage = () => {
             Math.random() * 255
           )},${Math.floor(Math.random() * 255)})`;
           dataValue[usage.chemicalId + usage.equipmentId] = {
-            label: `${getChemicalName(usage.chemicalId)} - ${getEquipmentName(
-              usage.equipmentId
-            )}`,
+            label: `${
+              getChemicalName(usage.chemicalId) || usage.chemicalId
+            } - ${getEquipmentName(usage.equipmentId) || usage.equipmentId}`,
             data: [
               {
                 x: moment(sensordata.timestamp),

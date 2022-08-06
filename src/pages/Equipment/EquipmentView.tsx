@@ -9,12 +9,13 @@ import InputLabel from '../../components/InputLabel';
 import NavBar from '../../components/NavBar';
 import TextAreaLabel from '../../components/TextAreaLabel';
 import EquipmentType from '../../type/Equipment';
-import { extendedEquipment } from './Equipment';
+import PumpScheduleType from '../../type/PumpSchedule';
 
 const EquipmentView = () => {
-  const [equipment, setEquipment] = useState<extendedEquipment>();
-  const [previousEq, setPreviousEq] = useState<extendedEquipment>();
+  const [equipment, setEquipment] = useState<EquipmentType>();
+  const [previousEq, setPreviousEq] = useState<EquipmentType>();
   const [selectedImage, setSelectedImage] = useState<File>();
+  const [pumpSchedule, setPumpSchedule] = useState<PumpScheduleType>();
   const [mode, setMode] = useState('normal');
   const params = useParams();
   const id = params.equipmentId;
@@ -26,8 +27,8 @@ const EquipmentView = () => {
         'http://localhost:5000/api/PumpSchedule',
         {
           equipmentId: equipment?.equipmentId,
-          startTime: equipment?.startTime,
-          endTime: equipment?.endTime,
+          startTime: pumpSchedule?.startTime,
+          endTime: pumpSchedule?.endTime,
         },
         {
           headers: {
@@ -80,12 +81,11 @@ const EquipmentView = () => {
             .then((schedule) => {
               setEquipment({
                 ...response.data.result[0],
-                ...schedule.data,
               });
               setPreviousEq({
                 ...response.data.result[0],
-                ...schedule.data,
               });
+              setPumpSchedule(schedule.data);
             })
             .catch((err) => {
               if (err.response.status === 404) {
@@ -126,14 +126,14 @@ const EquipmentView = () => {
         }
       )
       .then((response) => {
-        if (equipment?.startTime) {
+        if (pumpSchedule?.startTime) {
           axios
             .post(
               'http://localhost:5000/api/PumpSchedule',
               {
                 equipmentId: equipment?.equipmentId,
-                startTime: equipment?.startTime,
-                endTime: equipment?.endTime,
+                startTime: pumpSchedule?.startTime,
+                endTime: pumpSchedule?.endTime,
               },
               {
                 headers: {
@@ -366,13 +366,13 @@ const EquipmentView = () => {
                     className="w-5/12 my-2"
                   />
                 </div>
-                {equipment?.startTime && (
+                {pumpSchedule?.startTime && (
                   <div className="inline-flex justify-between w-full">
                     <InputLabel
                       onChange={(event) => {
-                        if (!event.currentTarget.value || !equipment) return;
-                        setEquipment({
-                          ...equipment,
+                        if (!event.currentTarget.value || !pumpSchedule) return;
+                        setPumpSchedule({
+                          ...pumpSchedule,
                           startTime:
                             moment(event.currentTarget.value, 'HH:mm').hour() *
                               60 +
@@ -383,10 +383,10 @@ const EquipmentView = () => {
                         });
                       }}
                       value={
-                        equipment?.startTime &&
+                        pumpSchedule?.startTime &&
                         moment()
                           .startOf('day')
-                          .add(equipment.startTime, 'minutes')
+                          .add(pumpSchedule.startTime, 'minutes')
                           .format('HH:mm')
                       }
                       type="time"
@@ -395,9 +395,9 @@ const EquipmentView = () => {
                     />
                     <InputLabel
                       onChange={(event) => {
-                        if (!event.currentTarget.value || !equipment) return;
-                        setEquipment({
-                          ...equipment,
+                        if (!event.currentTarget.value || !pumpSchedule) return;
+                        setPumpSchedule({
+                          ...pumpSchedule,
                           endTime:
                             moment(event.currentTarget.value, 'HH:mm').hour() *
                               60 +
@@ -408,10 +408,10 @@ const EquipmentView = () => {
                         });
                       }}
                       value={
-                        equipment?.endTime &&
+                        pumpSchedule?.endTime &&
                         moment()
                           .startOf('day')
-                          .add(equipment?.endTime, 'minutes')
+                          .add(pumpSchedule?.endTime, 'minutes')
                           .format('HH:mm')
                       }
                       type="time"
@@ -420,7 +420,7 @@ const EquipmentView = () => {
                     />
                   </div>
                 )}
-                {equipment?.type === 'Pump' && !equipment?.startTime && (
+                {equipment?.type === 'Pump' && !pumpSchedule?.startTime && (
                   <div>
                     <button
                       onClick={() => setMode('schedule')}
@@ -437,10 +437,10 @@ const EquipmentView = () => {
                 <div className="inline-flex justify-between w-full">
                   <InputLabel
                     onChange={(event) => {
-                      if (!event.currentTarget.value || !equipment) return;
+                      if (!event.currentTarget.value || !pumpSchedule) return;
 
-                      setEquipment({
-                        ...equipment,
+                      setPumpSchedule({
+                        ...pumpSchedule,
                         startTime:
                           moment(event.currentTarget.value, 'HH:mm').hour() *
                             60 +
@@ -448,10 +448,10 @@ const EquipmentView = () => {
                       });
                     }}
                     value={
-                      equipment?.startTime &&
+                      pumpSchedule?.startTime &&
                       moment()
                         .startOf('day')
-                        .add(equipment.startTime, 'minutes')
+                        .add(pumpSchedule.startTime, 'minutes')
                         .format('HH:mm:ss')
                     }
                     type="time"
@@ -460,9 +460,9 @@ const EquipmentView = () => {
                   />
                   <InputLabel
                     onChange={(event) => {
-                      if (!event.currentTarget.value || !equipment) return;
-                      setEquipment({
-                        ...equipment,
+                      if (!event.currentTarget.value || !pumpSchedule) return;
+                      setPumpSchedule({
+                        ...pumpSchedule,
                         endTime:
                           moment(event.currentTarget.value, 'HH:mm').hour() *
                             60 +
@@ -470,10 +470,10 @@ const EquipmentView = () => {
                       });
                     }}
                     value={
-                      equipment?.endTime &&
+                      pumpSchedule?.endTime &&
                       moment()
                         .startOf('day')
-                        .add(equipment.endTime, 'minutes')
+                        .add(pumpSchedule.endTime, 'minutes')
                         .format('HH:mm:ss')
                     }
                     type="time"

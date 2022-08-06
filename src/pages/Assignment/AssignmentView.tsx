@@ -70,7 +70,7 @@ const AssignmentView = () => {
     }
   };
 
-  const fetchEquipments = () => {
+  const fetchEquipments = (list: UserType[]) => {
     axios
       .get('http://localhost:5000/api/Equipment', {
         headers: {
@@ -79,7 +79,7 @@ const AssignmentView = () => {
       })
       .then((response) => {
         setEquipments(response.data.result);
-        fetchCustomers();
+        fetchCustomers(list);
       })
       .catch((err) => {
         console.log(err);
@@ -112,9 +112,11 @@ const AssignmentView = () => {
         },
       })
       .then((response) => {
-        setStaffs(response.data.result);
-        setSelStaff(response.data.result[0].username);
-        fetchEquipments();
+        let staffArr = response.data.result.filter(
+          (staff: UserType) => staff.staffRole !== 'UserAdmin'
+        );
+        setStaffs(staffArr);
+        fetchEquipments(staffArr);
       })
       .catch((err) => {
         console.log(err);
@@ -131,7 +133,7 @@ const AssignmentView = () => {
     );
   };
 
-  const fetchCustomers = () => {
+  const fetchCustomers = (list: UserType[]) => {
     axios
       .get('http://localhost:5000/api/Customer', {
         headers: {
@@ -147,6 +149,11 @@ const AssignmentView = () => {
             },
           })
           .then((response) => {
+            setSelStaff(
+              list.find((staff) => staff.userId === response.data.staffId)!
+                .username
+            );
+
             setTask(response.data);
             setPrevTask(response.data);
           })
