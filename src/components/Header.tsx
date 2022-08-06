@@ -11,7 +11,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
   const { notifications } = useContext(NotificationContext);
   return (
     <header className="w-full h-[10vh] shadow-lg inline-flex items-center bg-white">
-      <span className="ml-12 text-3xl font-semibold">{title}</span>
+      <span className="ml-12 text-xl 2xl:text-3xl font-semibold">{title}</span>
       <Menu as="div" className="relative ml-auto mr-12">
         <Menu.Button as={Fragment}>
           <Bell
@@ -33,14 +33,18 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
               >
                 <div className="flex flex-col">
                   <div className="inline-flex items-end">
-                    <span className="font-semibold">{notification.type}</span>
-                    <span className="text-gray-500 text-sm ml-2 font-light">
+                    <span className="font-semibold text-sm 2xl:text-base">
+                      {notification.type}
+                    </span>
+                    <span className="text-gray-500 ml-2 font-light text-xs 2xl:text-sm">
                       {moment(notification.createdAt).format(
                         'HH:mm:ss DD/MM/YYYY'
                       )}
                     </span>
                   </div>
-                  <span className="text-sm">{notification.content}</span>
+                  <span className="text-xs 2xl:text-sm">
+                    {notification.content}
+                  </span>
                 </div>
                 <InfoOutline size="48" />
               </div>
@@ -48,7 +52,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
           ))}
           <Link
             to="/notifications"
-            className="ml-auto mr-12 mb-2 mt-auto text-gray-500 hover:text-gray-800 transition-colors text-sm"
+            className="2xl:text-sm ml-auto mr-8 2xl:mr-12 mb-2 mt-auto text-gray-500 hover:text-gray-800 transition-colors text-xs"
           >
             View More
           </Link>

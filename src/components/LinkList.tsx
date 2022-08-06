@@ -35,7 +35,7 @@ const LinkList: React.FC<LinkType> = ({ title, icon, roles, items }) => {
         <Menu>
           {({ open }) => (
             <>
-              <Menu.Button className="inline-flex w-full items-center h-12">
+              <Menu.Button className="inline-flex w-full items-center h-10 2xl:h-12">
                 {checkSublink() ? (
                   <div className="rounded-r-md h-full w-[6px] bg-gray-900">
                     &nbsp;
@@ -46,7 +46,7 @@ const LinkList: React.FC<LinkType> = ({ title, icon, roles, items }) => {
                   </div>
                 )}
                 {icon}
-                <span className="ml-8 text-xl">{title}</span>
+                <span className="ml-4 2xl:ml-8 2xl:text-xl">{title}</span>
                 <ChevronDown size="24" className="ml-auto mr-8" />
               </Menu.Button>
               <Transition
@@ -67,7 +67,10 @@ const LinkList: React.FC<LinkType> = ({ title, icon, roles, items }) => {
                     if (item.roles.includes(user.staffRole))
                       return (
                         <Menu.Item key={index}>
-                          <Link to={item.path} className="text-lg ml-8 h-10">
+                          <Link
+                            to={item.path}
+                            className="2xl:text-lg 2xl:ml-8 h-8 ml-4 text-sm 2xl:h-10"
+                          >
                             {item.label}
                           </Link>
                         </Menu.Item>

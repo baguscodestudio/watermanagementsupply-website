@@ -21,19 +21,19 @@ const NavBar = () => {
     {
       path: '/dashboard',
       label: 'Dashboard',
-      icon: <Home size="24" className="ml-8" />,
+      icon: <Home size="24" className="ml-4 2xl:ml-8" />,
     },
     {
       path: '/broadcast',
       label: 'Broadcast',
       roles: ['CustomerSupport'],
-      icon: <MegaphoneLoud size="24" className="ml-8" />,
+      icon: <MegaphoneLoud size="24" className="ml-4 2xl:ml-8" />,
     },
   ];
   const LINK_LIST = [
     {
       title: 'User',
-      icon: <User size="24" className="ml-8" />,
+      icon: <User size="24" className="ml-4 2xl:ml-8" />,
       roles: ['CustomerSupport', 'UserAdmin'],
       items: [
         {
@@ -50,7 +50,7 @@ const NavBar = () => {
     },
     {
       title: 'Assets',
-      icon: <Devices size="24" className="ml-8" />,
+      icon: <Devices size="24" className="ml-4 2xl:ml-8" />,
       roles: ['Technician'],
       items: [
         {
@@ -72,7 +72,7 @@ const NavBar = () => {
     },
     {
       title: 'Usage',
-      icon: <QueryStats size="24" className="ml-8" />,
+      icon: <QueryStats size="24" className="ml-4 2xl:ml-8" />,
       roles: ['Technician', 'CustomerSupport'],
       items: [
         {
@@ -94,7 +94,7 @@ const NavBar = () => {
     },
     {
       title: 'Customer',
-      icon: <CustomerService size="24" className="ml-8" />,
+      icon: <CustomerService size="24" className="ml-4 2xl:ml-8" />,
       roles: ['CustomerSupport'],
       items: [
         {
@@ -116,7 +116,7 @@ const NavBar = () => {
     },
     {
       title: 'Assignments',
-      icon: <User size="24" className="ml-8" />,
+      icon: <User size="24" className="ml-4 2xl:ml-8" />,
       roles: ['CustomerSupport', 'Technician'],
       items: [
         {
@@ -166,7 +166,7 @@ const NavBar = () => {
               <div key={index}>
                 <Link
                   to={path.path}
-                  className="inline-flex w-full items-center h-12"
+                  className="inline-flex w-full items-center h-10 2xl:h-12"
                 >
                   {useLocation().pathname === path.path ? (
                     <div className="rounded-r-md h-full w-[6px] bg-gray-900">
@@ -178,7 +178,9 @@ const NavBar = () => {
                     </div>
                   )}
                   {path.icon}
-                  <span className="ml-8 text-xl">{path.label}</span>
+                  <span className="ml-4 2xl:ml-8 2xl:text-xl">
+                    {path.label}
+                  </span>
                 </Link>
                 <div key={index} className="w-4/5 h-[2px] bg-gray-900 mx-auto">
                   &nbsp;
@@ -197,11 +199,16 @@ const NavBar = () => {
           />
         ))}
       </div>
-      <div className="w-4/5 mt-auto mb-20 mx-auto inline-flex">
-        <img src="/images/AvatarFill.png" className="w-12" />
-        <div className="flex flex-col ml-4">
-          <span className="text-xl">{user.username}</span>
-          <span className="text-gray-500">{user.staffRole}</span>
+      <div className="w-4/5 mt-auto mb-20 items-center mx-auto inline-flex">
+        <img
+          src="/images/AvatarFill.png"
+          className="w-8 h-8 2xl:h-12 2xl:w-12"
+        />
+        <div className="flex flex-col ml-2 2x:ml-4">
+          <span className="2xl:text-xl">{user.username}</span>
+          <span className="text-sm 2xl:text-base text-gray-500">
+            {user.staffRole}
+          </span>
         </div>
         <Menu as="div" className="relative ml-2">
           <Menu.Button>
@@ -218,12 +225,12 @@ const NavBar = () => {
           >
             <Menu.Items
               as="div"
-              className="bottom-14 origin-top-right absolute left-0 bg-gray-50 rounded-lg shadow-lg p-1 flex flex-col min-w-fit"
+              className="bottom-8 2xl:bottom-14 origin-top-right absolute left-0 bg-gray-50 rounded-lg shadow-lg p-1 flex flex-col min-w-fit"
             >
               <Menu.Item>
                 <Link
                   to="/profile"
-                  className="hover:bg-gray-300 rounded-lg px-4 py-1 transition-colors hover:text-gray-700"
+                  className="text-sm 2xl:text-base hover:bg-gray-300 rounded-lg px-4 py-1 transition-colors hover:text-gray-700"
                 >
                   Profile
                 </Link>
@@ -231,7 +238,7 @@ const NavBar = () => {
               <Menu.Item>
                 <Link
                   to="/profile/password"
-                  className="hover:bg-gray-300 rounded-lg px-4 py-1 transition-colors hover:text-gray-700 whitespace-nowrap"
+                  className="text-sm 2xl:text-base hover:bg-gray-300 rounded-lg px-4 py-1 transition-colors hover:text-gray-700 whitespace-nowrap"
                 >
                   Change Password
                 </Link>
@@ -239,7 +246,7 @@ const NavBar = () => {
               <Menu.Item>
                 <button
                   onClick={handleLogout}
-                  className="hover:bg-gray-300 rounded-lg px-4 py-1 transition-colors hover:text-gray-700 text-left"
+                  className="text-sm 2xl:text-base hover:bg-gray-300 rounded-lg px-4 py-1 transition-colors hover:text-gray-700 text-left"
                 >
                   Logout
                 </button>

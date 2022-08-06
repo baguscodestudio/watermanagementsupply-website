@@ -52,15 +52,19 @@ const EquipmentCard = ({
           equipment.isActive ? 'bg-emerald-500' : 'bg-red-500'
         }`}
       />
-      <div className="flex flex-col ml-4 mr-8 mt-1 w-2/12">
-        <span className="text-xl font-semibold">{equipment.equipmentName}</span>
-        <span className="text-gray-500">{equipment.type}</span>
+      <div className="flex flex-col ml-4 mr-4 2xl:mr-8 mt-1 w-2/12">
+        <span className="2xl:text-xl font-semibold">
+          {equipment.equipmentName}
+        </span>
+        <span className="2xl:text-base text-xs text-gray-500">
+          {equipment.type}
+        </span>
       </div>
-      <div className="bg-neutral-300 h-16 my-auto w-16 mx-4">
+      <div className="bg-neutral-300 h-16 my-auto w-16 mx-2 2xl:mx-4">
         <img src={equipment.imageUrl} className="w-full h-full" />
       </div>
       <div className="h-4/5 w-[2px] bg-gray-200 mx-4 my-auto" />
-      <div className="inline-flex h-full w-1/2 items-center justify-around text-sm">
+      <div className="inline-flex h-full w-2/3 2xl:w-1/2 items-center justify-around text-xs 2xl:text-sm">
         <div className="flex flex-col my-auto ml-4 mr-12">
           <span className="text-green-700 font-medium mb-1">
             <PriceTag3 size="20" /> ${equipment.cost}

@@ -89,7 +89,7 @@ const Equipment = () => {
       <div className="w-[85vw] h-full relative">
         <Link
           to="/equipment/insert"
-          className="absolute bottom-20 left-10 rounded-full w-12 h-12 text-white bg-green-500 hover:scale-105 hover:rotate-180 transition-all flex"
+          className="absolute bottom-10 2xl:bottom-20 left-10 rounded-full w-8 h-8 2xl:w-12 2xl:h-12 text-white bg-green-500 hover:scale-105 hover:rotate-180 transition-all flex"
         >
           <Plus size="32" className="m-auto" />
         </Link>
@@ -101,7 +101,7 @@ const Equipment = () => {
           <div className="w-full h-[4px] bg-gray-200 -z-10 mt-[2px]" />
           <form
             onSubmit={(event) => handleSearch(event)}
-            className="rounded-lg ring-1 ring-gray-500 w-full h-12 my-8 inline-flex items-center px-6"
+            className="rounded-lg ring-1 ring-gray-500 w-full h-10 2xl:h-12 my-4 2xl:my-8 inline-flex items-center px-6"
           >
             <button type="submit" className="mr-4">
               <Search size="24" />
@@ -110,7 +110,7 @@ const Equipment = () => {
               placeholder="Search for equipment name"
               onChange={(event) => setSearch(event.currentTarget.value)}
               id="search"
-              className="outline-none text-lg w-full"
+              className="outline-none 2xl:text-lg w-full"
             />
           </form>
           <div className="w-full h-[4px] bg-gray-200 -z-10 mt-[2px]" />

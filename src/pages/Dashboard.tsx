@@ -88,9 +88,9 @@ const Dashboard = () => {
               <span className="text-sm text-gray-500">
                 Chemicals under minimum quantity
               </span>
-              <table className="mt-4 border-separate border-spacing-y-2">
+              <table className="mt-2 2xl:mt-4 border-separate border-spacing-y-2">
                 <thead className="rounded-lg overflow-clip">
-                  <tr className="bg-gray-200 h-8">
+                  <tr className="bg-gray-200 h-6 2xl:h-8">
                     <th className="font-semibold">Name</th>
                     <th className="font-semibold">Min Quantity</th>
                     <th className="font-semibold">Quantity</th>
@@ -101,7 +101,7 @@ const Dashboard = () => {
                     .sort((a, b) => a.quantity - b.quantity)
                     .slice(0, 4)
                     .map((chemical, index) => (
-                      <tr className="h-8">
+                      <tr className="h-5 2xl:h-8 text-sm 2xl:text-base">
                         <td className="text-center">{chemical.chemicalName}</td>
                         <td className="text-center border-x-2">{`${chemical.minQuantity}`}</td>
                         <td className="text-center relative">
@@ -116,7 +116,7 @@ const Dashboard = () => {
               </table>
               <Link
                 to="/chemical"
-                className="ml-auto mr-12 mb-2 mt-auto text-gray-500 hover:text-gray-800 transition-colors"
+                className="text-xs 2xl:text-base ml-auto mr-8 2xl:mr-12 mb-2 mt-auto text-gray-500 hover:text-gray-800 transition-colors"
               >
                 View More
               </Link>
@@ -124,7 +124,7 @@ const Dashboard = () => {
           )}
           {user.staffRole === 'Technician' && (
             <>
-              <Paper className="col-span-4 px-6 py-4 flex flex-col">
+              <Paper className="col-span-4 2xl:row-span-1 row-span-2 px-6 py-4 flex flex-col">
                 <span className="font-semibold text-xl mb-4">
                   Notifications
                 </span>
@@ -137,23 +137,25 @@ const Dashboard = () => {
                   >
                     <div className="flex flex-col">
                       <div className="inline-flex items-end">
-                        <span className="font-semibold">
+                        <span className="font-semibold text-sm 2xl:text-base">
                           {notification.type}
                         </span>
-                        <span className="text-gray-500 text-sm ml-2 font-light">
+                        <span className="text-gray-500 text-xs 2xl:text-sm ml-2 font-light">
                           {moment(notification.createdAt).format(
                             'HH:mm:ss DD/MM/YYYY'
                           )}
                         </span>
                       </div>
-                      <span className="text-sm">{notification.content}</span>
+                      <span className="text-xs 2xl:text-sm">
+                        {notification.content}
+                      </span>
                     </div>
                     <InfoOutline size="48" />
                   </div>
                 ))}
                 <Link
                   to="/notitifcations"
-                  className="ml-auto mr-4 mb-2 mt-auto text-gray-500 hover:text-gray-800 transition-colors"
+                  className="text-xs 2xl:text-base ml-auto mr-4 mb-2 mt-auto text-gray-500 hover:text-gray-800 transition-colors"
                 >
                   View More
                 </Link>
@@ -165,19 +167,15 @@ const Dashboard = () => {
                 </span>
                 <table>
                   <thead>
-                    <tr className="border-b-2 border-gray-200 h-10">
-                      <th className="font-normal text-gray-500 text-lg">
-                        Name
-                      </th>
-                      <th className="font-normal text-gray-500 text-lg">
-                        Status
-                      </th>
+                    <tr className="border-b-2 border-gray-200 h-6 text-sm 2xl:text-lg 2xl:h-10">
+                      <th className="font-normal text-gray-500">Name</th>
+                      <th className="font-normal text-gray-500">Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {equipments.slice(0, 4).map((equipment, index) => (
                       <tr
-                        className="border-b-2 border-gray-200 h-12"
+                        className="border-b-2 border-gray-200 h-8 2xl:text-base text-sm 2xl:h-12"
                         key={index}
                       >
                         <td className="px-8">{equipment.equipmentName}</td>
