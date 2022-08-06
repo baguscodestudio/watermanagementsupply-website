@@ -11,16 +11,13 @@ import EquipmentCard from '../../components/EquipmentCard';
 import Header from '../../components/Header';
 import Pagination from '../../components/Pagination';
 
-import PumpScheduleType from '../../type/PumpSchedule';
 import EquipmentType from '../../type/Equipment';
-
-export interface extendedEquipment extends EquipmentType, PumpScheduleType {}
 
 const Equipment = () => {
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
-  const [pump, setPump] = useState<extendedEquipment[]>([]);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(0);
+  const [length, setLength] = useState(1);
 
   const fetchEquipments = () => {
     axios
@@ -28,34 +25,20 @@ const Equipment = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
+        params: {
+          page: page + 1,
+          pageSize: 4,
+        },
       })
       .then((response) => {
-        setEquipments(response.data.result);
+        setEquipments([...response.data.result]);
+        setLength(response.data.metadata.count);
       })
       .catch((err) => {
         console.log(err);
         toast.error('Error occured while getting equipments');
       });
   };
-
-  useEffect(() => {
-    equipments.map((equipment) => {
-      if (equipment.type === 'Pump') {
-        axios
-          .get(
-            `http://localhost:5000/api/PumpSchedule/${equipment.equipmentId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-              },
-            }
-          )
-          .then((response) =>
-            setPump([...pump, { ...equipment, ...response.data }])
-          );
-      }
-    });
-  }, [equipments]);
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -71,6 +54,7 @@ const Equipment = () => {
         })
         .then((response) => {
           setEquipments(response.data.result);
+          setLength(response.data.metadata.count);
         })
         .catch((err) => {
           console.log(err);
@@ -81,7 +65,7 @@ const Equipment = () => {
 
   useEffect(() => {
     fetchEquipments();
-  }, []);
+  }, [page]);
 
   return (
     <div className="w-full h-full flex">
@@ -115,15 +99,13 @@ const Equipment = () => {
           </form>
           <div className="w-full h-[4px] bg-gray-200 -z-10 mt-[2px]" />
           <div className="flex flex-col my-4 pl-4">
-            {equipments
-              .slice(page * 4, page * 4 + 4)
-              .map((equipment, index) => (
-                <EquipmentCard key={index} equipment={equipment} pump={pump} />
-              ))}
+            {equipments.map((equipment, index) => (
+              <EquipmentCard key={index} equipment={equipment} />
+            ))}
           </div>
           <Pagination
             className="ml-auto mt-auto mb-8 inline-flex items-center"
-            rows={equipments.length}
+            rows={length}
             rowsPerPage={4}
             page={page}
             setPage={setPage}

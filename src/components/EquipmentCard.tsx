@@ -9,19 +9,13 @@ import { Activity } from '@styled-icons/evaicons-solid/Activity';
 import { TimeFive } from '@styled-icons/boxicons-regular/TimeFive';
 
 import EquipmentType from '../type/Equipment';
-import { extendedEquipment } from '../pages/Equipment/Equipment';
+import { useEffect, useState } from 'react';
+import PumpScheduleType from '../type/PumpSchedule';
 
-const EquipmentCard = ({
-  equipment,
-  pump,
-}: {
-  equipment: EquipmentType;
-  pump: extendedEquipment[];
-}) => {
+const EquipmentCard = ({ equipment }: { equipment: EquipmentType }) => {
+  const [schedule, setSchedule] = useState<PumpScheduleType>();
+
   const renderSchedule = () => {
-    let schedule = pump.find(
-      (pump) => pump.equipmentId === equipment.equipmentId
-    );
     if (schedule)
       return (
         <div className="flex flex-col my-auto ml-4 mr-12">
@@ -42,6 +36,17 @@ const EquipmentCard = ({
         </div>
       );
   };
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/PumpSchedule/${equipment.equipmentId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => setSchedule(response.data));
+  }, [equipment]);
+
   return (
     <Link
       to={`/equipment/${equipment.equipmentId}`}
