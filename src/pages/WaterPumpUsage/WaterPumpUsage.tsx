@@ -389,7 +389,7 @@ const WaterPumpUsage = () => {
                   },
                   title: {
                     display: true,
-                    text: 'All Pump Usage',
+                    text: 'All Pump Usage (L)',
                   },
                 },
                 scales: {

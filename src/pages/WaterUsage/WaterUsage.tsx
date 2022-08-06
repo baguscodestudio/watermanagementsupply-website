@@ -390,7 +390,7 @@ const WaterUsage = () => {
                   },
                   title: {
                     display: true,
-                    text: 'All Customer Water Usage',
+                    text: 'All Customer Water Usage (L)',
                   },
                 },
                 scales: {

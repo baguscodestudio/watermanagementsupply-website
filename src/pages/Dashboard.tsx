@@ -154,7 +154,7 @@ const Dashboard = () => {
                   </div>
                 ))}
                 <Link
-                  to="/notitifcations"
+                  to="/notifications"
                   className="text-xs 2xl:text-base ml-auto mr-4 mb-2 mt-auto text-gray-500 hover:text-gray-800 transition-colors"
                 >
                   View More
