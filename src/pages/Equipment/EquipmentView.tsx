@@ -366,7 +366,7 @@ const EquipmentView = () => {
                     className="w-5/12 my-2"
                   />
                 </div>
-                {pumpSchedule?.startTime && (
+                {pumpSchedule?.startTime !== undefined && (
                   <div className="inline-flex justify-between w-full">
                     <InputLabel
                       onChange={(event) => {
@@ -386,7 +386,7 @@ const EquipmentView = () => {
                         pumpSchedule?.startTime &&
                         moment()
                           .startOf('day')
-                          .add(pumpSchedule.startTime, 'minutes')
+                          .add(pumpSchedule.startTime || 0, 'minutes')
                           .format('HH:mm')
                       }
                       type="time"
@@ -411,7 +411,7 @@ const EquipmentView = () => {
                         pumpSchedule?.endTime &&
                         moment()
                           .startOf('day')
-                          .add(pumpSchedule?.endTime, 'minutes')
+                          .add(pumpSchedule?.endTime || 0, 'minutes')
                           .format('HH:mm')
                       }
                       type="time"
