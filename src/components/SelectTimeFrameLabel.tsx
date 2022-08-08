@@ -18,8 +18,10 @@ const SelectTimeFrameLabel: React.FC<{
     <Listbox value={value} onChange={onChange}>
       <div className={`relative ${className}`}>
         <Listbox.Button className="px-2 py-1 border-gray-200 border-[1px] bg-gray-100 flex flex-col">
-          <span className="text-sm text-gray-500 text-left">Mode</span>
-          <div className="inline-flex items-center">
+          <span className="text-xs text-gray-500 text-left 2xl:text-sm">
+            Mode
+          </span>
+          <div className="inline-flex items-center 2xl:text-base text-sm">
             {value.label}
             <ChevronDown size="20" className="ml-4" />
           </div>
@@ -29,7 +31,7 @@ const SelectTimeFrameLabel: React.FC<{
             <Listbox.Option key={index} as={Fragment} value={data}>
               {({ selected }) => (
                 <div
-                  className={`px-4 py-1 rounded-lg transition-colors hover:bg-gray-500 hover:text-white hover:cursor-pointer
+                  className={`px-4 py-1 rounded-lg transition-colors hover:bg-gray-500 hover:text-white hover:cursor-pointer 2xl:text-base text-sm
                             ${selected && 'bg-gray-500 text-white'}`}
                 >
                   {data.label}

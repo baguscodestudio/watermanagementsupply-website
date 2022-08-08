@@ -16,11 +16,11 @@ const SelectLabel: React.FC<{
         <Listbox.Button
           className={`w-full px-2 py-1 border-gray-200 border-[1px] bg-gray-100 flex flex-col`}
         >
-          <span className="text-sm text-gray-500 text-left">
+          <span className="text-xs text-gray-500 text-left 2xl:text-sm">
             {title}
             {required && <span className="text-red-500">*</span>}
           </span>
-          <div className="inline-flex items-center">
+          <div className="inline-flex items-center 2xl:text-base text-sm">
             {value}
             <ChevronDown size="20" className="ml-4" />
           </div>
@@ -30,7 +30,7 @@ const SelectLabel: React.FC<{
             <Listbox.Option key={index} as={Fragment} value={data}>
               {({ selected }) => (
                 <div
-                  className={`px-4 py-1 rounded-lg transition-colors hover:bg-gray-500 hover:text-white hover:cursor-pointer
+                  className={`px-4 py-1 rounded-lg transition-colors hover:bg-gray-500 hover:text-white hover:cursor-pointer 2xl:text-base text-sm
                             ${selected && 'bg-gray-500 text-white'}`}
                 >
                   {data}

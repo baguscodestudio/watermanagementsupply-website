@@ -23,7 +23,7 @@ const TextAreaLabel: React.FC<{
     <div
       className={`flex flex-col px-2 py-1 bg-gray-100 border-[1px] border-gray-200 ${className}`}
     >
-      <span className="text-sm text-gray-500">
+      <span className="text-xs 2xl:text-sm text-gray-500">
         {label}
         {required && <span className="text-red-500">*</span>}
       </span>
@@ -31,7 +31,7 @@ const TextAreaLabel: React.FC<{
         disabled={disabled}
         rows={rows ? rows : 5}
         cols={cols ? cols : 50}
-        className="bg-transparent outline-none"
+        className="bg-transparent outline-none 2xl:text-base text-sm"
         value={value}
         onChange={onChange}
         required={required}

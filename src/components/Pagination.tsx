@@ -53,17 +53,17 @@ const Pagination: React.FC<{
     }
   }
   return (
-    <div id="pagination" className={`${className}`}>
+    <div id="pagination" className={`${className} inline-flex items-center`}>
       <button
-        className="hover:text-gray-500 transition-all"
+        className="hover:text-gray-500 transition-all w-4 2xl:w-6"
         onClick={() => leftPage()}
       >
-        <ChevronLeft size="24" />
+        <ChevronLeft />
       </button>
       {pageNumbers.map((number, index) => (
         <button
           key={index}
-          className={`text-lg w-8 h-8 hover:bg-sky-500 hover:text-white transition-colors rounded-lg ${
+          className={`text-base w-6 h-6 2xl:text-lg 2xl:w-8 2xl:h-8 hover:bg-sky-500 hover:text-white transition-colors rounded-lg ${
             page === number - 1 && 'bg-sky-500 text-white'
           }`}
           onClick={() => setPage(number - 1)}
@@ -72,10 +72,10 @@ const Pagination: React.FC<{
         </button>
       ))}
       <button
-        className="hover:text-gray-500 transition-all"
+        className="hover:text-gray-500 transition-all w-4 2xl:w-6"
         onClick={() => rightPage()}
       >
-        <ChevronRight size="24" />
+        <ChevronRight />
       </button>
     </div>
   );

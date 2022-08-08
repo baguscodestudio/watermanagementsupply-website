@@ -451,7 +451,7 @@ const Assignment = () => {
                             onClick={() =>
                               navigate(`/assignment/${assignment.taskId}`)
                             }
-                            className="h-12 border-b-2 border-gray-200 hover:text-gray-500 hover:cursor-pointer group border-collapse"
+                            className="text-sm 2xl:text-base h-8 2xl:h-12 border-b-2 border-gray-200 hover:text-gray-500 hover:cursor-pointer group border-collapse"
                           >
                             <td className="">
                               <div className="px-4 py-2 group-hover:bg-gray-200 rounded-l-lg truncate">
