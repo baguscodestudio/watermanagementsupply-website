@@ -80,7 +80,7 @@ const Equipment = () => {
         <Header title="Assets" />
         <div className="flex flex-col py-10 px-12 h-[90vh]">
           <div className="underline underline-offset-8 text-2xl font-medium decoration-sky-500 decoration-[6px]">
-            Equipments
+            Equipments: {length} found
           </div>
           <div className="w-full h-[4px] bg-gray-200 -z-10 mt-[2px]" />
           <form
