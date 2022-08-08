@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
-import { NotificationContext } from '../App';
+import { NotificationContext, UserContext } from '../App';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
 import Paper from '../components/Paper';
@@ -9,11 +9,14 @@ import Pagination from '../components/Pagination';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Popover } from '@headlessui/react';
+import { useNavigate } from 'react-router-dom';
 
 const Notifications = () => {
   const { notifications, setNotifications } = useContext(NotificationContext);
+  const { user } = useContext(UserContext);
   const [page, setPage] = useState(0);
   const [length, setLength] = useState(1);
+  const navigate = useNavigate();
 
   const fetchNotifications = () => {
     axios
@@ -37,7 +40,12 @@ const Notifications = () => {
   };
 
   useEffect(() => {
-    fetchNotifications();
+    if (user.staffRole === 'Technician') {
+      fetchNotifications();
+    } else {
+      toast.error('You do not have access to notifications!');
+      navigate('/dashboard');
+    }
   }, [page]);
 
   const handleRead = (read: boolean, id: string) => {
