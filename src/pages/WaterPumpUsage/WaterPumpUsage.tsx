@@ -162,7 +162,6 @@ const WaterPumpUsage = () => {
     let set = dataValue[key];
     if (mode.unit === 'day') {
       let total = 0;
-      let count = 0;
       let currentDate: string;
       let calculated_data: { x: string; y: number }[] = [];
       set.data.map((data: { x: string; y: number }) => {
@@ -173,27 +172,23 @@ const WaterPumpUsage = () => {
           if (currentDate) {
             calculated_data.push({
               x: currentDate,
-              y: total / count,
+              y: total,
             });
           }
           currentDate = moment(data.x).format('YYYY-MM-DD');
           total = 0;
-          count = 0;
-          count++;
           total += data.y;
         } else if (currentDate === moment(data.x).format('YYYY-MM-DD')) {
           total += data.y;
-          count++;
         }
       });
       calculated_data.push({
         x: currentDate!,
-        y: total / count,
+        y: total,
       });
       set.data = calculated_data;
     } else if (mode.unit === 'month') {
       let total = 0;
-      let count = 0;
       let currentDate: string;
       let calculated_data: { x: string; y: number }[] = [];
       set.data.map((data: { x: string; y: number }) => {
@@ -201,27 +196,23 @@ const WaterPumpUsage = () => {
           if (currentDate) {
             calculated_data.push({
               x: currentDate,
-              y: total / count,
+              y: total,
             });
           }
           currentDate = moment(data.x).format('YYYY-MM');
           total = 0;
-          count = 0;
-          count++;
           total += data.y;
         } else if (currentDate === moment(data.x).format('YYYY-MM')) {
           total += data.y;
-          count++;
         }
       });
       calculated_data.push({
         x: currentDate!,
-        y: total / count,
+        y: total,
       });
       set.data = calculated_data;
     } else if (mode.unit === 'hour') {
       let total = 0;
-      let count = 0;
       let currentDate: string;
       let calculated_data: { x: string; y: number }[] = [];
       set.data.map((data: { x: string; y: number }) => {
@@ -232,27 +223,23 @@ const WaterPumpUsage = () => {
           if (currentDate) {
             calculated_data.push({
               x: currentDate,
-              y: total / count,
+              y: total,
             });
           }
           currentDate = moment(data.x).format('YYYY-MM-DD HH');
           total = 0;
-          count = 0;
-          count++;
           total += data.y;
         } else if (currentDate === moment(data.x).format('YYYY-MM-DD HH')) {
           total += data.y;
-          count++;
         }
       });
       calculated_data.push({
         x: currentDate!,
-        y: total / count,
+        y: total,
       });
       set.data = calculated_data;
     } else if (mode.unit === 'week') {
       let total = 0;
-      let count = 0;
       let currentDate: string;
       let calculated_data: { x: string; y: number }[] = [];
       set.data.map((data: { x: string; y: number }) => {
@@ -263,22 +250,19 @@ const WaterPumpUsage = () => {
           if (currentDate) {
             calculated_data.push({
               x: moment(currentDate).startOf('week').format('YYYY-MM-DD'),
-              y: total / count,
+              y: total,
             });
           }
           currentDate = moment(data.x).format('YYYY-MM-DD');
           total = 0;
-          count = 0;
-          count++;
           total += data.y;
         } else if (moment(currentDate).week() === moment(data.x).week()) {
           total += data.y;
-          count++;
         }
       });
       calculated_data.push({
         x: moment(currentDate!).startOf('week').format('YYYY-MM-DD'),
-        y: total / count,
+        y: total,
       });
       set.data = calculated_data;
     }
