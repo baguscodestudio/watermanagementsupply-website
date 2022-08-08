@@ -46,6 +46,26 @@ const EquipmentView = () => {
       });
   };
 
+  const handleDeleteSchedule = () => {
+    axios
+      .delete(
+        `http://localhost:5000/api/PumpSchedule/${equipment?.equipmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast('Successfully deleted Equipment schedule');
+        navigate('/equipment');
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('Error while deleting schedule');
+      });
+  };
+
   const handleDelete = (id: string) => {
     axios
       .delete(`http://localhost:5000/api/Equipment/${id}`, {
@@ -54,6 +74,11 @@ const EquipmentView = () => {
         },
       })
       .then((response) => {
+        axios.delete(`http://localhost:5000/api/PumpSchedule/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        });
         toast('Successfully deleted Equipment');
         navigate('/equipment');
       })
@@ -366,61 +391,79 @@ const EquipmentView = () => {
                     className="w-5/12 my-2"
                   />
                 </div>
-                {pumpSchedule?.startTime !== undefined && (
-                  <div className="inline-flex justify-between w-full">
-                    <InputLabel
-                      onChange={(event) => {
-                        if (!event.currentTarget.value || !pumpSchedule) return;
-                        setPumpSchedule({
-                          ...pumpSchedule,
-                          startTime:
-                            moment(event.currentTarget.value, 'HH:mm').hour() *
-                              60 +
-                            moment(
-                              event.currentTarget.value,
-                              'HH:mm'
-                            ).minutes(),
-                        });
-                      }}
-                      value={
-                        pumpSchedule?.startTime &&
-                        moment()
-                          .startOf('day')
-                          .add(pumpSchedule.startTime || 0, 'minutes')
-                          .format('HH:mm')
-                      }
-                      type="time"
-                      label="Start Time"
-                      className="w-5/12 my-2"
-                    />
-                    <InputLabel
-                      onChange={(event) => {
-                        if (!event.currentTarget.value || !pumpSchedule) return;
-                        setPumpSchedule({
-                          ...pumpSchedule,
-                          endTime:
-                            moment(event.currentTarget.value, 'HH:mm').hour() *
-                              60 +
-                            moment(
-                              event.currentTarget.value,
-                              'HH:mm'
-                            ).minutes(),
-                        });
-                      }}
-                      value={
-                        pumpSchedule?.endTime &&
-                        moment()
-                          .startOf('day')
-                          .add(pumpSchedule?.endTime || 0, 'minutes')
-                          .format('HH:mm')
-                      }
-                      type="time"
-                      label="End Time"
-                      className="w-5/12 my-2"
-                    />
-                  </div>
-                )}
-                {equipment?.type === 'Pump' && !pumpSchedule?.startTime && (
+                {pumpSchedule?.startTime !== undefined ? (
+                  <>
+                    <div className="inline-flex justify-between w-full">
+                      <InputLabel
+                        onChange={(event) => {
+                          if (!event.currentTarget.value || !pumpSchedule)
+                            return;
+                          setPumpSchedule({
+                            ...pumpSchedule,
+                            startTime:
+                              moment(
+                                event.currentTarget.value,
+                                'HH:mm'
+                              ).hour() *
+                                60 +
+                              moment(
+                                event.currentTarget.value,
+                                'HH:mm'
+                              ).minutes(),
+                          });
+                        }}
+                        value={
+                          pumpSchedule?.startTime &&
+                          moment()
+                            .startOf('day')
+                            .add(pumpSchedule.startTime || 0, 'minutes')
+                            .format('HH:mm')
+                        }
+                        type="time"
+                        label="Start Time"
+                        className="w-5/12 my-2"
+                      />
+                      <InputLabel
+                        onChange={(event) => {
+                          if (!event.currentTarget.value || !pumpSchedule)
+                            return;
+                          setPumpSchedule({
+                            ...pumpSchedule,
+                            endTime:
+                              moment(
+                                event.currentTarget.value,
+                                'HH:mm'
+                              ).hour() *
+                                60 +
+                              moment(
+                                event.currentTarget.value,
+                                'HH:mm'
+                              ).minutes(),
+                          });
+                        }}
+                        value={
+                          pumpSchedule?.endTime &&
+                          moment()
+                            .startOf('day')
+                            .add(pumpSchedule?.endTime || 0, 'minutes')
+                            .format('HH:mm')
+                        }
+                        type="time"
+                        label="End Time"
+                        className="w-5/12 my-2"
+                      />
+                    </div>
+                    <div>
+                      <button
+                        onClick={() => handleDeleteSchedule()}
+                        type="button"
+                        className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-red-500 font-medium w-[45%]"
+                      >
+                        Delete Schedule
+                      </button>
+                    </div>
+                  </>
+                ) : (
                   <div>
                     <button
                       onClick={() => setMode('schedule')}
