@@ -375,8 +375,8 @@ const AssignmentSelf = () => {
                       Task Name
                     </th>
                     <th className="font-normal px-4 w-2/12">Staff Assigned</th>
-                    <th className="font-normal px-4 w-1/12">Customer</th>
                     <th className="font-normal px-4 w-1/12">Equipment</th>
+                    <th className="font-normal px-4 w-1/12">Customer</th>
                     <th className="font-normal px-4 w-2/12">Deadline</th>
                     <th className="font-normal px-4 w-2/12">Finished</th>
                   </tr>
