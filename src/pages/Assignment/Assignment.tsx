@@ -25,9 +25,9 @@ const Assignment = () => {
   const [equipments, setEquipments] = useState<EquipmentType[]>([]);
   const [customers, setCustomers] = useState<CustomerType[]>([]);
   const [staffs, setStaffs] = useState<UserType[]>([]);
-  const [sel, setSel] = useState<string[]>([]);
-  const [selEq, setSelEq] = useState<string[]>([]);
-  const [selCust, setSelCust] = useState<string[]>([]);
+  const [sel, setSel] = useState<string>();
+  const [selEq, setSelEq] = useState<string>();
+  const [selCust, setSelCust] = useState<string>();
   const [page, setPage] = useState(0);
   const [pageCust, setPageCust] = useState(0);
   const [pageEq, setPageEq] = useState(0);
@@ -54,53 +54,74 @@ const Assignment = () => {
   };
 
   const addSelected = (staff: UserType) => {
-    if (sel.includes(staff.userId)) {
-      let tempArr = [...sel];
-      tempArr = tempArr.filter((id) => id !== staff.userId);
-      setSel(tempArr);
-    } else if (sel.length < 5) {
-      let tempArr = [...sel];
-      tempArr.push(staff.userId);
-      setSel(tempArr);
+    if (sel == staff.userId) {
+      setSel('');
+      fetchAssignments();
     } else {
-      let tempArr = [...sel];
-      tempArr.shift();
-      tempArr.push(staff.userId);
-      setSel(tempArr);
+      setSel(staff.userId);
+      axios
+        .get(`http://localhost:5000/api/TaskAssignment/Staff/${staff.userId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        })
+        .then((response) => setAssignments(response.data.result))
+        .catch((err) => {
+          console.log(err);
+          toast.error(
+            'An error occured while fetching assignments filtered by staff'
+          );
+        });
     }
   };
 
   const addSelectedEquipment = (eq: EquipmentType) => {
-    if (selEq.includes(eq.equipmentId)) {
-      let tempArr = [...selEq];
-      tempArr = tempArr.filter((id) => id !== eq.equipmentId);
-      setSelEq(tempArr);
-    } else if (selEq.length < 5) {
-      let tempArr = [...selEq];
-      tempArr.push(eq.equipmentId);
-      setSelEq(tempArr);
+    if (selEq == eq.equipmentId) {
+      setSelEq('');
+      fetchAssignments();
     } else {
-      let tempArr = [...selEq];
-      tempArr.shift();
-      tempArr.push(eq.equipmentId);
-      setSelEq(tempArr);
+      setSelEq(eq.equipmentId);
+      axios
+        .get(
+          `http://localhost:5000/api/TaskAssignment/Equipment/${eq.equipmentId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+          }
+        )
+        .then((response) => setAssignments(response.data.result))
+        .catch((err) => {
+          console.log(err);
+          toast.error(
+            'An error occured while fetching assignments filtered by equipment'
+          );
+        });
     }
   };
 
   const addSelectedCustomer = (cust: CustomerType) => {
-    if (selCust.includes(cust.userId)) {
-      let tempArr = [...selCust];
-      tempArr = tempArr.filter((id) => id !== cust.userId);
-      setSelCust(tempArr);
-    } else if (selCust.length < 5) {
-      let tempArr = [...selCust];
-      tempArr.push(cust.userId);
-      setSelCust(tempArr);
+    if (selCust == cust.userId) {
+      setSelCust('');
+      fetchAssignments();
     } else {
-      let tempArr = [...selCust];
-      tempArr.shift();
-      tempArr.push(cust.userId);
-      setSelCust(tempArr);
+      setSelCust(cust.userId);
+      axios
+        .get(
+          `http://localhost:5000/api/TaskAssignment/Customer/${cust.userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+          }
+        )
+        .then((response) => setAssignments(response.data.result))
+        .catch((err) => {
+          console.log(err);
+          toast.error(
+            'An error occured while fetching assignments filtered by customer'
+          );
+        });
     }
   };
 
@@ -250,7 +271,7 @@ const Assignment = () => {
                   <td className="py-1">
                     <div
                       className={`${
-                        sel.includes(staff.userId) &&
+                        sel === staff.userId &&
                         'bg-gray-200 text-gray-500 rounded-lg'
                       }`}
                     >
@@ -305,7 +326,7 @@ const Assignment = () => {
                     <td className="py-1">
                       <div
                         className={`${
-                          selCust.includes(customer.userId) &&
+                          selCust === customer.userId &&
                           'bg-gray-200 text-gray-500 rounded-lg'
                         }`}
                       >
@@ -360,7 +381,7 @@ const Assignment = () => {
                     <td className="py-1">
                       <div
                         className={`${
-                          selEq.includes(equipment.equipmentId) &&
+                          selEq === equipment.equipmentId &&
                           'bg-gray-200 text-gray-500 rounded-lg'
                         }`}
                       >
@@ -384,9 +405,9 @@ const Assignment = () => {
   };
 
   useEffect(() => {
-    setSel([]);
-    setSelCust([]);
-    setSelEq([]);
+    setSel('');
+    setSelCust('');
+    setSelEq('');
   }, [filter]);
 
   useEffect(() => {
@@ -437,75 +458,64 @@ const Assignment = () => {
                 <tbody>
                   {assignments
                     .slice(page * 9, page * 9 + 9)
-                    .map((assignment, index) => {
-                      if (
-                        (selCust.length === 0 ||
-                          selCust.includes(assignment.customerId)) &&
-                        (selEq.length === 0 ||
-                          selEq.includes(assignment.equipmentId)) &&
-                        (sel.length === 0 || sel.includes(assignment.staffId))
-                      ) {
-                        return (
-                          <tr
-                            key={index}
-                            onClick={() =>
-                              navigate(`/assignment/${assignment.taskId}`)
+                    .map((assignment, index) => (
+                      <tr
+                        key={index}
+                        onClick={() =>
+                          navigate(`/assignment/${assignment.taskId}`)
+                        }
+                        className="text-sm 2xl:text-base h-8 2xl:h-12 border-b-2 border-gray-200 hover:text-gray-500 hover:cursor-pointer group border-collapse"
+                      >
+                        <td className="">
+                          <div className="px-4 py-2 group-hover:bg-gray-200 rounded-l-lg truncate">
+                            {assignment.taskName}
+                          </div>
+                        </td>
+                        <td className="text-center">
+                          <div className="px-4 py-2 group-hover:bg-gray-200">
+                            {
+                              staffs.find(
+                                (staff) => staff.userId === assignment.staffId
+                              )?.username
                             }
-                            className="text-sm 2xl:text-base h-8 2xl:h-12 border-b-2 border-gray-200 hover:text-gray-500 hover:cursor-pointer group border-collapse"
-                          >
-                            <td className="">
-                              <div className="px-4 py-2 group-hover:bg-gray-200 rounded-l-lg truncate">
-                                {assignment.taskName}
-                              </div>
-                            </td>
-                            <td className="text-center">
-                              <div className="px-4 py-2 group-hover:bg-gray-200">
-                                {
-                                  staffs.find(
-                                    (staff) =>
-                                      staff.userId === assignment.staffId
-                                  )?.username
-                                }
-                              </div>
-                            </td>
-                            <td className="text-center">
-                              <div className="px-4 py-2 group-hover:bg-gray-200">
-                                {assignment.equipmentId &&
-                                  equipments.find(
-                                    (eq) =>
-                                      eq.equipmentId === assignment.equipmentId
-                                  )?.equipmentName}
-                              </div>
-                            </td>
-                            <td className="text-center">
-                              <div className="px-4 py-2 group-hover:bg-gray-200">
-                                {assignment.customerId &&
-                                  customers.find(
-                                    (customer) =>
-                                      customer.userId === assignment.customerId
-                                  )?.username}
-                              </div>
-                            </td>
-                            <td className="text-center">
-                              <div className="px-4 py-2 group-hover:bg-gray-200">
-                                {assignment.deadline &&
-                                  moment(assignment.deadline).format(
-                                    'hh:mm:ss A DD/MM/YYYY'
-                                  )}
-                              </div>
-                            </td>
-                            <td className="text-center">
-                              <div className="px-4 py-2 group-hover:bg-gray-200">
-                                {assignment.finishedAt &&
-                                  moment(assignment.finishedAt).format(
-                                    'hh:mm:ss A DD/MM/YYYY'
-                                  )}
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      }
-                    })}
+                          </div>
+                        </td>
+                        <td className="text-center">
+                          <div className="px-4 py-2 group-hover:bg-gray-200">
+                            {assignment.equipmentId &&
+                              equipments.find(
+                                (eq) =>
+                                  eq.equipmentId === assignment.equipmentId
+                              )?.equipmentName}
+                          </div>
+                        </td>
+                        <td className="text-center">
+                          <div className="px-4 py-2 group-hover:bg-gray-200">
+                            {assignment.customerId &&
+                              customers.find(
+                                (customer) =>
+                                  customer.userId === assignment.customerId
+                              )?.username}
+                          </div>
+                        </td>
+                        <td className="text-center">
+                          <div className="px-4 py-2 group-hover:bg-gray-200">
+                            {assignment.deadline &&
+                              moment(assignment.deadline).format(
+                                'hh:mm:ss A DD/MM/YYYY'
+                              )}
+                          </div>
+                        </td>
+                        <td className="text-center">
+                          <div className="px-4 py-2 group-hover:bg-gray-200">
+                            {assignment.finishedAt &&
+                              moment(assignment.finishedAt).format(
+                                'hh:mm:ss A DD/MM/YYYY'
+                              )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
               <Pagination
