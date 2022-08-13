@@ -72,7 +72,7 @@ const AssignmentView = () => {
 
   const fetchEquipments = (list: UserType[]) => {
     axios
-      .get('http://localhost:5000/api/Equipment', {
+      .get(`${import.meta.env.VITE_REST_URL}/Equipment`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -89,7 +89,7 @@ const AssignmentView = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:5000/api/TaskAssignment/${params.id}`, {
+      .delete(`${import.meta.env.VITE_REST_URL}/TaskAssignment/${params.id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -106,7 +106,7 @@ const AssignmentView = () => {
 
   const fetchStaffs = () => {
     axios
-      .get('http://localhost:5000/api/Staff', {
+      .get(`${import.meta.env.VITE_REST_URL}/Staff`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -135,7 +135,7 @@ const AssignmentView = () => {
 
   const fetchCustomers = (list: UserType[]) => {
     axios
-      .get('http://localhost:5000/api/Customer', {
+      .get(`${import.meta.env.VITE_REST_URL}/Customer`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -143,7 +143,7 @@ const AssignmentView = () => {
       .then((response) => {
         setCustomers(response.data.result);
         axios
-          .get(`http://localhost:5000/api/TaskAssignment/${params.id}`, {
+          .get(`${import.meta.env.VITE_REST_URL}/TaskAssignment/${params.id}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             },
@@ -173,7 +173,7 @@ const AssignmentView = () => {
     if (selStaff !== '') {
       axios
         .put(
-          `http://localhost:5000/api/TaskAssignment/`,
+          `${import.meta.env.VITE_REST_URL}/TaskAssignment/`,
           {
             ...task,
             managerId: user.userId,

@@ -20,7 +20,7 @@ const Notifications = () => {
 
   const fetchNotifications = () => {
     axios
-      .get('http://localhost:5000/api/Notification', {
+      .get(`${import.meta.env.VITE_REST_URL}/Notification`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -51,7 +51,7 @@ const Notifications = () => {
   const handleRead = (read: boolean, id: string) => {
     axios
       .put(
-        `http://localhost:5000/api/Notification/${id}/${read}`,
+        `${import.meta.env.VITE_REST_URL}/Notification/${id}/${read}`,
         {},
         {
           headers: {
@@ -70,7 +70,7 @@ const Notifications = () => {
 
   const handleDelete = (id: string) => {
     axios
-      .delete(`http://localhost:5000/api/Notification/${id}`, {
+      .delete(`${import.meta.env.VITE_REST_URL}/Notification/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

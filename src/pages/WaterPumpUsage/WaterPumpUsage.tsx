@@ -66,7 +66,7 @@ const WaterPumpUsage = () => {
     event.preventDefault();
     if (search !== '') {
       axios
-        .get('http://localhost:5000/api/Equipment/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Equipment/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -115,7 +115,7 @@ const WaterPumpUsage = () => {
 
   const fetchEquipments = () => {
     axios
-      .get('http://localhost:5000/api/Equipment', {
+      .get(`${import.meta.env.VITE_REST_URL}/Equipment`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -285,7 +285,7 @@ const WaterPumpUsage = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/WaterPumpUsage', {
+      .get(`${import.meta.env.VITE_REST_URL}/WaterPumpUsage`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

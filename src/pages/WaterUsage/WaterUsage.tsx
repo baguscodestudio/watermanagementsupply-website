@@ -64,7 +64,7 @@ const WaterUsage = () => {
     event.preventDefault();
     if (search !== '') {
       axios
-        .get('http://localhost:5000/api/Customer/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Customer/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -101,7 +101,7 @@ const WaterUsage = () => {
 
   const fetchCustomers = () => {
     axios
-      .get('http://localhost:5000/api/Customer', {
+      .get(`${import.meta.env.VITE_REST_URL}/Customer`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -286,7 +286,7 @@ const WaterUsage = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/WaterUsage', {
+      .get(`${import.meta.env.VITE_REST_URL}/WaterUsage`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

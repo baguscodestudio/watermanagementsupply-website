@@ -29,7 +29,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (user.staffRole === 'Technician') {
       axios
-        .get('http://localhost:5000/api/Chemical/BelowMinQuantity', {
+        .get(`${import.meta.env.VITE_REST_URL}/Chemical/BelowMinQuantity`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -46,7 +46,7 @@ const Dashboard = () => {
           toast.error('Error while fetching chemicals');
         });
       axios
-        .get('http://localhost:5000/api/PumpSchedule', {
+        .get(`${import.meta.env.VITE_REST_URL}/PumpSchedule`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -57,7 +57,7 @@ const Dashboard = () => {
           toast.error('Error while creating');
         });
       axios
-        .get('http://localhost:5000/api/Equipment', {
+        .get(`${import.meta.env.VITE_REST_URL}/Equipment`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },

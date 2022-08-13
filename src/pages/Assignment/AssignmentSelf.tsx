@@ -41,7 +41,7 @@ const AssignmentSelf = () => {
 
   const fetchAssignments = () => {
     axios
-      .get('http://localhost:5000/api/TaskAssignment/MyInfo', {
+      .get(`${import.meta.env.VITE_REST_URL}/TaskAssignment/MyInfo`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -108,7 +108,7 @@ const AssignmentSelf = () => {
     event.preventDefault();
     if (search !== '') {
       axios
-        .get('http://localhost:5000/api/Staff/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Staff/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -126,7 +126,7 @@ const AssignmentSelf = () => {
 
   const fetchStaffs = () => {
     axios
-      .get('http://localhost:5000/api/Staff', {
+      .get(`${import.meta.env.VITE_REST_URL}/Staff`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -140,7 +140,7 @@ const AssignmentSelf = () => {
 
   const fetchEquipments = () => {
     axios
-      .get('http://localhost:5000/api/Equipment', {
+      .get(`${import.meta.env.VITE_REST_URL}/Equipment`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -158,7 +158,7 @@ const AssignmentSelf = () => {
     event.preventDefault();
     if (searchCust !== '') {
       axios
-        .get('http://localhost:5000/api/Customer/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Customer/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -178,7 +178,7 @@ const AssignmentSelf = () => {
 
   const fetchCustomers = () => {
     axios
-      .get('http://localhost:5000/api/Customer', {
+      .get(`${import.meta.env.VITE_REST_URL}/Customer`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -197,7 +197,7 @@ const AssignmentSelf = () => {
     if (user.staffRole === 'Technician') {
       if (searchEq !== '') {
         axios
-          .get('http://localhost:5000/api/Equipment/Search', {
+          .get(`${import.meta.env.VITE_REST_URL}/Equipment/Search`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             },

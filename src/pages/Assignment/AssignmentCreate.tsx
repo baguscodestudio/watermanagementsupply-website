@@ -73,7 +73,7 @@ const AssignmentCreate = () => {
 
   const fetchEquipments = () => {
     axios
-      .get('http://localhost:5000/api/Equipment', {
+      .get(`${import.meta.env.VITE_REST_URL}/Equipment`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -89,7 +89,7 @@ const AssignmentCreate = () => {
 
   const fetchStaffs = () => {
     axios
-      .get('http://localhost:5000/api/Staff', {
+      .get(`${import.meta.env.VITE_REST_URL}/Staff`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -108,7 +108,7 @@ const AssignmentCreate = () => {
 
   const fetchCustomers = () => {
     axios
-      .get('http://localhost:5000/api/Customer', {
+      .get(`${import.meta.env.VITE_REST_URL}/Customer`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -127,7 +127,7 @@ const AssignmentCreate = () => {
     if (selStaff !== '') {
       axios
         .post(
-          'http://localhost:5000/api/TaskAssignment',
+          `${import.meta.env.VITE_REST_URL}/TaskAssignment`,
           {
             ...task,
             managerId: user.userId,

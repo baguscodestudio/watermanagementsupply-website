@@ -24,7 +24,7 @@ const EquipmentView = () => {
   const createSchedule = () => {
     axios
       .post(
-        'http://localhost:5000/api/PumpSchedule',
+        `${import.meta.env.VITE_REST_URL}/PumpSchedule`,
         {
           equipmentId: equipment?.equipmentId,
           startTime: pumpSchedule?.startTime,
@@ -49,7 +49,9 @@ const EquipmentView = () => {
   const handleDeleteSchedule = () => {
     axios
       .delete(
-        `http://localhost:5000/api/PumpSchedule/${equipment?.equipmentId}`,
+        `${import.meta.env.VITE_REST_URL}/PumpSchedule/${
+          equipment?.equipmentId
+        }`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -68,13 +70,13 @@ const EquipmentView = () => {
 
   const handleDelete = (id: string) => {
     axios
-      .delete(`http://localhost:5000/api/Equipment/${id}`, {
+      .delete(`${import.meta.env.VITE_REST_URL}/Equipment/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
       .then((response) => {
-        axios.delete(`http://localhost:5000/api/PumpSchedule/${id}`, {
+        axios.delete(`${import.meta.env.VITE_REST_URL}/PumpSchedule/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -90,7 +92,7 @@ const EquipmentView = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/Equipment/EquipmentId/${id}`, {
+      .get(`${import.meta.env.VITE_REST_URL}/Equipment/EquipmentId/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -98,7 +100,7 @@ const EquipmentView = () => {
       .then((response) => {
         if (response.data.result[0].type === 'Pump') {
           axios
-            .get(`http://localhost:5000/api/PumpSchedule/${id}`, {
+            .get(`${import.meta.env.VITE_REST_URL}/PumpSchedule/${id}`, {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
               },
@@ -138,7 +140,7 @@ const EquipmentView = () => {
 
     axios
       .put(
-        'http://localhost:5000/api/Equipment',
+        `${import.meta.env.VITE_REST_URL}/Equipment`,
         {
           equipment: equipment,
           imageFile: selectedImage,
@@ -154,7 +156,7 @@ const EquipmentView = () => {
         if (pumpSchedule?.startTime) {
           axios
             .post(
-              'http://localhost:5000/api/PumpSchedule',
+              `${import.meta.env.VITE_REST_URL}/PumpSchedule`,
               {
                 equipmentId: equipment?.equipmentId,
                 startTime: pumpSchedule?.startTime,

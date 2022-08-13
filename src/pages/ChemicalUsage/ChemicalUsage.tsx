@@ -66,7 +66,7 @@ const ChemicalUsage = () => {
     event.preventDefault();
     if (searchChem !== '') {
       axios
-        .get('http://localhost:5000/api/Chemical/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Chemical/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -88,7 +88,7 @@ const ChemicalUsage = () => {
     event.preventDefault();
     if (search !== '') {
       axios
-        .get('http://localhost:5000/api/Equipment/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Equipment/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -155,7 +155,7 @@ const ChemicalUsage = () => {
 
   const fetchEquipments = () => {
     axios
-      .get('http://localhost:5000/api/Equipment', {
+      .get(`${import.meta.env.VITE_REST_URL}/Equipment`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -183,7 +183,7 @@ const ChemicalUsage = () => {
 
   const fetchChemicals = () => {
     axios
-      .get('http://localhost:5000/api/Chemical', {
+      .get(`${import.meta.env.VITE_REST_URL}/Chemical`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -355,7 +355,7 @@ const ChemicalUsage = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/ChemicalUsage', {
+      .get(`${import.meta.env.VITE_REST_URL}/ChemicalUsage`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

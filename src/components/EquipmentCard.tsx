@@ -39,11 +39,16 @@ const EquipmentCard = ({ equipment }: { equipment: EquipmentType }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/PumpSchedule/${equipment.equipmentId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
+      .get(
+        `${import.meta.env.VITE_REST_URL}/PumpSchedule/${
+          equipment.equipmentId
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      )
       .then((response) => setSchedule(response.data));
   }, [equipment]);
 

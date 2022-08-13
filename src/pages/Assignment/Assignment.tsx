@@ -41,7 +41,7 @@ const Assignment = () => {
 
   const fetchAssignments = () => {
     axios
-      .get('http://localhost:5000/api/TaskAssignment', {
+      .get(`${import.meta.env.VITE_REST_URL}/TaskAssignment`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -60,11 +60,16 @@ const Assignment = () => {
     } else {
       setSel(staff.userId);
       axios
-        .get(`http://localhost:5000/api/TaskAssignment/Staff/${staff.userId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          },
-        })
+        .get(
+          `${import.meta.env.VITE_REST_URL}/TaskAssignment/Staff/${
+            staff.userId
+          }`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+          }
+        )
         .then((response) => setAssignments(response.data.result))
         .catch((err) => {
           console.log(err);
@@ -83,7 +88,9 @@ const Assignment = () => {
       setSelEq(eq.equipmentId);
       axios
         .get(
-          `http://localhost:5000/api/TaskAssignment/Equipment/${eq.equipmentId}`,
+          `${import.meta.env.VITE_REST_URL}/TaskAssignment/Equipment/${
+            eq.equipmentId
+          }`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -108,7 +115,9 @@ const Assignment = () => {
       setSelCust(cust.userId);
       axios
         .get(
-          `http://localhost:5000/api/TaskAssignment/Customer/${cust.userId}`,
+          `${import.meta.env.VITE_REST_URL}/TaskAssignment/Customer/${
+            cust.userId
+          }`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -129,7 +138,7 @@ const Assignment = () => {
     event.preventDefault();
     if (search !== '') {
       axios
-        .get('http://localhost:5000/api/Staff/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Staff/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -147,7 +156,7 @@ const Assignment = () => {
 
   const fetchStaffs = () => {
     axios
-      .get('http://localhost:5000/api/Staff', {
+      .get(`${import.meta.env.VITE_REST_URL}/Staff`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -161,7 +170,7 @@ const Assignment = () => {
 
   const fetchEquipments = () => {
     axios
-      .get('http://localhost:5000/api/Equipment', {
+      .get(`${import.meta.env.VITE_REST_URL}/Equipment`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -179,7 +188,7 @@ const Assignment = () => {
     event.preventDefault();
     if (searchCust !== '') {
       axios
-        .get('http://localhost:5000/api/Customer/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Customer/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -199,7 +208,7 @@ const Assignment = () => {
 
   const fetchCustomers = () => {
     axios
-      .get('http://localhost:5000/api/Customer', {
+      .get(`${import.meta.env.VITE_REST_URL}/Customer`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -218,7 +227,7 @@ const Assignment = () => {
     if (user.staffRole === 'Technician') {
       if (searchEq !== '') {
         axios
-          .get('http://localhost:5000/api/Equipment/Search', {
+          .get(`${import.meta.env.VITE_REST_URL}/Equipment/Search`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             },
