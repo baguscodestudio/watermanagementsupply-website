@@ -12,13 +12,13 @@ import EquipmentType from '../../type/Equipment';
 import PumpScheduleType from '../../type/PumpSchedule';
 
 const EquipmentView = () => {
+  const params = useParams();
+  const id = params.equipmentId;
   const [equipment, setEquipment] = useState<EquipmentType>();
   const [previousEq, setPreviousEq] = useState<EquipmentType>();
   const [selectedImage, setSelectedImage] = useState<File>();
   const [pumpSchedule, setPumpSchedule] = useState<PumpScheduleType>();
   const [mode, setMode] = useState('normal');
-  const params = useParams();
-  const id = params.equipmentId;
   const navigate = useNavigate();
 
   const createSchedule = () => {
@@ -194,6 +194,8 @@ const EquipmentView = () => {
   const checkChanges = () => {
     return equipment === previousEq && !selectedImage;
   };
+
+  console.log(pumpSchedule);
 
   return (
     <div className="w-full h-full flex">
@@ -482,10 +484,10 @@ const EquipmentView = () => {
                 <div className="inline-flex justify-between w-full">
                   <InputLabel
                     onChange={(event) => {
-                      if (!event.currentTarget.value || !pumpSchedule) return;
+                      if (!event.currentTarget.value) return;
 
                       setPumpSchedule({
-                        ...pumpSchedule,
+                        ...pumpSchedule!,
                         startTime:
                           moment(event.currentTarget.value, 'HH:mm').hour() *
                             60 +
@@ -505,9 +507,9 @@ const EquipmentView = () => {
                   />
                   <InputLabel
                     onChange={(event) => {
-                      if (!event.currentTarget.value || !pumpSchedule) return;
+                      if (!event.currentTarget.value) return;
                       setPumpSchedule({
-                        ...pumpSchedule,
+                        ...pumpSchedule!,
                         endTime:
                           moment(event.currentTarget.value, 'HH:mm').hour() *
                             60 +
