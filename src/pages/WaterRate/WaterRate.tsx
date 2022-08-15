@@ -18,14 +18,22 @@ const WaterRate = () => {
     month: 0,
     year: 0,
   });
-  const [selWaterRate, setSelWaterRate] = useState<WaterRateType>();
+  const [selWaterRate, setSelWaterRate] = useState<WaterRateType>({
+    month: 0,
+    year: 0,
+    price: 0,
+    waterRateId: '',
+  });
   const [page, setPage] = useState(0);
   const [month, setMonth] = useState(0);
   const [year, setYear] = useState(0);
 
   const handleUpdate = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (selWaterRate?.month === moment().month() + 1) {
+    if (
+      selWaterRate?.month >= moment().month() + 1 &&
+      selWaterRate?.year >= moment().year()
+    ) {
       axios
         .put(
           'http://localhost:5000/api/WaterRate',
