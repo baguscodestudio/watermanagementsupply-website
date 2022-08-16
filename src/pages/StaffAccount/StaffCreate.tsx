@@ -113,6 +113,7 @@ const StaffCreate = () => {
               <InputLabel
                 className="my-3"
                 label="Email"
+                required={true}
                 value={staff?.email}
                 onChange={(event) => {
                   if (!staff) return;
@@ -126,6 +127,7 @@ const StaffCreate = () => {
                 <InputLabel
                   className="w-[45%]"
                   label="Phone"
+                  required={true}
                   value={staff?.phone}
                   onChange={(event) => {
                     if (!staff) return;
@@ -146,6 +148,7 @@ const StaffCreate = () => {
               <InputLabel
                 className="my-3"
                 label="Full Name"
+                required={true}
                 value={staff?.fullName}
                 onChange={(event) => {
                   if (!staff) return;

@@ -129,6 +129,7 @@ const Bill = () => {
         'http://localhost:5000/api/Bill',
         {
           ...bill,
+          deadline: moment(bill.deadline),
           customerId: selCustomer,
         },
         {
@@ -166,14 +167,15 @@ const Bill = () => {
       });
   };
 
-  const generateBill = () => {
+  const generateBill = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     axios
       .post(
         'http://localhost:5000/api/Bill/GenerateBills',
         {
-          month: moment().month(),
-          year: moment().year(),
-          deadline: moment().add(1, 'month').format('YYYY-MM-DD'),
+          month: month,
+          year: year,
+          deadline: moment().add(1, 'month'),
         },
         {
           headers: {

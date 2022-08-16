@@ -110,6 +110,7 @@ const CustomerCreate = () => {
               <InputLabel
                 className="my-3"
                 label="Email"
+                required={true}
                 value={customer?.email}
                 onChange={(event) => {
                   if (!customer) return;
@@ -123,6 +124,7 @@ const CustomerCreate = () => {
                 <InputLabel
                   className="w-[45%]"
                   label="Phone"
+                  required={true}
                   value={customer?.phone}
                   onChange={(event) => {
                     if (!customer) return;
@@ -142,6 +144,7 @@ const CustomerCreate = () => {
               </div>
               <InputLabel
                 className="my-3"
+                required={true}
                 label="Full Name"
                 value={customer?.fullName}
                 onChange={(event) => {
@@ -155,6 +158,7 @@ const CustomerCreate = () => {
               <InputLabel
                 className="my-3"
                 label="Address"
+                required={true}
                 value={customer?.address}
                 onChange={(event) => {
                   if (!customer) return;

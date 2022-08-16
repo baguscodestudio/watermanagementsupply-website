@@ -135,7 +135,9 @@ const WaterRate = () => {
         <Header title="Water Rate List" />
         <div className="flex py-10 px-12 h-[90vh] justify-center">
           <Paper className="w-2/5 px-4 py-2 h-full flex flex-col">
-            <span className="font-semibold text-xl">Water Rate History</span>
+            <span className="font-semibold text-xl">
+              Water Rate History / m<sup>3</sup>
+            </span>
             <div className="w-full h-[2px] bg-gray-200 my-2" />
             <table className="w-full">
               <thead>
