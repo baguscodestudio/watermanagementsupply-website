@@ -54,7 +54,7 @@ const ChemicalInsert = () => {
           <div className="mb-8 inline-flex w-1/2">
             <div className="flex flex-col mr-auto">
               <span className="text-3xl">Chemical Information</span>
-              <span className="text-gray-500">Create Chemical</span>
+              <span className="text-gray-500">View or Update Chemical</span>
             </div>
             <Link
               to="/chemical"
