@@ -34,7 +34,7 @@ const MaintenanceCreate = () => {
 
   const fetchEquipments = () => {
     axios
-      .get('http://localhost:5000/api/Equipment', {
+      .get(`${import.meta.env.VITE_REST_URL}/Equipment`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -52,7 +52,7 @@ const MaintenanceCreate = () => {
     event.preventDefault();
     axios
       .post(
-        'http://localhost:5000/api/Maintenance',
+        `${import.meta.env.VITE_REST_URL}/Maintenance`,
         {
           ...maintenance,
           equipmentId: equipments.find((eq) => eq.equipmentName == selEq)

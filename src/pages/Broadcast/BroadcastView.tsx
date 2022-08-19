@@ -16,7 +16,7 @@ const BroadcastView = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/BroadcastAlert/${params.id}`, {
+      .get(`${import.meta.env.VITE_REST_URL}/BroadcastAlert/${params.id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

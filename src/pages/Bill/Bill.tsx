@@ -36,7 +36,7 @@ const Bill = () => {
     event.preventDefault();
     if (search !== '') {
       axios
-        .get('http://localhost:5000/api/Customer/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Customer/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -54,7 +54,7 @@ const Bill = () => {
 
   const fetchCustomers = () => {
     axios
-      .get('http://localhost:5000/api/Customer', {
+      .get(`${import.meta.env.VITE_REST_URL}/Customer`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -68,7 +68,7 @@ const Bill = () => {
 
   const fetchBills = () => {
     axios
-      .get('http://localhost:5000/api/Bill', {
+      .get(`${import.meta.env.VITE_REST_URL}/Bill`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -94,7 +94,7 @@ const Bill = () => {
     } else {
       setSelCustomer(id);
       axios
-        .get('http://localhost:5000/api/Bill', {
+        .get(`${import.meta.env.VITE_REST_URL}/Bill`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -126,7 +126,7 @@ const Bill = () => {
     event.preventDefault();
     axios
       .post(
-        'http://localhost:5000/api/Bill',
+        `${import.meta.env.VITE_REST_URL}/Bill`,
         {
           ...bill,
           deadline: moment(bill.deadline),
@@ -145,7 +145,7 @@ const Bill = () => {
           )}`
         );
         axios
-          .get('http://localhost:5000/api/Bill', {
+          .get(`${import.meta.env.VITE_REST_URL}/Bill`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             },
@@ -171,7 +171,7 @@ const Bill = () => {
     event.preventDefault();
     axios
       .post(
-        'http://localhost:5000/api/Bill/GenerateBills',
+        `${import.meta.env.VITE_REST_URL}/Bill/GenerateBills`,
         {
           month: month,
           year: year,

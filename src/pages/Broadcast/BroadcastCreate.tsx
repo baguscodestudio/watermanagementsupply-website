@@ -20,7 +20,7 @@ const BroadcastCreate = () => {
     event.preventDefault();
     axios
       .post(
-        'http://localhost:5000/api/BroadcastAlert',
+        `${import.meta.env.VITE_REST_URL}/BroadcastAlert`,
         {
           ...broadcast,
         },

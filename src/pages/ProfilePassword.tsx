@@ -31,7 +31,7 @@ const Profile = () => {
     } else {
       axios
         .put(
-          'http://localhost:5000/api/Staff/MyInfo',
+          `${import.meta.env.VITE_REST_URL}/Staff/MyInfo`,
           {
             ...user,
             updatePassword: true,

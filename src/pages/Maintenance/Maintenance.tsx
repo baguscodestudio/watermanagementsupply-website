@@ -38,7 +38,7 @@ const Maintenance = () => {
     event.preventDefault();
     if (searchMt !== '') {
       axios
-        .get('http://localhost:5000/api/Maintenance/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Maintenance/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -60,7 +60,7 @@ const Maintenance = () => {
     event.preventDefault();
     if (search !== '') {
       axios
-        .get('http://localhost:5000/api/Equipment/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Equipment/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -80,7 +80,7 @@ const Maintenance = () => {
 
   const filterByEquipment = (id: string) => {
     axios
-      .get(`http://localhost:5000/api/Maintenance/Equipment/${id}`, {
+      .get(`${import.meta.env.VITE_REST_URL}/Maintenance/Equipment/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -94,7 +94,7 @@ const Maintenance = () => {
 
   const fetchEquipments = () => {
     axios
-      .get('http://localhost:5000/api/Equipment', {
+      .get(`${import.meta.env.VITE_REST_URL}/Equipment`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -110,7 +110,7 @@ const Maintenance = () => {
 
   const fetchMaintenances = () => {
     axios
-      .get('http://localhost:5000/api/Maintenance', {
+      .get(`${import.meta.env.VITE_REST_URL}/Maintenance`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

@@ -27,7 +27,7 @@ const StaffUpdate = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/Staff/${id}`, {
+      .get(`${import.meta.env.VITE_REST_URL}/Staff/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -53,7 +53,7 @@ const StaffUpdate = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:5000/api/staff/${id}`, {
+      .delete(`${import.meta.env.VITE_REST_URL}/staff/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -75,7 +75,7 @@ const StaffUpdate = () => {
     } else {
       axios
         .put(
-          'http://localhost:5000/api/Staff',
+          `${import.meta.env.VITE_REST_URL}/Staff`,
           {
             userId: id,
             updatePassword: staff?.password === confirmPassword,

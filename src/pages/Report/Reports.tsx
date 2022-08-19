@@ -24,7 +24,7 @@ const Reports = () => {
     event.preventDefault();
     if (search !== '') {
       axios
-        .get('http://localhost:5000/api/ReportTicket/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/ReportTicket/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -47,7 +47,7 @@ const Reports = () => {
 
   const fetchReports = () => {
     axios
-      .get('http://localhost:5000/api/ReportTicket', {
+      .get(`${import.meta.env.VITE_REST_URL}/ReportTicket`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

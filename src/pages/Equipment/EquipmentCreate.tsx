@@ -27,7 +27,7 @@ const EquipmentCreate = () => {
 
     axios
       .post(
-        'http://localhost:5000/api/Equipment',
+        `${import.meta.env.VITE_REST_URL}/Equipment`,
         {
           equipment: equipment,
           imageFile: selectedImage,

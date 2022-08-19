@@ -21,7 +21,7 @@ const Chemical = () => {
 
   const fetchChemicals = () => {
     axios
-      .get('http://localhost:5000/api/Chemical', {
+      .get(`${import.meta.env.VITE_REST_URL}/Chemical`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -39,7 +39,7 @@ const Chemical = () => {
     event.preventDefault();
     if (search !== '') {
       axios
-        .get('http://localhost:5000/api/Chemical/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Chemical/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },

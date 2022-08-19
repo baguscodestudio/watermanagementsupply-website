@@ -33,7 +33,7 @@ const CustomerCreate = () => {
     } else {
       axios
         .post(
-          'http://localhost:5000/api/Customer',
+          `${import.meta.env.VITE_REST_URL}/Customer`,
           {
             ...customer,
           },

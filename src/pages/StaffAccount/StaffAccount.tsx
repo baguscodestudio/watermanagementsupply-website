@@ -23,7 +23,7 @@ const StaffAccount = () => {
     event.preventDefault();
     if (search !== '') {
       axios
-        .get('http://localhost:5000/api/Staff/Search', {
+        .get(`${import.meta.env.VITE_REST_URL}/Staff/Search`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -43,7 +43,7 @@ const StaffAccount = () => {
 
   const fetchStaffs = () => {
     axios
-      .get('http://localhost:5000/api/Staff', {
+      .get(`${import.meta.env.VITE_REST_URL}/Staff`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

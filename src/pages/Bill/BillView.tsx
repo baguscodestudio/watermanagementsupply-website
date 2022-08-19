@@ -21,7 +21,7 @@ const BillView = () => {
   useEffect(() => {
     if (bill) {
       axios
-        .get(`http://localhost:5000/api/Customer/${bill.customerId}`, {
+        .get(`${import.meta.env.VITE_REST_URL}/Customer/${bill.customerId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
@@ -36,7 +36,7 @@ const BillView = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/Bill/${params.billId}`, {
+      .get(`${import.meta.env.VITE_REST_URL}/Bill/${params.billId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -52,7 +52,7 @@ const BillView = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:5000/api/Bill/${bill?.billId}`, {
+      .delete(`${import.meta.env.VITE_REST_URL}/Bill/${bill?.billId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

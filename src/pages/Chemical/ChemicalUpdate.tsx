@@ -19,7 +19,7 @@ const ChemicalUpdate = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/Chemical/${id}`, {
+      .get(`${import.meta.env.VITE_REST_URL}/Chemical/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -37,7 +37,7 @@ const ChemicalUpdate = () => {
 
   const handleDelete = (id: string) => {
     axios
-      .delete(`http://localhost:5000/api/Chemical/${id}`, {
+      .delete(`${import.meta.env.VITE_REST_URL}/Chemical/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -61,7 +61,7 @@ const ChemicalUpdate = () => {
     event.preventDefault();
     axios
       .put(
-        'http://localhost:5000/api/Chemical',
+        `${import.meta.env.VITE_REST_URL}/Chemical`,
         {
           chemicalId: id,
           ...chemical,

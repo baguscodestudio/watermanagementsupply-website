@@ -21,7 +21,7 @@ const ChemicalInsert = () => {
     event.preventDefault();
     axios
       .post(
-        'http://localhost:5000/api/Chemical',
+        `${import.meta.env.VITE_REST_URL}/Chemical`,
         {
           ...chemical,
         },

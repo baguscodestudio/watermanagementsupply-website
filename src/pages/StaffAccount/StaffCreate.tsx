@@ -35,7 +35,7 @@ const StaffCreate = () => {
     } else {
       axios
         .post(
-          'http://localhost:5000/api/Staff',
+          `${import.meta.env.VITE_REST_URL}/Staff`,
           {
             ...staff,
             staffRole: role,

@@ -83,7 +83,7 @@ function App() {
   useEffect(() => {
     if (user.staffRole === 'Technician') {
       axios
-        .get('http://localhost:5000/api/Notification', {
+        .get(`${import.meta.env.VITE_REST_URL}/Notification`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },

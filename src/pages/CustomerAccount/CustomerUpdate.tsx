@@ -26,7 +26,7 @@ const CustomerUpdate = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/Customer/${id}`, {
+      .get(`${import.meta.env.VITE_REST_URL}/Customer/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -44,7 +44,7 @@ const CustomerUpdate = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:5000/api/Customer/${id}`, {
+      .delete(`${import.meta.env.VITE_REST_URL}/Customer/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -70,7 +70,7 @@ const CustomerUpdate = () => {
     } else {
       axios
         .put(
-          'http://localhost:5000/api/Customer',
+          `${import.meta.env.VITE_REST_URL}/Customer`,
           {
             userId: id,
             updatePassword: confirmPassword === customer?.password,

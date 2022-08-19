@@ -36,7 +36,7 @@ const WaterRate = () => {
     ) {
       axios
         .put(
-          'http://localhost:5000/api/WaterRate',
+          `${import.meta.env.VITE_REST_URL}/WaterRate`,
           {
             ...selWaterRate,
           },
@@ -63,7 +63,7 @@ const WaterRate = () => {
 
   const fetchWaterRates = () => {
     axios
-      .get('http://localhost:5000/api/WaterRate/', {
+      .get(`${import.meta.env.VITE_REST_URL}/WaterRate/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -79,7 +79,7 @@ const WaterRate = () => {
     event.preventDefault();
     axios
       .post(
-        `http://localhost:5000/api/WaterRate`,
+        `${import.meta.env.VITE_REST_URL}/WaterRate`,
         {
           ...waterRate,
         },
@@ -103,7 +103,7 @@ const WaterRate = () => {
     event.preventDefault();
     if (month !== 0 && year !== 0) {
       axios
-        .get(`http://localhost:5000/api/WaterRate/${year}/${month}`, {
+        .get(`${import.meta.env.VITE_REST_URL}/WaterRate/${year}/${month}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
