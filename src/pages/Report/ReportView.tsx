@@ -18,7 +18,7 @@ const ReportView = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/ReportTicket/${params.reportId}`, {
+      .get(`${import.meta.env.VITE_REST_URL}/ReportTicket/${params.reportId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -33,7 +33,7 @@ const ReportView = () => {
   const markResolved = () => {
     axios
       .put(
-        `http://localhost:5000/api/ReportTicket`,
+        `${import.meta.env.VITE_REST_URL}/ReportTicket`,
         {
           ...report,
           status: 'Closed',
@@ -58,7 +58,7 @@ const ReportView = () => {
     <div className="w-full h-full flex">
       <NavBar />
       <div className="w-[85vw] h-full relative">
-        <Header title="Broadcast" />
+        <Header title="Report Ticket" />
         <div className="flex flex-col py-10 px-12 h-[90vh] items-center">
           <div className="flex flex-col w-1/2">
             <div className="w-full flex flex-col mb-4">
