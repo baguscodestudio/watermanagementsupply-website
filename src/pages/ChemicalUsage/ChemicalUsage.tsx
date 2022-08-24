@@ -406,7 +406,7 @@ const ChemicalUsage = () => {
                       <tr
                         key={index}
                         onClick={() => addSelectedChemical(chemical)}
-                        className="border-b-2 h-8 border-gray-200 last-of-type:border-none hover:cursor-pointer"
+                        className="border-b-2 h-6 border-gray-200 last-of-type:border-none hover:cursor-pointer text-sm"
                       >
                         <td className="py-1">
                           <div
@@ -459,7 +459,7 @@ const ChemicalUsage = () => {
                       <tr
                         key={index}
                         onClick={() => addSelectedEquipment(equipment)}
-                        className="border-b-2 h-8 border-gray-200 last-of-type:border-none hover:cursor-pointer"
+                        className="border-b-2 h-6 border-gray-200 last-of-type:border-none hover:cursor-pointer text-sm"
                       >
                         <td className="py-1">
                           <div

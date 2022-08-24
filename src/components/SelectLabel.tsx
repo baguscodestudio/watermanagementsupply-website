@@ -14,7 +14,7 @@ const SelectLabel: React.FC<{
     <Listbox value={value} onChange={onChange}>
       <div className={`relative ${className}`}>
         <Listbox.Button
-          className={`w-full px-2 py-1 border-gray-200 border-[1px] bg-gray-100 flex flex-col`}
+          className={`w-full px-2 border-gray-200 border-[1px] bg-gray-100 flex flex-col`}
         >
           <span className="text-xs text-gray-500 text-left 2xl:text-sm">
             {title}

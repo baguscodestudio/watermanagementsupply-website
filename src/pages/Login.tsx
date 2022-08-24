@@ -39,7 +39,7 @@ const Login = () => {
       onSubmit={handleLogin}
     >
       <div className="font-semibold 2xl:text-2xl underline">Login</div>
-      <div className="flex flex-col my-2 w-full">
+      <div className="flex flex-col my-2 w-full text-sm 2xl:text-base">
         <div className="inline-flex w-full my-1">
           <div className="">Username:</div>{' '}
           <input

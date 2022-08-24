@@ -17,7 +17,7 @@ const SelectTimeFrameLabel: React.FC<{
   return (
     <Listbox value={value} onChange={onChange}>
       <div className={`relative ${className}`}>
-        <Listbox.Button className="px-2 py-1 border-gray-200 border-[1px] bg-gray-100 flex flex-col">
+        <Listbox.Button className="px-2 border-gray-200 border-[1px] bg-gray-100 flex flex-col">
           <span className="text-xs text-gray-500 text-left 2xl:text-sm">
             Mode
           </span>

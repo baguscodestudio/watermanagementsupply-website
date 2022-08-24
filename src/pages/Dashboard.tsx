@@ -88,7 +88,7 @@ const Dashboard = () => {
               <span className="text-sm text-gray-500">
                 Chemicals under minimum quantity
               </span>
-              <table className="mt-2 2xl:mt-4 border-separate border-spacing-y-2">
+              <table className="mt-2 border-separate border-spacing-y-2">
                 <thead className="rounded-lg overflow-clip">
                   <tr className="bg-gray-200 h-6 2xl:h-8">
                     <th className="font-semibold">Name</th>
@@ -101,7 +101,7 @@ const Dashboard = () => {
                     .sort((a, b) => a.quantity - b.quantity)
                     .slice(0, 4)
                     .map((chemical, index) => (
-                      <tr className="h-5 2xl:h-8 text-sm 2xl:text-base">
+                      <tr className="h-5 2xl:h-6 text-xs 2xl:text-sm">
                         <td className="text-center">{chemical.chemicalName}</td>
                         <td className="text-center border-x-2">{`${chemical.minQuantity}`}</td>
                         <td className="text-center relative">
@@ -124,7 +124,7 @@ const Dashboard = () => {
           )}
           {user.staffRole === 'Technician' && (
             <>
-              <Paper className="col-span-4 2xl:row-span-1 row-span-2 px-6 py-4 flex flex-col">
+              <Paper className="col-span-4 row-span-2 px-6 py-4 flex flex-col">
                 <span className="font-semibold text-xl mb-4">
                   Notifications
                 </span>
@@ -167,7 +167,7 @@ const Dashboard = () => {
                 </span>
                 <table>
                   <thead>
-                    <tr className="border-b-2 border-gray-200 h-6 text-sm 2xl:text-lg 2xl:h-10">
+                    <tr className="border-b-2 border-gray-200 h-6 text-sm 2xl:text-base 2xl:h-10">
                       <th className="font-normal text-gray-500">Name</th>
                       <th className="font-normal text-gray-500">Status</th>
                     </tr>
@@ -175,7 +175,7 @@ const Dashboard = () => {
                   <tbody>
                     {equipments.slice(0, 4).map((equipment, index) => (
                       <tr
-                        className="border-b-2 border-gray-200 h-8 2xl:text-base text-sm 2xl:h-12"
+                        className="border-b-2 border-gray-200 h-6 2xl:text-sm text-xs 2xl:h-8"
                         key={index}
                       >
                         <td className="px-8">{equipment.equipmentName}</td>

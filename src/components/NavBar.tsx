@@ -199,20 +199,17 @@ const NavBar = () => {
           />
         ))}
       </div>
-      <div className="w-4/5 mt-auto mb-20 items-center mx-auto inline-flex">
-        <img
-          src="/images/AvatarFill.png"
-          className="w-8 h-8 2xl:h-12 2xl:w-12"
-        />
+      <div className="w-full px-2 mt-auto mb-20 items-center mx-auto inline-flex">
+        <img src="/images/AvatarFill.png" className="w-8 h-8" />
         <div className="flex flex-col ml-2 2x:ml-4">
-          <span className="2xl:text-xl">{user.username}</span>
+          <span className="2xl:text-lg">{user.username}</span>
           <span className="text-sm 2xl:text-base text-gray-500">
             {user.staffRole}
           </span>
         </div>
         <Menu as="div" className="relative ml-2">
           <Menu.Button>
-            <MoreHorizontalOutline size="28" />
+            <MoreHorizontalOutline size="24" />
           </Menu.Button>
           <Transition
             as={Fragment}
@@ -225,7 +222,7 @@ const NavBar = () => {
           >
             <Menu.Items
               as="div"
-              className="bottom-8 2xl:bottom-14 origin-top-right absolute left-0 bg-gray-50 rounded-lg shadow-lg p-1 flex flex-col min-w-fit"
+              className="z-50 bottom-8 2xl:bottom-14 origin-top-right absolute left-0 bg-gray-50 rounded-lg shadow-lg p-1 flex flex-col min-w-fit"
             >
               <Menu.Item>
                 <Link

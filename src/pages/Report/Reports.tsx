@@ -72,9 +72,9 @@ const Reports = () => {
   return (
     <div className="w-full h-full flex">
       <NavBar />
-      <div className="w-[85vw] h-full relative">
+      <div className="w-[85vw] h-fit relative">
         <Header title="Customer Related" />
-        <div className="flex flex-col py-10 px-12 h-[90vh]">
+        <div className="flex flex-col py-10 px-12">
           <div className="underline underline-offset-8 text-2xl font-medium decoration-sky-500 decoration-[6px]">
             Reports
           </div>

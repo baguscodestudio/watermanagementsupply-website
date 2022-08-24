@@ -25,7 +25,7 @@ const InputLabel: React.FC<{
 }) => {
   return (
     <div
-      className={`flex flex-col px-2 py-1 bg-gray-100 border-[1px] border-gray-200 ${className}`}
+      className={`flex flex-col px-2 bg-gray-100 border-[1px] border-gray-200 ${className}`}
     >
       <span className="text-xs 2xl:text-sm text-gray-500">
         {label}

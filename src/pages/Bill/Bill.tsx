@@ -366,7 +366,7 @@ const Bill = () => {
                   />
                 </div>
                 <div className="flex flex-col w-1/2 px-2">
-                  <span className="mb-4 font-semibold">
+                  <span className="mb-4 font-semibold text-sm">
                     Generate Bills for every customer for{' '}
                     {month !== 0 &&
                       year !== 0 &&
@@ -383,11 +383,11 @@ const Bill = () => {
               {selCustomer && (
                 <form className="flex h-full mx-4" onSubmit={billCustomer}>
                   <div className="flex flex-col h-full mr-4">
-                    <span className="font-semibold mb-4">
-                      Generate for {getCustomerName(selCustomer)}
+                    <span className="font-semibold mb-4 text-sm">
+                      {getCustomerName(selCustomer)}
                     </span>
                     <button
-                      className="px-4 py-1 bg-sky-500 rounded-lg text-white"
+                      className="px-2 py-1 bg-sky-500 rounded-lg text-white"
                       type="submit"
                     >
                       Create Bill

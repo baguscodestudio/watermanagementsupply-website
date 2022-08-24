@@ -69,7 +69,7 @@ const LinkList: React.FC<LinkType> = ({ title, icon, roles, items }) => {
                         <Menu.Item key={index}>
                           <Link
                             to={item.path}
-                            className="2xl:text-lg 2xl:ml-8 h-8 ml-4 text-sm 2xl:h-10"
+                            className="2xl:text-base 2xl:ml-8 h-8 ml-4 text-sm 2xl:h-10"
                           >
                             {item.label}
                           </Link>
