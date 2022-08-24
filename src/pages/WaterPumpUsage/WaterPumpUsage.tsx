@@ -330,6 +330,7 @@ const WaterPumpUsage = () => {
             <table className="w-full text-center">
               <tbody>
                 {equipments
+                  .filter((eq) => eq.type === 'Pump')
                   .slice(page * 15, page * 15 + 15)
                   .map((equipment, index) => (
                     <tr
