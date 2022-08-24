@@ -286,7 +286,8 @@ const WaterRate = () => {
                   <InputLabel
                     label="Price"
                     className="w-1/5 my-2"
-                    value={selWaterRate.price}
+                    type="number"
+                    value={selWaterRate.price || 0}
                     onChange={(event) => {
                       setSelWaterRate({
                         ...selWaterRate,
