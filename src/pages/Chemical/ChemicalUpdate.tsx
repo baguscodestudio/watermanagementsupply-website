@@ -97,7 +97,9 @@ const ChemicalUpdate = () => {
           <div className="mb-8 inline-flex w-1/3">
             <div className="flex flex-col mx-auto">
               <span className="text-5xl">Chemical Information</span>
-              <span className="text-gray-500 text-xl">Create Chemical</span>
+              <span className="text-gray-500 text-xl">
+                View or Update Chemical
+              </span>
             </div>
           </div>
           <div className="w-1/3 flex flex-col">
