@@ -16,7 +16,6 @@ import Chemical from './pages/Chemical/Chemical';
 import ChemicalInsert from './pages/Chemical/ChemicalInsert';
 import BroadcastCreate from './pages/Broadcast/BroadcastCreate';
 import ChemicalUpdate from './pages/Chemical/ChemicalUpdate';
-import ManageRole from './pages/ManageRole';
 import CustomerAccount from './pages/CustomerAccount/CustomerAccount';
 import CustomerCreate from './pages/CustomerAccount/CustomerCreate';
 import StaffAccount from './pages/StaffAccount/StaffAccount';
@@ -132,7 +131,6 @@ function App() {
                 />
                 <Route path="/assignment/:id" element={<AssignmentView />} />
                 <Route path="/assignment/self" element={<AssignmentSelf />} />
-                <Route path="/staff/role" element={<ManageRole />} />
                 <Route path="/staff" element={<StaffAccount />} />
                 <Route path="/staff/create" element={<StaffCreate />} />
                 <Route path="/staff/:staffId" element={<StaffUpdate />} />
