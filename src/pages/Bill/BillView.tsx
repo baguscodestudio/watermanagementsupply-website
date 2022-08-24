@@ -131,7 +131,7 @@ const BillView = () => {
                 <div className="h-[2px] w-full mx-auto bg-gray-200 mb-4" />
                 <div className="inline-flex justify-between w-full">
                   <span className="font-bold">Transaction ID:</span>
-                  <span className="">{bill?.payment.transactionID}</span>
+                  <span className="">{bill?.payment.transactionId}</span>
                 </div>
                 <div className="inline-flex justify-between w-full">
                   <span className="font-bold">Created At:</span>

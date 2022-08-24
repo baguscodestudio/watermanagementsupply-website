@@ -9,7 +9,7 @@ export default interface BillType {
   createdAt: string;
   deadline: string;
   payment: {
-    transactionID: string;
+    transactionId: string;
     createdAt: string;
     cardNumber: string;
   };
