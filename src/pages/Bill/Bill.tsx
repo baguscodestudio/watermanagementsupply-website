@@ -189,6 +189,7 @@ const Bill = () => {
             'MMMM'
           )}`
         );
+        fetchBills();
       })
       .catch((err) => {
         console.log(err);
