@@ -417,6 +417,7 @@ const Assignment = () => {
     setSel('');
     setSelCust('');
     setSelEq('');
+    fetchAssignments();
   }, [filter]);
 
   useEffect(() => {
