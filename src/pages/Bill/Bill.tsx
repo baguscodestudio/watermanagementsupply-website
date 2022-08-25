@@ -185,9 +185,10 @@ const Bill = () => {
       )
       .then((response) => {
         toast(
-          `Successfully generated bills for every customer for ${moment().format(
-            'MMMM'
-          )}`
+          `Successfully generated bills for every customer for ${moment(
+            `${month}/${year}`,
+            'MM/YYYY'
+          ).format('MMMM')}`
         );
         fetchBills();
       })
