@@ -1,12 +1,11 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import Header from '../../components/Header';
 import NavBar from '../../components/NavBar';
 import TextAreaLabel from '../../components/TextAreaLabel';
-import InputLabel from '../../components/InputLabel';
 import ReportType from '../../type/Report';
 import moment from 'moment';
 import { CircleFill } from 'styled-icons/bootstrap';
@@ -98,12 +97,14 @@ const ReportView = () => {
               >
                 Back
               </Link>
-              <button
-                onClick={markResolved}
-                className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-red-500 font-medium text-lg"
-              >
-                Mark as resolved
-              </button>
+              {report?.status === 'closed' && (
+                <button
+                  onClick={markResolved}
+                  className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-red-500 font-medium text-lg"
+                >
+                  Mark as resolved
+                </button>
+              )}
             </div>
           </div>
         </div>

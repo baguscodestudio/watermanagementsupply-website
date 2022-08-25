@@ -195,8 +195,6 @@ const EquipmentView = () => {
     return equipment === previousEq && !selectedImage;
   };
 
-  console.log(pumpSchedule);
-
   return (
     <div className="w-full h-full flex">
       <NavBar />
@@ -468,15 +466,17 @@ const EquipmentView = () => {
                     </div>
                   </>
                 ) : (
-                  <div>
-                    <button
-                      onClick={() => setMode('schedule')}
-                      type="button"
-                      className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-green-500 font-medium w-[45%]"
-                    >
-                      Schedule
-                    </button>
-                  </div>
+                  equipment?.type === 'Pump' && (
+                    <div>
+                      <button
+                        onClick={() => setMode('schedule')}
+                        type="button"
+                        className="disabled:bg-gray-300 rounded-lg px-4 h-fit py-1 ml-2 enabled:hover:shadow-lg enabled:hover:-translate-y-1 transition-all text-white bg-green-500 font-medium w-[45%]"
+                      >
+                        Schedule
+                      </button>
+                    </div>
+                  )
                 )}
               </div>
             ) : (
