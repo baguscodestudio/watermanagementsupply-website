@@ -33,6 +33,7 @@ const CustomerAccount = () => {
         })
         .then((response) => {
           setCustomers(response.data.result);
+          setPage(0);
         })
         .catch((err) => {
           console.log(err);

@@ -31,7 +31,8 @@ const WaterRate = () => {
   const handleUpdate = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (
-      selWaterRate?.month >= moment().month() + 1 &&
+      (selWaterRate?.month >= moment().month() + 1 &&
+        selWaterRate?.year == moment().year()) ||
       selWaterRate?.year >= moment().year()
     ) {
       axios
@@ -56,7 +57,7 @@ const WaterRate = () => {
         });
     } else {
       toast.error(
-        'You can only update the price of the current month water rate!'
+        'You can only update the price of the current/future month water rate!'
       );
     }
   };

@@ -33,6 +33,7 @@ const StaffAccount = () => {
         })
         .then((response) => {
           setStaffs(response.data.result);
+          setPage(0);
         })
         .catch((err) => {
           console.log(err);
