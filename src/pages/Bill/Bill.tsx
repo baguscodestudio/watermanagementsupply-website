@@ -20,6 +20,7 @@ const Bill = () => {
   const [bills, setBills] = useState<BillType[]>([]);
   const [page, setPage] = useState(0);
   const [customers, setCustomers] = useState<CustomerType[]>([]);
+  const [completeCustomer, setCompleteCustomer] = useState<CustomerType[]>([]);
   const [selCustomer, setSelCustomer] = useState<string>('');
   const [bill, setBill] = useState({
     title: '',
@@ -59,7 +60,10 @@ const Bill = () => {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       })
-      .then((response) => setCustomers(response.data.result))
+      .then((response) => {
+        setCustomers(response.data.result);
+        setCompleteCustomer(response.data.result);
+      })
       .catch((err) => {
         console.log(err);
         toast.error('An error occured while fetching customers');
@@ -113,10 +117,10 @@ const Bill = () => {
   };
 
   const getCustomerName = (id: string) => {
-    if (customers) {
-      for (let i = 0; i < customers.length; i++) {
-        if (customers[i].userId === id) {
-          return customers[i].username;
+    if (completeCustomer) {
+      for (let i = 0; i < completeCustomer.length; i++) {
+        if (completeCustomer[i].userId === id) {
+          return completeCustomer[i].username;
         }
       }
     } else return id;
